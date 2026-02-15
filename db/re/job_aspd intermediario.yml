@@ -94,85 +94,85 @@ Body:
       Super_Baby_E: true
       Hyper_Novice: true
     BaseASPD:
-      Fist: 37
-      Dagger: 52
-      1hSword: 54
-      1hAxe: 47
-      Mace: 47
-      2hMace: 52
-      Staff: 62
-      2hStaff: 62
-      Shield: 7
+      Fist: 40
+      Dagger: 55
+      1hSword: 57
+      1hAxe: 50
+      Mace: 50
+      2hMace: 55
+      Staff: 65
+      2hStaff: 65
+      Shield: 10
   - Jobs:
       Swordman: true
       Swordman_High: true
       Baby_Swordman: true
     BaseASPD:
-      Fist: 37
-      Dagger: 44
-      1hSword: 44
-      2hSword: 51
-      1hSpear: 54
-      2hSpear: 62
-      1hAxe: 52
-      2hAxe: 57
-      Mace: 47
-      2hMace: 52
-      Shield: 2
+      Fist: 40
+      Dagger: 47
+      1hSword: 47
+      2hSword: 54
+      1hSpear: 57
+      2hSpear: 65
+      1hAxe: 55
+      2hAxe: 60
+      Mace: 50
+      2hMace: 55
+      Shield: 5
   - Jobs:
       Mage: true
       Mage_High: true
       Baby_Mage: true
     BaseASPD:
-      Fist: 47
-      Dagger: 47
-      Staff: 52
-      2hStaff: 52
-      Shield: 7
+      Fist: 50
+      Dagger: 50
+      Staff: 55
+      2hStaff: 55
+      Shield: 10
   - Jobs:
       Archer: true
       Archer_High: true
       Baby_Archer: true
     BaseASPD:
-      Fist: 37
-      Dagger: 52
-      Bow: 47
-      Shield: 6
+      Fist: 40
+      Dagger: 55
+      Bow: 50
+      Shield: 9
   - Jobs:
       Acolyte: true
       Acolyte_High: true
       Baby_Acolyte: true
     BaseASPD:
-      Fist: 37
-      Mace: 42
-      2hMace: 47
-      Staff: 57
-      2hStaff: 57
-      Shield: 4
+      Fist: 40
+      Mace: 45
+      2hMace: 50
+      Staff: 60
+      2hStaff: 60
+      Shield: 7
   - Jobs:
       Merchant: true
       Merchant_High: true
       Baby_Merchant: true
     BaseASPD:
-      Fist: 37
-      Dagger: 49
-      1hSword: 49
-      1hAxe: 45
-      2hAxe: 52
-      Mace: 47
-      2hMace: 52
-      Shield: 2
+      Fist: 40
+      Dagger: 52
+      1hSword: 52
+      1hAxe: 48
+      2hAxe: 55
+      Mace: 50
+      2hMace: 55
+      Shield: 5
   - Jobs:
       Thief: true
       Thief_High: true
       Baby_Thief: true
     BaseASPD:
-      Fist: 37
-      Dagger: 45
-      1hSword: 47
-      1hAxe: 57
-      Bow: 50
-      Shield: 3
+      Fist: 40
+      Dagger: 48
+      1hSword: 50
+      1hAxe: 60
+      Bow: 53
+      Shield: 6
   - Jobs:
       Knight: true
       Knight2: true
@@ -181,74 +181,74 @@ Body:
       Baby_Knight: true
       Baby_Knight2: true
     BaseASPD:
-      Fist: 37
-      Dagger: 46
-      1hSword: 42
-      2hSword: 49
-      1hSpear: 52
-      2hSpear: 57
-      1hAxe: 47
-      2hAxe: 52
-      Mace: 42
-      2hMace: 47
-      Shield: 2
+      Fist: 40
+      Dagger: 49
+      1hSword: 45
+      2hSword: 52
+      1hSpear: 55
+      2hSpear: 60
+      1hAxe: 50
+      2hAxe: 55
+      Mace: 45
+      2hMace: 50
+      Shield: 5
   - Jobs:
       Priest: true
       High_Priest: true
       Baby_Priest: true
     BaseASPD:
-      Fist: 37
-      Mace: 40
-      2hMace: 45
-      Staff: 57
-      Knuckle: 57
-      Book: 41
-      2hStaff: 57
-      Shield: 2
+      Fist: 40
+      Mace: 43
+      2hMace: 48
+      Staff: 60
+      Knuckle: 60
+      Book: 44
+      2hStaff: 60
+      Shield: 5
   - Jobs:
       Wizard: true
       High_Wizard: true
       Baby_Wizard: true
     BaseASPD:
-      Fist: 47
-      Dagger: 51
-      Staff: 50
-      2hStaff: 50
-      Shield: 5
+      Fist: 50
+      Dagger: 54
+      Staff: 53
+      2hStaff: 53
+      Shield: 8
   - Jobs:
       Blacksmith: true
       Whitesmith: true
       Baby_Blacksmith: true
     BaseASPD:
-      Fist: 37
-      Dagger: 47
-      1hSword: 47
-      1hAxe: 43
-      2hAxe: 50
-      Mace: 45
-      2hMace: 50
-      Shield: 2
+      Fist: 40
+      Dagger: 50
+      1hSword: 50
+      1hAxe: 46
+      2hAxe: 53
+      Mace: 48
+      2hMace: 53
+      Shield: 5
   - Jobs:
       Hunter: true
       Sniper: true
       Baby_Hunter: true
     BaseASPD:
-      Fist: 37
-      Dagger: 50
-      Bow: 45
-      Shield: 6
+      Fist: 40
+      Dagger: 53
+      Bow: 48
+      Shield: 9
   - Jobs:
       Assassin: true
       Assassin_Cross: true
       Baby_Assassin: true
     BaseASPD:
-      Fist: 37
-      Dagger: 39
-      1hSword: 47
-      1hAxe: 48
-      Katar: 39
-      Huuma: 107
-      Shield: 3
+      Fist: 40
+      Dagger: 42
+      1hSword: 50
+      1hAxe: 51
+      Katar: 42
+      Huuma: 110
+      Shield: 6
   - Jobs:
       Crusader: true
       Crusader2: true
@@ -257,84 +257,84 @@ Body:
       Baby_Crusader: true
       Baby_Crusader2: true
     BaseASPD:
-      Fist: 37
-      Dagger: 45
-      1hSword: 40
-      2hSword: 52
-      1hSpear: 50
-      2hSpear: 49
-      1hAxe: 47
-      2hAxe: 52
-      Mace: 42
-      2hMace: 47
-      Shield: 2
+      Fist: 40
+      Dagger: 48
+      1hSword: 43
+      2hSword: 55
+      1hSpear: 53
+      2hSpear: 52
+      1hAxe: 50
+      2hAxe: 55
+      Mace: 45
+      2hMace: 50
+      Shield: 5
   - Jobs:
       Monk: true
       Champion: true
       Baby_Monk: true
     BaseASPD:
-      Fist: 37
-      Mace: 40
-      2hMace: 45
-      Staff: 57
-      Knuckle: 37
-      2hStaff: 55
-      Shield: 2
+      Fist: 40
+      Mace: 43
+      2hMace: 48
+      Staff: 60
+      Knuckle: 40
+      2hStaff: 58
+      Shield: 5
   - Jobs:
       Sage: true
       Professor: true
       Baby_Sage: true
     BaseASPD:
-      Fist: 42
-      Dagger: 50
-      1hSword: 57
-      Staff: 52
-      Book: 40
-      2hStaff: 52
-      Shield: 2
+      Fist: 45
+      Dagger: 53
+      1hSword: 60
+      Staff: 55
+      Book: 43
+      2hStaff: 55
+      Shield: 5
   - Jobs:
       Rogue: true
       Stalker: true
       Baby_Rogue: true
     BaseASPD:
-      Fist: 37
-      Dagger: 42
-      1hSword: 47
-      Bow: 47
-      Shield: 2
+      Fist: 40
+      Dagger: 45
+      1hSword: 50
+      Bow: 50
+      Shield: 5
   - Jobs:
       Alchemist: true
       Creator: true
       Baby_Alchemist: true
     BaseASPD:
-      Fist: 37
-      Dagger: 47
-      1hSword: 42
-      1hAxe: 42
-      2hAxe: 49
-      Mace: 42
-      2hMace: 47
-      Shield: 1
+      Fist: 40
+      Dagger: 50
+      1hSword: 45
+      1hAxe: 45
+      2hAxe: 52
+      Mace: 45
+      2hMace: 50
+      Shield: 4
   - Jobs:
       Bard: true
       Clown: true
       Baby_Bard: true
     BaseASPD:
-      Fist: 37
-      Dagger: 50
-      Bow: 45
-      Musical: 42
-      Shield: 4
+      Fist: 40
+      Dagger: 53
+      Bow: 48
+      Musical: 45
+      Shield: 7
   - Jobs:
       Dancer: true
       Gypsy: true
       Baby_Dancer: true
     BaseASPD:
-      Fist: 37
-      Dagger: 50
-      Bow: 45
-      Whip: 42
-      Shield: 4
+      Fist: 40
+      Dagger: 53
+      Bow: 48
+      Whip: 45
+      Shield: 7
   - Jobs:
       Gunslinger: true
       Rebellion: true
@@ -342,21 +342,21 @@ Body:
       Baby_Rebellion: true
       Night_Watch: true
     BaseASPD:
-      Fist: 51
-      Revolver: 46
-      Rifle: 56
-      Gatling: 51
-      Shotgun: 91
-      Grenade: 101
-      Shield: 3
+      Fist: 54
+      Revolver: 49
+      Rifle: 59
+      Gatling: 54
+      Shotgun: 94
+      Grenade: 104
+      Shield: 6
   - Jobs:
       Ninja: true
       Baby_Ninja: true
     BaseASPD:
-      Fist: 37
-      Dagger: 40
-      Huuma: 52
-      Shield: 3
+      Fist: 40
+      Dagger: 43
+      Huuma: 55
+      Shield: 6
   - Jobs:
       Taekwon: true
       Star_Gladiator: true
@@ -370,31 +370,31 @@ Body:
       Baby_Star_Emperor2: true
       Sky_Emperor: true
     BaseASPD:
-      Fist: 37
-      Dagger: 47
-      1hSword: 47
-      2hSword: 47
-      1hSpear: 47
-      2hSpear: 47
-      1hAxe: 47
-      2hAxe: 47
-      Mace: 47
-      2hMace: 47
-      Staff: 47
-      Bow: 47
-      Knuckle: 47
-      Musical: 47
-      Whip: 47
-      Book: 47
-      Katar: 47
-      Revolver: 47
-      Rifle: 47
-      Gatling: 47
-      Shotgun: 47
-      Grenade: 47
-      Huuma: 47
-      2hStaff: 47
-      Shield: 3
+      Fist: 40
+      Dagger: 50
+      1hSword: 50
+      2hSword: 50
+      1hSpear: 50
+      2hSpear: 50
+      1hAxe: 50
+      2hAxe: 50
+      Mace: 50
+      2hMace: 50
+      Staff: 50
+      Bow: 50
+      Knuckle: 50
+      Musical: 50
+      Whip: 50
+      Book: 50
+      Katar: 50
+      Revolver: 50
+      Rifle: 50
+      Gatling: 50
+      Shotgun: 50
+      Grenade: 50
+      Huuma: 50
+      2hStaff: 50
+      Shield: 6
   - Jobs:
       Soul_Linker: true
       Baby_Soul_Linker: true
@@ -402,11 +402,11 @@ Body:
       Baby_Soul_Reaper: true
       Soul_Ascetic: true
     BaseASPD:
-      Fist: 47
-      Dagger: 47
-      Staff: 50
-      2hStaff: 52
-      Shield: 5
+      Fist: 50
+      Dagger: 50
+      Staff: 53
+      2hStaff: 55
+      Shield: 8
   - Jobs:
       Rune_Knight: true
       Rune_Knight2: true
@@ -429,29 +429,29 @@ Body:
     #   2hMace: 52
     #   Shield: 5
     BaseASPD:
-      Fist: 33
-      Dagger: 39
-      1hSword: 41
-      2hSword: 46
-      1hSpear: 50
-      2hSpear: 48
-      1hAxe: 41
-      2hAxe: 41
-      Mace: 36
-      2hMace: 36
-      Shield: 2
+      Fist: 36
+      Dagger: 42
+      1hSword: 44
+      2hSword: 49
+      1hSpear: 53
+      2hSpear: 51
+      1hAxe: 44
+      2hAxe: 44
+      Mace: 39
+      2hMace: 39
+      Shield: 5
   - Jobs:
       Warlock: true
       Warlock_T: true
       Baby_Warlock: true
       Arch_Mage: true
     BaseASPD:
-      Fist: 36
-      Dagger: 43
-      1hSword: 51
-      Staff: 41
-      2hStaff: 47
-      Shield: 2
+      Fist: 39
+      Dagger: 46
+      1hSword: 54
+      Staff: 44
+      2hStaff: 50
+      Shield: 5
   - Jobs:
       Ranger: true
       Ranger2: true
@@ -462,24 +462,24 @@ Body:
       Windhawk: true
       Windhawk2: true
     BaseASPD:
-      Fist: 33
-      Dagger: 41
-      Bow: 40
-      Shield: 5
+      Fist: 36
+      Dagger: 44
+      Bow: 43
+      Shield: 8
   - Jobs:
       Arch_Bishop: true
       Arch_Bishop_T: true
       Baby_Arch_Bishop: true
       Cardinal: true
     BaseASPD:
-      Fist: 36
-      Mace: 36
-      2hMace: 36
-      Staff: 51
-      Knuckle: 41
-      Book: 36
-      2hStaff: 46
-      Shield: 2
+      Fist: 39
+      Mace: 39
+      2hMace: 39
+      Staff: 54
+      Knuckle: 44
+      Book: 39
+      2hStaff: 49
+      Shield: 5
   - Jobs:
       Mechanic: true
       Mechanic2: true
@@ -490,31 +490,31 @@ Body:
       Meister: true
       Meister2: true
     BaseASPD:
-      Fist: 31
-      Dagger: 51
-      1hSword: 56
-      1hAxe: 46
-      2hAxe: 39
-      Mace: 39
-      2hMace: 41
-      Shield: 3
+      Fist: 34
+      Dagger: 54
+      1hSword: 59
+      1hAxe: 49
+      2hAxe: 42
+      Mace: 42
+      2hMace: 44
+      Shield: 6
   - Jobs:
       Guillotine_Cross: true
       Guillotine_Cross_T: true
       Baby_Guillotine_Cross: true
       Shadow_Cross: true
     BaseASPD:
-      Fist: 33
-      Dagger: 35
-      1hSword: 56
-      1hAxe: 71
-      Katar: 33
-      Rifle: 92
-      Gatling: 117
-      Shotgun: 87
-      Grenade: 97
-      Huuma: 107
-      Shield: 6
+      Fist: 36
+      Dagger: 38
+      1hSword: 59
+      1hAxe: 74
+      Katar: 36
+      Rifle: 95
+      Gatling: 120
+      Shotgun: 90
+      Grenade: 100
+      Huuma: 110
+      Shield: 9
   - Jobs:
       Royal_Guard: true
       Royal_Guard2: true
@@ -525,90 +525,90 @@ Body:
       Imperial_Guard: true
       Imperial_Guard2: true
     BaseASPD:
-      Fist: 31
-      Dagger: 38
-      1hSword: 36
-      2hSword: 44
-      1hSpear: 41
-      2hSpear: 41
-      1hAxe: 39
-      2hAxe: 43
-      Mace: 35
-      2hMace: 41
-      Shield: 2
+      Fist: 34
+      Dagger: 41
+      1hSword: 39
+      2hSword: 47
+      1hSpear: 44
+      2hSpear: 44
+      1hAxe: 42
+      2hAxe: 46
+      Mace: 38
+      2hMace: 44
+      Shield: 5
   - Jobs:
       Sorcerer: true
       Sorcerer_T: true
       Baby_Sorcerer: true
       Elemental_Master: true
     BaseASPD:
-      Fist: 31
-      Dagger: 41
-      1hSword: 41
-      Staff: 36
-      Book: 36
-      2hStaff: 46
-      Shield: 2
+      Fist: 34
+      Dagger: 44
+      1hSword: 44
+      Staff: 39
+      Book: 39
+      2hStaff: 49
+      Shield: 5
   - Jobs:
       Minstrel: true
       Minstrel_T: true
       Baby_Minstrel: true
       Troubadour: true
     BaseASPD:
-      Fist: 31
-      Dagger: 43
-      Bow: 40
-      Musical: 35
-      Shield: 4
+      Fist: 34
+      Dagger: 46
+      Bow: 43
+      Musical: 38
+      Shield: 7
   - Jobs:
       Wanderer: true
       Wanderer_T: true
       Baby_Wanderer: true
       Trouvere: true
     BaseASPD:
-      Fist: 31
-      Dagger: 43
-      Bow: 40
-      Whip: 35
-      Shield: 4
+      Fist: 34
+      Dagger: 46
+      Bow: 43
+      Whip: 38
+      Shield: 7
   - Jobs:
       Sura: true
       Sura_T: true
       Baby_Sura: true
       Inquisitor: true
     BaseASPD:
-      Fist: 32
-      Mace: 39
-      2hMace: 42
-      Staff: 45
-      Knuckle: 36
-      2hStaff: 47
-      Shield: 2
+      Fist: 35
+      Mace: 42
+      2hMace: 45
+      Staff: 48
+      Knuckle: 39
+      2hStaff: 50
+      Shield: 5
   - Jobs:
       Genetic: true
       Genetic_T: true
       Baby_Genetic: true
       Biolo: true
     BaseASPD:
-      Fist: 31
-      Dagger: 41
-      1hSword: 35
-      1hAxe: 39
-      2hAxe: 42
-      Mace: 35
-      2hMace: 39
-      Shield: 1
+      Fist: 34
+      Dagger: 44
+      1hSword: 38
+      1hAxe: 42
+      2hAxe: 45
+      Mace: 38
+      2hMace: 42
+      Shield: 4
   - Jobs:
       Shadow_Chaser: true
       Shadow_Chaser_T: true
       Baby_Shadow_Chaser: true
       Abyss_Chaser: true
     BaseASPD:
-      Fist: 31
-      Dagger: 34
-      1hSword: 38
-      Bow: 38
-      Shield: 1
+      Fist: 34
+      Dagger: 37
+      1hSword: 41
+      Bow: 41
+      Shield: 4
   - Jobs:
       Kagerou: true
       Oboro: true
@@ -617,15 +617,15 @@ Body:
       Shinkiro: true
       Shiranui: true
     BaseASPD:
-      Fist: 37
-      Dagger: 42
-      Huuma: 47
-      Shield: 0
+      Fist: 40
+      Dagger: 45
+      Huuma: 50
+      Shield: 3
   - Jobs:
       Summoner: true
       Baby_Summoner: true
       Spirit_Handler: true
     BaseASPD:
-      Fist: 37
-      Staff: 57
-      Shield: 4
+      Fist: 40
+      Staff: 60
+      Shield: 7

@@ -449,6 +449,11 @@ izlude,129,145,4	script	Kafra ROS::kaf_izlude	423,{
 					skill 155,1,SKILL_PERM;
 					skill 153,1,SKILL_PERM;
 					}
+				if (Class == 4077){// sura
+					skill 156,1,SKILL_PERM;
+					skill 1015,1,SKILL_PERM;
+					skill 1016,1,SKILL_PERM;
+					}
 			break;
 		}
 	cutin "",255;

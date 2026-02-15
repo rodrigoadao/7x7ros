@@ -2922,12 +2922,26 @@ case SR_TIGERCANNON:
 #endif
 
 	// Need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
-	if (!ud->state.running)
-	{
-		// Even though this is not how official works but this will do the trick. bugreport:6829
-		unit_stop_walking(src, USW_FIXPOS);
-	}
-
+	// if (!ud->state.running)
+	// {
+	// 	// Even though this is not how official works but this will do the trick. bugreport:6829
+	// 	unit_stop_walking(src, USW_FIXPOS);
+	// }
+//custom moskaum 2026 02 13 pra tirar delay de unhide
+if (!ud->state.running)
+{
+    // Custom MoskaumRO: Não parar walking ao usar TF_HIDING/ST_CHASEWALK/KO_YAMIKUMO para sair do hide
+    bool is_unhide_toggle = false;
+    if (sc && (skill_id == TF_HIDING || skill_id == ST_CHASEWALK || skill_id == KO_YAMIKUMO))
+    {
+        sc_type toggle_sc = skill_get_sc(skill_id);
+        if (toggle_sc != SC_NONE && sc->getSCE(toggle_sc))
+            is_unhide_toggle = true;
+    }
+    if (!is_unhide_toggle)
+        unit_stop_walking(src, USW_FIXPOS);
+}
+//fim do custom
 	// SC_MAGICPOWER needs to switch states at start of cast
 #ifndef RENEWAL
 	skill_toggle_magicpower(src, skill_id);

@@ -11102,12 +11102,30 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 	case TF_HIDING:
 	case ST_CHASEWALK:
 	case KO_YAMIKUMO:
-		if (tsce)
-		{
-			clif_skill_nodamage(src, *bl, skill_id, -1, status_change_end(bl, type)); // Hide skill-scream animation.
-			map_freeblock_unlock();
-			return 0;
-		}
+	//original
+		// if (tsce)
+		// {
+		// 	clif_skill_nodamage(src, *bl, skill_id, -1, status_change_end(bl, type)); // Hide skill-scream animation.
+		// 	map_freeblock_unlock();
+		// 	return 0;
+		// }
+	//custom moskaum pra tirar delay de unhide
+    if (tsce)
+    {
+        clif_skill_nodamage(src, *bl, skill_id, -1, status_change_end(bl, type)); // Hide skill-scream animation.
+        // Custom MoskaumRO: Liberar jogador imediatamente ao sair do hide (sem lock)
+        {
+            struct unit_data *ud_unhide = unit_bl2ud(bl);
+            if (ud_unhide) {
+                t_tick now = gettick();
+                ud_unhide->canact_tick = now;
+                ud_unhide->canmove_tick = now;
+            }
+        }
+        map_freeblock_unlock();
+        return 0;
+    }
+	//fim do custom
 		clif_skill_nodamage(src, *bl, skill_id, -1, sc_start(src, bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv)));
 		break;
 	case TK_RUN:
@@ -14218,7 +14236,11 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 		break;
 
 	case SC_SHADOWFORM:
-		if (sd && dstsd && src != bl && !dstsd->shadowform_id)
+		// if (sd && dstsd && src != bl && !dstsd->shadowform_id)
+		//início do custo pra poder usar vínculo em aliado
+		if (sd && dstsd && src != bl && !dstsd->shadowform_id
+			&& battle_check_target(src, bl, BCT_PARTY | BCT_ENEMY) > 0)
+		//fim do custom
 		{
 			if (clif_skill_nodamage(src, *bl, skill_id, skill_lv, sc_start4(src, src, type, 100, skill_lv, bl->id, 4 + skill_lv, 0, skill_get_time(skill_id, skill_lv))))
 				dstsd->shadowform_id = src->id;
@@ -16860,7 +16882,8 @@ TIMER_FUNC(skill_castend_id)
 		}
 
 		if (ud->walktimer != INVALID_TIMER && ud->skill_id != TK_RUN && ud->skill_id != RA_WUGDASH)
-			unit_stop_walking(src, USW_FIXPOS);
+			unit_stop_walking(src, (src->type == BL_PC) ? USW_NONE : USW_FIXPOS);
+
 
 		if ((!sd || sd->skillitem != ud->skill_id || skill_get_delay(ud->skill_id, ud->skill_lv)) &&
 			!(ud->skill_id == SC_ENERVATION || ud->skill_id == SC_GROOMY || ud->skill_id == SC_IGNORANCE ||

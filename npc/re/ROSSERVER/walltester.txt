@@ -1,4 +1,4 @@
-arena@24,175,92,95,79,5	script	lembrar de remover	123,{
+prontera,161,187,95,79,5	script	lembrar de remover	123,{
 	mes "[Wall Tester]";
 	mes "Oi! O que voce deseja fazer?";
 	next;

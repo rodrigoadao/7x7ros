@@ -1850,6 +1850,7 @@ int32 status_damage(struct block_list *src, struct block_list *target, int64 dhp
 
 				if (sc->getSCE(type) && it.second->flag[SCF_REMOVEONDAMAGED])
 				{
+
 					// A status change that gets broken by damage should still be considered when calculating if a status change can be applied or not (for the same attack).
 					// !TODO: This is a temporary solution until we refactor the code so that the calculation of an SC is done at the start of an attack rather than after the damage was applied.
 					if (sc->opt1 > OPT1_NONE && sc->lastEffectTimer == INVALID_TIMER)
@@ -2788,13 +2789,7 @@ bool status_check_visibility(block_list *src, block_list *target, bool checkblin
 	return true;
 }
 
-/**
- * Base ASPD value taken from the job tables
- * @param sd: Player object
- * @param status: Player status
- * @return base aspd after single/dual weapon and shield adjustments, passive bonuses and status changes [RENEWAL]
- *	  base amotion after single/dual weapon and stats adjustments [PRE-RENEWAL]
- */
+//
 int32 status_base_amotion_pc(map_session_data *sd, struct status_data *status)
 {
 	std::shared_ptr<s_job_info> job = job_db.find(sd->status.class_);
@@ -2806,7 +2801,395 @@ int32 status_base_amotion_pc(map_session_data *sd, struct status_data *status)
 	int16 skill_lv, val = 0;
 	float temp_aspd = 0;
 
-//vers�o 14/12/2025 17h
+	int32 aspd = job->aspd_base[sd->weapontype1]; // Single weapon
+	if (sd->weapontype2 != W_FIST && sd->equip_index[EQI_HAND_R] != sd->equip_index[EQI_HAND_L])
+		aspd += job->aspd_base[sd->weapontype2] / 4; // Dual-wield
+
+	switch (sd->status.weapon)
+	{
+	case W_BOW:
+	case W_MUSICAL:
+	case W_WHIP:
+	case W_REVOLVER:
+	case W_RIFLE:
+	case W_GATLING:
+	case W_SHOTGUN:
+	case W_GRENADE:
+		temp_aspd = status->dex * status->dex / 7.0f + status->agi * status->agi * 0.5f;
+		break;
+	default:
+		temp_aspd = status->dex * status->dex / 9.0f + status->agi * status->agi * 0.5f;
+		break;
+	}
+	temp_aspd = (float)(sqrt(temp_aspd) * 0.25f) + 196;
+	if ((skill_lv = pc_checkskill(sd, SA_ADVANCEDBOOK)) > 0 && sd->status.weapon == W_BOOK)
+		val += (skill_lv - 1) / 2 + 1;
+	if ((skill_lv = pc_checkskill(sd, SG_DEVIL)) > 0 && ((sd->class_ & MAPID_THIRDMASK) == MAPID_STAR_EMPEROR || pc_is_maxjoblv(sd)))
+		val += 1 + skill_lv;
+	if ((skill_lv = pc_checkskill(sd, GS_SINGLEACTION)) > 0 && (sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE))
+		val += ((skill_lv + 1) / 2);
+	if (pc_isriding(sd))
+		val -= 50 - 10 * pc_checkskill(sd, KN_CAVALIERMASTERY);
+	else if (pc_isridingdragon(sd))
+		val -= 25 - 5 * pc_checkskill(sd, RK_DRAGONTRAINING);
+	aspd = ((int32)(temp_aspd + ((float)(status_calc_aspd(sd, &sd->sc, true) + val) * status->agi / 200)) - min(aspd, 200));
+	if (sd->status.shield)
+		aspd -= 5;
+	return aspd;
+#else
+	if (job == nullptr)
+		return AMOTION_ZERO_ASPD;
+
+	// Base weapon delay
+	int32 amotion = (sd->status.weapon < MAX_WEAPON_TYPE)
+						? (job->aspd_base[sd->status.weapon])											// Single weapon
+						: (job->aspd_base[sd->weapontype1] + job->aspd_base[sd->weapontype2]) * 7 / 10; // Dual-wield
+
+	// Percentual delay reduction from stats
+	amotion -= amotion * (4 * status->agi + status->dex) / 1000;
+
+	// Raw delay adjustment from bAspd bonus
+	amotion += sd->bonus.aspd_add;
+	return amotion;
+#endif
+}
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+//==========================================================================================================================================
+
+// /**
+//  * Base ASPD value taken from the job tables
+//  * @param sd: Player object
+//  * @param status: Player status
+//  * @return base aspd after single/dual weapon and shield adjustments, passive bonuses and status changes [RENEWAL]
+//  *	  base amotion after single/dual weapon and stats adjustments [PRE-RENEWAL]
+//  */
+// int32 status_base_amotion_pc(map_session_data *sd, struct status_data *status)
+// {
+// 	std::shared_ptr<s_job_info> job = job_db.find(sd->status.class_);
+
+// #ifdef RENEWAL_ASPD
+// 	if (job == nullptr)
+// 		return 0;
+
+// 	int16 skill_lv, val = 0;
+// 	float temp_aspd = 0;
+
+// //vers�o 14/12/2025 17h
+// // int32 aspd = job->aspd_base[sd->weapontype1]; // Single weapon = BaseASPD da arma
+
+// // // Shield: DO NOT add to BaseASPD - penalty will be applied at the end
+// // // Dual-wield
+// // if (sd->weapontype2 != W_FIST && sd->equip_index[EQI_HAND_R] != sd->equip_index[EQI_HAND_L])
+// // 	aspd += job->aspd_base[sd->weapontype2] / 4;
+
+// // switch (sd->status.weapon)
+// // {
+// // case W_BOW:
+// // case W_MUSICAL:
+// // case W_WHIP:
+// // case W_REVOLVER:
+// // case W_RIFLE:
+// // case W_GATLING:
+// // case W_SHOTGUN:
+// // case W_GRENADE:
+// // 	// Ranged weapons: DEX affects ASPD (official behavior)
+// // 	temp_aspd = status->dex * status->dex / 7.0f + status->agi * status->agi * 0.5f;
+// // 	break;
+// // default:
+// // 	// Melee weapons: Only AGI affects ASPD primarily
+// // 	// DEX has MINIMAL effect (discovered from Sakray testing)
+// // 	temp_aspd = status->agi * status->agi * 0.5f;
+// // 	break;
+// // }
+
+// // // Official formula discovered: ASPD = base + floor(sqrt(AGI) * k)
+// // // Parameters (base, k) vary based on weapon's BaseASPD
+// // float aspd_base_value, aspd_multiplier;
+
+// // // Get the base ASPD value of the weapon (calculated above)
+// // int32 weapon_base_aspd = aspd;
+
+// // // Select parameters based on weapon's BaseASPD
+// // // Each weapon type has its own optimized parameters for maximum accuracy
+// // switch (weapon_base_aspd) {
+// // case 35:
+// // 	// Shura/Monk Fist (W_FIST, BaseASPD=35)
+// // 	// Formula: ASPD = 156 + floor(sqrt(AGI) * 2.42)
+// // 	// Precision: 100% (32/32)
+// // 	aspd_base_value = 191.0f;  // 156 + 35
+// // 	aspd_multiplier = 2.42f;
+// // 	break;
+
+// // case 39:
+// // 	// Shura/Monk Knuckle (W_KNUCKLE, BaseASPD=39)
+// // 	// Formula: ASPD = 155 + floor(sqrt(AGI) * 2.46)
+// // 	// Precision: 100% (32/32 with 6 corrections)
+// // 	aspd_base_value = 194.0f;  // 155 + 39
+// // 	aspd_multiplier = 2.46f;
+// // 	break;
+	
+// // case 40:
+// // 	// Most common weapons (Sorcerer, RK, Ranger, Shadow Chaser, Royal Guard, etc)
+// // 	// Formula: ASPD = 154 + floor(sqrt(AGI) * 2.54)
+// // 	// Precision: 100% (tested on multiple classes)
+// // 	aspd_base_value = 194.0f;  // 154 + 40
+// // 	aspd_multiplier = 2.54f;
+// // 	break;
+
+// // case 43:
+// // 	// Shura/RK Mace (W_MACE, BaseASPD=43)
+// // 	// Formula: ASPD = 152 + floor(sqrt(AGI) * 2.56) [Shura]
+// // 	//          149 + floor(sqrt(AGI) * 2.86) [RK]
+// // 	// Using RK formula for better compatibility
+// // 	aspd_base_value = 192.0f;  // 149 + 43
+// // 	aspd_multiplier = 2.86f;
+// // 	break;
+	
+// // case 45:
+// // 	// Arch Bishop/Priest main weapons (BaseASPD=45)
+// // 	// Formula: ASPD = 149 + floor(sqrt(AGI) * 2.86)
+// // 	// Precision: 100% (41/41)
+// // 	aspd_base_value = 194.0f;  // 149 + 45
+// // 	aspd_multiplier = 2.86f;
+// // 	break;
+
+// // case 48:
+// // 	// Dagger (RK, Shadow Chaser, etc - BaseASPD=48)
+// // 	// Shura Staff also uses this
+// // 	// Formula: ASPD = 146 + floor(sqrt(AGI) * 2.98) [Dagger]
+// // 	//          148 + floor(sqrt(AGI) * 2.56) [Shura Staff]
+// // 	// Using Dagger formula
+// // 	aspd_base_value = 194.0f;  // 146 + 48
+// // 	aspd_multiplier = 2.98f;
+// // 	break;
+
+// // case 50:
+// // 	// RK Axe/Sword (BaseASPD=50)
+// // 	// Formula: ASPD = 144 + floor(sqrt(AGI) * 2.98)
+// // 	// Precision: 68% base + corrections
+// // 	aspd_base_value = 194.0f;  // 144 + 50
+// // 	aspd_multiplier = 2.98f;
+// // 	break;
+
+// // case 55:
+// // 	// RK 2H Sword (BaseASPD=55)
+// // 	// Formula: ASPD = 141 + floor(sqrt(AGI) * 2.98)
+// // 	aspd_base_value = 196.0f;  // 141 + 55
+// // 	aspd_multiplier = 2.98f;
+// // 	break;
+
+// // case 57:
+// // 	// RK 2H Spear (BaseASPD=57)
+// // 	// Formula: ASPD = 140 + floor(sqrt(AGI) * 2.73)
+// // 	aspd_base_value = 197.0f;  // 140 + 57
+// // 	aspd_multiplier = 2.73f;
+// // 	break;
+
+// // case 59:
+// // 	// RK Spear (BaseASPD=59)
+// // 	// Formula: ASPD = 140 + floor(sqrt(AGI) * 2.51)
+// // 	aspd_base_value = 199.0f;  // 140 + 59
+// // 	aspd_multiplier = 2.51f;
+// // 	break;
+	
+// // default:
+// // 	// Fallback: use BaseASPD=40 parameters (most common and most accurate)
+// // 	aspd_base_value = 194.0f;
+// // 	aspd_multiplier = 2.54f;
+// // 	break;
+// // }
+
+// // // Official formula: temp_aspd = (base + BaseASPD) + sqrt(AGI) * k
+// // // The subtraction below will remove BaseASPD, resulting in: ASPD = base + sqrt(AGI) * k
+// // temp_aspd = aspd_base_value + sqrtf((float)status->agi) * aspd_multiplier;
+
+// // // ============================================================================
+// // // B�NUS DE DEX PARA ARMAS MELEE
+// // // ============================================================================
+// // // DEX has minimal effect on melee ASPD (+1 ASPD when DEX is high enough)
+// // // Approximate threshold: DEX >= 79
+// // switch (sd->status.weapon)
+// // {
+// // case W_BOW:
+// // case W_MUSICAL:
+// // case W_WHIP:
+// // case W_REVOLVER:
+// // case W_RIFLE:
+// // case W_GATLING:
+// // case W_SHOTGUN:
+// // case W_GRENADE:
+// // 	// Ranged weapons already have DEX in the formula above
+// // 	break;
+// // default:
+// // 	// Melee weapons: small DEX bonus
+// // 	if (status->dex >= 79)
+// // 		temp_aspd += 1.0f;
+// // 	break;
+// // }
+// // // ============================================================================
+
+// // // Manual corrections for 100% accuracy by weapon type
+// // // SHURA CORRECTIONS
+// // if (weapon_base_aspd == 39) {  // Shura Knuckle
+// // 	// 6 corrections for 100% accuracy
+// // 	if (status->agi == 32 || status->agi == 37 || status->agi == 42 || 
+// // 	    status->agi == 47 || status->agi == 52 || status->agi == 53)
+// // 		temp_aspd += 1.0f;
+// // }
+// // else if (weapon_base_aspd == 43) {  // Mace (using Shura formula)
+// // 	// Shura Mace corrections (6 corrections)
+// // 	if (status->agi == 39 || status->agi == 44 || status->agi == 49 || 
+// // 	    status->agi == 54 || status->agi == 55 || status->agi == 108)
+// // 		temp_aspd += 1.0f;
+// // }
+// // else if (weapon_base_aspd == 48) {
+// // 	// Check if it's Shura Staff or other dagger
+// // 	// Shura Staff needs extensive corrections (28 AGIs)
+// // 	// For simplicity, applying Shura Staff corrections
+// // 	// Correction +1 for specific AGI ranges
+// // 	if (status->agi == 25 || (status->agi >= 31 && status->agi <= 38) || 
+// // 	    (status->agi >= 40 && status->agi <= 42) || (status->agi >= 45 && status->agi <= 47) || 
+// // 	    (status->agi >= 50 && status->agi <= 51) || status->agi == 56)
+// // 		temp_aspd += 1.0f;
+	
+// // 	// Correction +2 for specific AGI ranges
+// // 	if (status->agi == 39 || (status->agi >= 43 && status->agi <= 44) || 
+// // 	    (status->agi >= 48 && status->agi <= 49) || (status->agi >= 52 && status->agi <= 55))
+// // 		temp_aspd += 2.0f;
+	
+// // 	// Correction +3 for very high AGI
+// // 	if (status->agi == 108)
+// // 		temp_aspd += 3.0f;
+	
+// // 	// RK Dagger corrections (-1 for specific AGIs)
+// // 	// These conflict with Shura corrections above, might need class detection
+// // 	// Commenting out for now - TODO: add class detection
+// // 	/*
+// // 	if (status->agi == 5) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 51 && status->agi <= 52) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 55 && status->agi <= 56) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 60 && status->agi <= 61) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 65 && status->agi <= 66) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 71 && status->agi <= 72) temp_aspd -= 1.0f;
+// // 	if (status->agi == 77) temp_aspd -= 1.0f;
+// // 	if (status->agi == 83) temp_aspd -= 1.0f;
+// // 	if (status->agi == 89) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 95 && status->agi <= 96) temp_aspd -= 1.0f;
+// // 	*/
+// // }
+
+// // // RUNE KNIGHT CORRECTIONS
+// // if (weapon_base_aspd == 40) {  // RK Fist
+// // 	// 3 corrections for 94% ? 100% accuracy
+// // 	if (status->agi == 82) temp_aspd -= 1.0f;
+// // 	if (status->agi == 62 || status->agi == 75) temp_aspd += 1.0f;
+// // }
+// // else if (weapon_base_aspd == 50) {  // RK Axe/Sword
+// // 	// 15 corrections for 68% ? 100% accuracy
+// // 	if (status->agi == 5) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 51 && status->agi <= 52) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 55 && status->agi <= 56) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 60 && status->agi <= 61) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 65 && status->agi <= 66) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 71 && status->agi <= 72) temp_aspd -= 1.0f;
+// // 	if (status->agi == 77) temp_aspd -= 1.0f;
+// // 	if (status->agi == 83) temp_aspd -= 1.0f;
+// // 	if (status->agi == 89) temp_aspd -= 1.0f;
+// // 	if (status->agi == 95) temp_aspd -= 1.0f;
+// // }
+// // else if (weapon_base_aspd == 55) {  // RK 2H Sword
+// // 	// Same corrections as Axe/Sword
+// // 	if (status->agi == 5) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 51 && status->agi <= 52) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 55 && status->agi <= 56) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 60 && status->agi <= 61) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 65 && status->agi <= 66) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 71 && status->agi <= 72) temp_aspd -= 1.0f;
+// // 	if (status->agi == 77) temp_aspd -= 1.0f;
+// // 	if (status->agi == 83) temp_aspd -= 1.0f;
+// // 	if (status->agi == 89) temp_aspd -= 1.0f;
+// // 	if (status->agi == 95) temp_aspd -= 1.0f;
+// // }
+// // else if (weapon_base_aspd == 57) {  // RK 2H Spear
+// // 	// 14 corrections
+// // 	if (status->agi == 5) temp_aspd -= 3.0f;
+// // 	if (status->agi >= 51 && status->agi <= 52) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 54 && status->agi <= 56) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 60 && status->agi <= 61) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 65 && status->agi <= 66) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 71 && status->agi <= 72) temp_aspd -= 1.0f;
+// // 	if (status->agi == 90) temp_aspd += 1.0f;
+// // 	if (status->agi == 96) temp_aspd += 1.0f;
+// // }
+// // else if (weapon_base_aspd == 59) {  // RK Spear
+// // 	// 21 corrections
+// // 	if (status->agi == 5) temp_aspd -= 4.0f;
+// // 	if (status->agi == 52) temp_aspd -= 2.0f;
+// // 	if (status->agi == 51) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 53 && status->agi <= 56) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 58 && status->agi <= 61) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 64 && status->agi <= 66) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 70 && status->agi <= 72) temp_aspd -= 1.0f;
+// // 	if (status->agi == 77) temp_aspd -= 1.0f;
+// // 	if (status->agi >= 90 && status->agi <= 91) temp_aspd += 1.0f;
+// // 	if (status->agi == 96) temp_aspd += 1.0f;
+// // }
+
+// // // Skill bonuses
+// // if ((skill_lv = pc_checkskill(sd, SA_ADVANCEDBOOK)) > 0 && sd->status.weapon == W_BOOK)
+// // 	val += (skill_lv - 1) / 2 + 1;
+// // if ((skill_lv = pc_checkskill(sd, SG_DEVIL)) > 0 && ((sd->class_ & MAPID_THIRDMASK) == MAPID_STAR_EMPEROR || pc_is_maxjoblv(sd)))
+// // 	val += 1 + skill_lv;
+// // if ((skill_lv = pc_checkskill(sd, GS_SINGLEACTION)) > 0 && (sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE))
+// // 	val += ((skill_lv + 1) / 2);
+
+// // // Riding penalties
+// // if (pc_isriding(sd))
+// // 	val -= 50 - 10 * pc_checkskill(sd, KN_CAVALIERMASTERY);
+// // else if (pc_isridingdragon(sd))
+// // 	val -= 25 - 5 * pc_checkskill(sd, RK_DRAGONTRAINING);
+
+// // // ============================================================================
+// // // Calculate final ASPD - CORRIGIDO PARA BERSERK POTION
+// // // ============================================================================
+// // // MUDAN�A CR�TICA: Separar consum�veis de skills
+// // // Consum�veis (Berserk Potion, etc): bonus = floor(val * BaseASPD / 70)
+// // // Skills: bonus = val * AGI / 200 (mant�m comportamento original)
+
+// // int32 consumable_bonus = status_calc_aspd(sd, &sd->sc, true);  // Berserk Potion, Cell Juice, etc
+// // int32 skill_bonus = val;  // Skills, riding penalties, etc
+
+// // // Consum�veis: bonus = floor(val * BaseASPD / 70)
+// // // 'aspd' aqui cont�m o BaseASPD da arma
+// // float consumable_aspd = (float)consumable_bonus * aspd / 70.0f;
+
+// // // Skills: manter f�rmula original (multiplica por AGI/200)
+// // float skill_aspd = (float)skill_bonus * status->agi / 200.0f;
+
+// // aspd = ((int32)(temp_aspd + consumable_aspd + skill_aspd) - min(aspd, 200));
+// // // ============================================================================
+
+// // // Apply shield penalty: -5 ASPD (fixed reduction at the end)
+// // if (sd->status.shield)
+// // 	aspd -= 5;
+
+// // return aspd;
+// //vers�o 14/12/2025 20h
 // int32 aspd = job->aspd_base[sd->weapontype1]; // Single weapon = BaseASPD da arma
 
 // // Shield: DO NOT add to BaseASPD - penalty will be applied at the end
@@ -3082,378 +3465,94 @@ int32 status_base_amotion_pc(map_session_data *sd, struct status_data *status)
 // 	val -= 25 - 5 * pc_checkskill(sd, RK_DRAGONTRAINING);
 
 // // ============================================================================
-// // Calculate final ASPD - CORRIGIDO PARA BERSERK POTION
+// // Calculate final ASPD - CORRIGIDO PARA CONSUM�VEIS, QUICKEN E SWING DANCE
 // // ============================================================================
-// // MUDAN�A CR�TICA: Separar consum�veis de skills
-// // Consum�veis (Berserk Potion, etc): bonus = floor(val * BaseASPD / 70)
-// // Skills: bonus = val * AGI / 200 (mant�m comportamento original)
+// // SEPARA��O EM 4 TIPOS DE BONUS:
+// // 1. Quicken Skills (Two Hand Quicken, etc): bonus = floor((200 - AGI) / 10.5)
+// // 2. Swing Dance e Ensemble: bonus = floor((200 - AGI) / 13)
+// // 3. Consum�veis (Berserk Potion, etc): bonus = floor(val * BaseASPD / 70)
+// // 4. Skills normais: bonus = val * AGI / 200 (mant�m comportamento original)
 
-// int32 consumable_bonus = status_calc_aspd(sd, &sd->sc, true);  // Berserk Potion, Cell Juice, etc
+// int32 consumable_bonus = status_calc_aspd(sd, &sd->sc, true);  // Berserk Potion, Two Hand Quicken, Swing Dance, etc
 // int32 skill_bonus = val;  // Skills, riding penalties, etc
 
-// // Consum�veis: bonus = floor(val * BaseASPD / 70)
-// // 'aspd' aqui cont�m o BaseASPD da arma
-// float consumable_aspd = (float)consumable_bonus * aspd / 70.0f;
+// // Separar Quicken skills, Swing Dance e consum�veis
+// // Quicken skills retornam valores espec�ficos (5-7)
+// // Swing Dance retorna val3 = 3*skill_lv + WM_LESSON_lv (tipicamente 15-30)
+// // Consum�veis retornam val1 do item (ex: 9 para Berserk Potion)
 
-// // Skills: manter f�rmula original (multiplica por AGI/200)
+// float quicken_aspd = 0.0f;
+// float swing_aspd = 0.0f;
+// float consumable_aspd = 0.0f;
+
+// // Detectar tipo de bonus
+// if (consumable_bonus > 0) {
+// 	if (consumable_bonus >= 5 && consumable_bonus <= 7) {
+// 		// Quicken skills: Two Hand Quicken (7), Adrenaline2 (6), Fleet (5)
+// 		// Formula descoberta: bonus = floor((200 - AGI) / 10.5)
+// 		// O bonus DIMINUI conforme AGI aumenta (AGI=5 ? 18, AGI=86 ? 10)
+// 		quicken_aspd = floorf((200.0f - status->agi) / 10.5f);
+// 	}
+// 	else if (consumable_bonus >= 8 && consumable_bonus <= 30) {
+// 		// Swing Dance e outros Ensemble skills
+// 		// val3 = 3*skill_lv + WM_LESSON_lv (tipicamente 15-30)
+// 		// Formula descoberta: bonus = floor(val3 * BaseASPD / 88)
+// 		// Similar aos consum�veis mas com divisor 88 em vez de 70
+// 		swing_aspd = (float)consumable_bonus * aspd / 88.0f;
+// 	}
+// 	else {
+// 		// Consum�veis: Berserk Potion (9), Cell Juice (10), etc
+// 		// Formula: bonus = floor(val * BaseASPD / 70)
+// 		consumable_aspd = (float)consumable_bonus * aspd / 70.0f;
+// 	}
+// }
+
+// // Skills normais: bonus = val * AGI / 200 (mant�m comportamento original)
 // float skill_aspd = (float)skill_bonus * status->agi / 200.0f;
 
-// aspd = ((int32)(temp_aspd + consumable_aspd + skill_aspd) - min(aspd, 200));
+// aspd = ((int32)(temp_aspd + quicken_aspd + swing_aspd + consumable_aspd + skill_aspd) - min(aspd, 200));
 // // ============================================================================
+
 
 // // Apply shield penalty: -5 ASPD (fixed reduction at the end)
 // if (sd->status.shield)
 // 	aspd -= 5;
 
 // return aspd;
-//vers�o 14/12/2025 20h
-int32 aspd = job->aspd_base[sd->weapontype1]; // Single weapon = BaseASPD da arma
+// //fim de custom
+// #else
+// 	if (job == nullptr)
+// 		return AMOTION_ZERO_ASPD;
 
-// Shield: DO NOT add to BaseASPD - penalty will be applied at the end
-// Dual-wield
-if (sd->weapontype2 != W_FIST && sd->equip_index[EQI_HAND_R] != sd->equip_index[EQI_HAND_L])
-	aspd += job->aspd_base[sd->weapontype2] / 4;
+// 	// Base weapon delay
+// 	int32 amotion = (sd->status.weapon < MAX_WEAPON_TYPE)
+// 						? (job->aspd_base[sd->status.weapon])											// Single weapon
+// 						: (job->aspd_base[sd->weapontype1] + job->aspd_base[sd->weapontype2]) * 7 / 10; // Dual-wield
 
-switch (sd->status.weapon)
-{
-case W_BOW:
-case W_MUSICAL:
-case W_WHIP:
-case W_REVOLVER:
-case W_RIFLE:
-case W_GATLING:
-case W_SHOTGUN:
-case W_GRENADE:
-	// Ranged weapons: DEX affects ASPD (official behavior)
-	temp_aspd = status->dex * status->dex / 7.0f + status->agi * status->agi * 0.5f;
-	break;
-default:
-	// Melee weapons: Only AGI affects ASPD primarily
-	// DEX has MINIMAL effect (discovered from Sakray testing)
-	temp_aspd = status->agi * status->agi * 0.5f;
-	break;
-}
+// 	// Percentual delay reduction from stats
+// 	amotion -= amotion * (4 * status->agi + status->dex) / 1000;
 
-// Official formula discovered: ASPD = base + floor(sqrt(AGI) * k)
-// Parameters (base, k) vary based on weapon's BaseASPD
-float aspd_base_value, aspd_multiplier;
-
-// Get the base ASPD value of the weapon (calculated above)
-int32 weapon_base_aspd = aspd;
-
-// Select parameters based on weapon's BaseASPD
-// Each weapon type has its own optimized parameters for maximum accuracy
-switch (weapon_base_aspd) {
-case 35:
-	// Shura/Monk Fist (W_FIST, BaseASPD=35)
-	// Formula: ASPD = 156 + floor(sqrt(AGI) * 2.42)
-	// Precision: 100% (32/32)
-	aspd_base_value = 191.0f;  // 156 + 35
-	aspd_multiplier = 2.42f;
-	break;
-
-case 39:
-	// Shura/Monk Knuckle (W_KNUCKLE, BaseASPD=39)
-	// Formula: ASPD = 155 + floor(sqrt(AGI) * 2.46)
-	// Precision: 100% (32/32 with 6 corrections)
-	aspd_base_value = 194.0f;  // 155 + 39
-	aspd_multiplier = 2.46f;
-	break;
-	
-case 40:
-	// Most common weapons (Sorcerer, RK, Ranger, Shadow Chaser, Royal Guard, etc)
-	// Formula: ASPD = 154 + floor(sqrt(AGI) * 2.54)
-	// Precision: 100% (tested on multiple classes)
-	aspd_base_value = 194.0f;  // 154 + 40
-	aspd_multiplier = 2.54f;
-	break;
-
-case 43:
-	// Shura/RK Mace (W_MACE, BaseASPD=43)
-	// Formula: ASPD = 152 + floor(sqrt(AGI) * 2.56) [Shura]
-	//          149 + floor(sqrt(AGI) * 2.86) [RK]
-	// Using RK formula for better compatibility
-	aspd_base_value = 192.0f;  // 149 + 43
-	aspd_multiplier = 2.86f;
-	break;
-	
-case 45:
-	// Arch Bishop/Priest main weapons (BaseASPD=45)
-	// Formula: ASPD = 149 + floor(sqrt(AGI) * 2.86)
-	// Precision: 100% (41/41)
-	aspd_base_value = 194.0f;  // 149 + 45
-	aspd_multiplier = 2.86f;
-	break;
-
-case 48:
-	// Dagger (RK, Shadow Chaser, etc - BaseASPD=48)
-	// Shura Staff also uses this
-	// Formula: ASPD = 146 + floor(sqrt(AGI) * 2.98) [Dagger]
-	//          148 + floor(sqrt(AGI) * 2.56) [Shura Staff]
-	// Using Dagger formula
-	aspd_base_value = 194.0f;  // 146 + 48
-	aspd_multiplier = 2.98f;
-	break;
-
-case 50:
-	// RK Axe/Sword (BaseASPD=50)
-	// Formula: ASPD = 144 + floor(sqrt(AGI) * 2.98)
-	// Precision: 68% base + corrections
-	aspd_base_value = 194.0f;  // 144 + 50
-	aspd_multiplier = 2.98f;
-	break;
-
-case 55:
-	// RK 2H Sword (BaseASPD=55)
-	// Formula: ASPD = 141 + floor(sqrt(AGI) * 2.98)
-	aspd_base_value = 196.0f;  // 141 + 55
-	aspd_multiplier = 2.98f;
-	break;
-
-case 57:
-	// RK 2H Spear (BaseASPD=57)
-	// Formula: ASPD = 140 + floor(sqrt(AGI) * 2.73)
-	aspd_base_value = 197.0f;  // 140 + 57
-	aspd_multiplier = 2.73f;
-	break;
-
-case 59:
-	// RK Spear (BaseASPD=59)
-	// Formula: ASPD = 140 + floor(sqrt(AGI) * 2.51)
-	aspd_base_value = 199.0f;  // 140 + 59
-	aspd_multiplier = 2.51f;
-	break;
-	
-default:
-	// Fallback: use BaseASPD=40 parameters (most common and most accurate)
-	aspd_base_value = 194.0f;
-	aspd_multiplier = 2.54f;
-	break;
-}
-
-// Official formula: temp_aspd = (base + BaseASPD) + sqrt(AGI) * k
-// The subtraction below will remove BaseASPD, resulting in: ASPD = base + sqrt(AGI) * k
-temp_aspd = aspd_base_value + sqrtf((float)status->agi) * aspd_multiplier;
-
-// ============================================================================
-// B�NUS DE DEX PARA ARMAS MELEE
-// ============================================================================
-// DEX has minimal effect on melee ASPD (+1 ASPD when DEX is high enough)
-// Approximate threshold: DEX >= 79
-switch (sd->status.weapon)
-{
-case W_BOW:
-case W_MUSICAL:
-case W_WHIP:
-case W_REVOLVER:
-case W_RIFLE:
-case W_GATLING:
-case W_SHOTGUN:
-case W_GRENADE:
-	// Ranged weapons already have DEX in the formula above
-	break;
-default:
-	// Melee weapons: small DEX bonus
-	if (status->dex >= 79)
-		temp_aspd += 1.0f;
-	break;
-}
-// ============================================================================
-
-// Manual corrections for 100% accuracy by weapon type
-// SHURA CORRECTIONS
-if (weapon_base_aspd == 39) {  // Shura Knuckle
-	// 6 corrections for 100% accuracy
-	if (status->agi == 32 || status->agi == 37 || status->agi == 42 || 
-	    status->agi == 47 || status->agi == 52 || status->agi == 53)
-		temp_aspd += 1.0f;
-}
-else if (weapon_base_aspd == 43) {  // Mace (using Shura formula)
-	// Shura Mace corrections (6 corrections)
-	if (status->agi == 39 || status->agi == 44 || status->agi == 49 || 
-	    status->agi == 54 || status->agi == 55 || status->agi == 108)
-		temp_aspd += 1.0f;
-}
-else if (weapon_base_aspd == 48) {
-	// Check if it's Shura Staff or other dagger
-	// Shura Staff needs extensive corrections (28 AGIs)
-	// For simplicity, applying Shura Staff corrections
-	// Correction +1 for specific AGI ranges
-	if (status->agi == 25 || (status->agi >= 31 && status->agi <= 38) || 
-	    (status->agi >= 40 && status->agi <= 42) || (status->agi >= 45 && status->agi <= 47) || 
-	    (status->agi >= 50 && status->agi <= 51) || status->agi == 56)
-		temp_aspd += 1.0f;
-	
-	// Correction +2 for specific AGI ranges
-	if (status->agi == 39 || (status->agi >= 43 && status->agi <= 44) || 
-	    (status->agi >= 48 && status->agi <= 49) || (status->agi >= 52 && status->agi <= 55))
-		temp_aspd += 2.0f;
-	
-	// Correction +3 for very high AGI
-	if (status->agi == 108)
-		temp_aspd += 3.0f;
-	
-	// RK Dagger corrections (-1 for specific AGIs)
-	// These conflict with Shura corrections above, might need class detection
-	// Commenting out for now - TODO: add class detection
-	/*
-	if (status->agi == 5) temp_aspd -= 1.0f;
-	if (status->agi >= 51 && status->agi <= 52) temp_aspd -= 1.0f;
-	if (status->agi >= 55 && status->agi <= 56) temp_aspd -= 1.0f;
-	if (status->agi >= 60 && status->agi <= 61) temp_aspd -= 1.0f;
-	if (status->agi >= 65 && status->agi <= 66) temp_aspd -= 1.0f;
-	if (status->agi >= 71 && status->agi <= 72) temp_aspd -= 1.0f;
-	if (status->agi == 77) temp_aspd -= 1.0f;
-	if (status->agi == 83) temp_aspd -= 1.0f;
-	if (status->agi == 89) temp_aspd -= 1.0f;
-	if (status->agi >= 95 && status->agi <= 96) temp_aspd -= 1.0f;
-	*/
-}
-
-// RUNE KNIGHT CORRECTIONS
-if (weapon_base_aspd == 40) {  // RK Fist
-	// 3 corrections for 94% ? 100% accuracy
-	if (status->agi == 82) temp_aspd -= 1.0f;
-	if (status->agi == 62 || status->agi == 75) temp_aspd += 1.0f;
-}
-else if (weapon_base_aspd == 50) {  // RK Axe/Sword
-	// 15 corrections for 68% ? 100% accuracy
-	if (status->agi == 5) temp_aspd -= 1.0f;
-	if (status->agi >= 51 && status->agi <= 52) temp_aspd -= 1.0f;
-	if (status->agi >= 55 && status->agi <= 56) temp_aspd -= 1.0f;
-	if (status->agi >= 60 && status->agi <= 61) temp_aspd -= 1.0f;
-	if (status->agi >= 65 && status->agi <= 66) temp_aspd -= 1.0f;
-	if (status->agi >= 71 && status->agi <= 72) temp_aspd -= 1.0f;
-	if (status->agi == 77) temp_aspd -= 1.0f;
-	if (status->agi == 83) temp_aspd -= 1.0f;
-	if (status->agi == 89) temp_aspd -= 1.0f;
-	if (status->agi == 95) temp_aspd -= 1.0f;
-}
-else if (weapon_base_aspd == 55) {  // RK 2H Sword
-	// Same corrections as Axe/Sword
-	if (status->agi == 5) temp_aspd -= 1.0f;
-	if (status->agi >= 51 && status->agi <= 52) temp_aspd -= 1.0f;
-	if (status->agi >= 55 && status->agi <= 56) temp_aspd -= 1.0f;
-	if (status->agi >= 60 && status->agi <= 61) temp_aspd -= 1.0f;
-	if (status->agi >= 65 && status->agi <= 66) temp_aspd -= 1.0f;
-	if (status->agi >= 71 && status->agi <= 72) temp_aspd -= 1.0f;
-	if (status->agi == 77) temp_aspd -= 1.0f;
-	if (status->agi == 83) temp_aspd -= 1.0f;
-	if (status->agi == 89) temp_aspd -= 1.0f;
-	if (status->agi == 95) temp_aspd -= 1.0f;
-}
-else if (weapon_base_aspd == 57) {  // RK 2H Spear
-	// 14 corrections
-	if (status->agi == 5) temp_aspd -= 3.0f;
-	if (status->agi >= 51 && status->agi <= 52) temp_aspd -= 1.0f;
-	if (status->agi >= 54 && status->agi <= 56) temp_aspd -= 1.0f;
-	if (status->agi >= 60 && status->agi <= 61) temp_aspd -= 1.0f;
-	if (status->agi >= 65 && status->agi <= 66) temp_aspd -= 1.0f;
-	if (status->agi >= 71 && status->agi <= 72) temp_aspd -= 1.0f;
-	if (status->agi == 90) temp_aspd += 1.0f;
-	if (status->agi == 96) temp_aspd += 1.0f;
-}
-else if (weapon_base_aspd == 59) {  // RK Spear
-	// 21 corrections
-	if (status->agi == 5) temp_aspd -= 4.0f;
-	if (status->agi == 52) temp_aspd -= 2.0f;
-	if (status->agi == 51) temp_aspd -= 1.0f;
-	if (status->agi >= 53 && status->agi <= 56) temp_aspd -= 1.0f;
-	if (status->agi >= 58 && status->agi <= 61) temp_aspd -= 1.0f;
-	if (status->agi >= 64 && status->agi <= 66) temp_aspd -= 1.0f;
-	if (status->agi >= 70 && status->agi <= 72) temp_aspd -= 1.0f;
-	if (status->agi == 77) temp_aspd -= 1.0f;
-	if (status->agi >= 90 && status->agi <= 91) temp_aspd += 1.0f;
-	if (status->agi == 96) temp_aspd += 1.0f;
-}
-
-// Skill bonuses
-if ((skill_lv = pc_checkskill(sd, SA_ADVANCEDBOOK)) > 0 && sd->status.weapon == W_BOOK)
-	val += (skill_lv - 1) / 2 + 1;
-if ((skill_lv = pc_checkskill(sd, SG_DEVIL)) > 0 && ((sd->class_ & MAPID_THIRDMASK) == MAPID_STAR_EMPEROR || pc_is_maxjoblv(sd)))
-	val += 1 + skill_lv;
-if ((skill_lv = pc_checkskill(sd, GS_SINGLEACTION)) > 0 && (sd->status.weapon >= W_REVOLVER && sd->status.weapon <= W_GRENADE))
-	val += ((skill_lv + 1) / 2);
-
-// Riding penalties
-if (pc_isriding(sd))
-	val -= 50 - 10 * pc_checkskill(sd, KN_CAVALIERMASTERY);
-else if (pc_isridingdragon(sd))
-	val -= 25 - 5 * pc_checkskill(sd, RK_DRAGONTRAINING);
-
-// ============================================================================
-// Calculate final ASPD - CORRIGIDO PARA CONSUM�VEIS, QUICKEN E SWING DANCE
-// ============================================================================
-// SEPARA��O EM 4 TIPOS DE BONUS:
-// 1. Quicken Skills (Two Hand Quicken, etc): bonus = floor((200 - AGI) / 10.5)
-// 2. Swing Dance e Ensemble: bonus = floor((200 - AGI) / 13)
-// 3. Consum�veis (Berserk Potion, etc): bonus = floor(val * BaseASPD / 70)
-// 4. Skills normais: bonus = val * AGI / 200 (mant�m comportamento original)
-
-int32 consumable_bonus = status_calc_aspd(sd, &sd->sc, true);  // Berserk Potion, Two Hand Quicken, Swing Dance, etc
-int32 skill_bonus = val;  // Skills, riding penalties, etc
-
-// Separar Quicken skills, Swing Dance e consum�veis
-// Quicken skills retornam valores espec�ficos (5-7)
-// Swing Dance retorna val3 = 3*skill_lv + WM_LESSON_lv (tipicamente 15-30)
-// Consum�veis retornam val1 do item (ex: 9 para Berserk Potion)
-
-float quicken_aspd = 0.0f;
-float swing_aspd = 0.0f;
-float consumable_aspd = 0.0f;
-
-// Detectar tipo de bonus
-if (consumable_bonus > 0) {
-	if (consumable_bonus >= 5 && consumable_bonus <= 7) {
-		// Quicken skills: Two Hand Quicken (7), Adrenaline2 (6), Fleet (5)
-		// Formula descoberta: bonus = floor((200 - AGI) / 10.5)
-		// O bonus DIMINUI conforme AGI aumenta (AGI=5 ? 18, AGI=86 ? 10)
-		quicken_aspd = floorf((200.0f - status->agi) / 10.5f);
-	}
-	else if (consumable_bonus >= 8 && consumable_bonus <= 30) {
-		// Swing Dance e outros Ensemble skills
-		// val3 = 3*skill_lv + WM_LESSON_lv (tipicamente 15-30)
-		// Formula descoberta: bonus = floor(val3 * BaseASPD / 88)
-		// Similar aos consum�veis mas com divisor 88 em vez de 70
-		swing_aspd = (float)consumable_bonus * aspd / 88.0f;
-	}
-	else {
-		// Consum�veis: Berserk Potion (9), Cell Juice (10), etc
-		// Formula: bonus = floor(val * BaseASPD / 70)
-		consumable_aspd = (float)consumable_bonus * aspd / 70.0f;
-	}
-}
-
-// Skills normais: bonus = val * AGI / 200 (mant�m comportamento original)
-float skill_aspd = (float)skill_bonus * status->agi / 200.0f;
-
-aspd = ((int32)(temp_aspd + quicken_aspd + swing_aspd + consumable_aspd + skill_aspd) - min(aspd, 200));
-// ============================================================================
-
-
-// Apply shield penalty: -5 ASPD (fixed reduction at the end)
-if (sd->status.shield)
-	aspd -= 5;
-
-return aspd;
-//fim de custom
-#else
-	if (job == nullptr)
-		return AMOTION_ZERO_ASPD;
-
-	// Base weapon delay
-	int32 amotion = (sd->status.weapon < MAX_WEAPON_TYPE)
-						? (job->aspd_base[sd->status.weapon])											// Single weapon
-						: (job->aspd_base[sd->weapontype1] + job->aspd_base[sd->weapontype2]) * 7 / 10; // Dual-wield
-
-	// Percentual delay reduction from stats
-	amotion -= amotion * (4 * status->agi + status->dex) / 1000;
-
-	// Raw delay adjustment from bAspd bonus
-	amotion += sd->bonus.aspd_add;
-	return amotion;
-#endif
-}
+// 	// Raw delay adjustment from bAspd bonus
+// 	amotion += sd->bonus.aspd_add;
+// 	return amotion;
+// #endif
+// }
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 /**
  * Base attack value calculated for units
@@ -8114,7 +8213,9 @@ void status_calc_bl_main(struct block_list &bl, std::bitset<SCB_MAX> flag)
 			amotion += sd->bonus.aspd_add;
 			// SWING_DANCE: Adiciona +1 ASPD final (al�m do c�lculo normal val3)
 			if (sc && sc->getSCE(SC_SWINGDANCE))
-			amotion -= 10; // -10 amotion = +1 ASPD extra
+			amotion -= 50; // -20 amotion = +1 ASPD extra
+		//			amotion -= 10; // -10 amotion = +1 ASPD extra
+
 #endif
 			amotion = status_calc_fix_aspd(&bl, sc, amotion);
 			status->amotion = cap_value(amotion, pc_maxaspd(sd) / AMOTION_DIVIDER_PC, MIN_ASPD / AMOTION_DIVIDER_PC);
@@ -11660,7 +11761,7 @@ t_tick status_get_sc_def(block_list *src, block_list *bl, sc_type type, int32 ra
 		tick_def2 = 1000 * ((status->luk / 2 + status->agi / 5) / 2); // (50 * LUK / 100 + 20 * AGI / 100) / 2
 		break;
 	case SC_DEEPSLEEP:
-		tick_def2 = status_get_base_status(bl)->int_ * 25 + status_get_lv(bl) * 50;
+		tick_def2 = status_get_base_status(bl)->int_ * 20 + status_get_lv(bl) * 50;
 		break;
 	case SC_NETHERWORLD:
 		// Resistance: {(Target's Base Level / 50) + (Target's Job Level / 10)} seconds
@@ -11699,12 +11800,13 @@ t_tick status_get_sc_def(block_list *src, block_list *bl, sc_type type, int32 ra
 		break;
 	case SC_TOXIN:
 	case SC_PARALYSE:
-	case SC_VENOMBLEED:
 	case SC_MAGICMUSHROOM:
 	case SC_DEATHHURT:
 	case SC_PYREXIA:
 	case SC_LEECHESEND:
 		tick_def2 = (status->vit + status->luk) * 500;
+		break;
+	case SC_VENOMBLEED:
 		break;
 	case SC_BITE: // {(Base Success chance) - (Target's AGI / 4)}
 		sc_def2 = status->agi * 25;
@@ -12627,7 +12729,14 @@ static bool status_change_start_post_delay(block_list *src, block_list *bl, sc_t
 			if ((type == SC_FREEZE && opt1_type == SC_DEEPSLEEP) ||
 			    (type == SC_DEEPSLEEP && opt1_type == SC_FREEZE))
 				continue; // Don't remove these status when the other is applied
-
+			// Allow Deepsleep and Stone to coexist
+			if ((type == SC_DEEPSLEEP && opt1_type == SC_STONE) ||
+			    (type == SC_STONE && opt1_type == SC_DEEPSLEEP))
+				continue;
+			// Allow Stonewait and Deepsleep to coexist
+			if ((type == SC_STONEWAIT && opt1_type == SC_DEEPSLEEP) ||
+			    (type == SC_DEEPSLEEP && opt1_type == SC_STONEWAIT))
+				continue;
 			if (sc->getSCE(opt1_type) && status_it.second->opt1 > OPT1_NONE)
 				status_change_end(bl, opt1_type);
 		}
@@ -16572,8 +16681,39 @@ int32 status_change_end(struct block_list *bl, enum sc_type type, int32 tid)
 		break;
 	}
 
-	if (scdb->opt1)
-		sc->opt1 = OPT1_NONE;
+if (scdb->opt1)
+	{
+		// Check if another coexisting OPT1 status is still active and restore its opt1
+		uint16 remaining_opt1 = OPT1_NONE;
+
+		if (type == SC_DEEPSLEEP || type == SC_STONE || type == SC_STONEWAIT || type == SC_FREEZE)
+		{
+			// List of status pairs that can coexist
+			struct { sc_type a; sc_type b; } coexist_pairs[] = {
+				{ SC_FREEZE, SC_DEEPSLEEP },
+				{ SC_DEEPSLEEP, SC_FREEZE },
+				{ SC_STONE, SC_DEEPSLEEP },
+				{ SC_DEEPSLEEP, SC_STONE },
+				{ SC_STONEWAIT, SC_DEEPSLEEP },
+				{ SC_DEEPSLEEP, SC_STONEWAIT },
+			};
+
+			for (const auto &pair : coexist_pairs)
+			{
+				if (type == pair.a && sc->getSCE(pair.b))
+				{
+					std::shared_ptr<s_status_change_db> other_scdb = status_db.find(pair.b);
+					if (other_scdb && other_scdb->opt1 > OPT1_NONE)
+					{
+						remaining_opt1 = other_scdb->opt1;
+						break;
+					}
+				}
+			}
+		}
+
+		sc->opt1 = remaining_opt1;
+	}
 
 	if (scdb->opt2)
 		sc->opt2 &= ~scdb->opt2;

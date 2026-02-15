@@ -25,8 +25,8 @@ izlude,121,143,6	script	Blue Team	683,{
 
     set .@guild_id, getcharid(2);
     if ( (getguildmasterid(.@guild_id)) == (getcharid(0)) ){
-        $@jogadoresblue1 = 2; // Número de jogadores necessários por time (7x7)
-        if ($@jogadoresblue1 < 2){
+        $@jogadoresblue1 = 7; // Número de jogadores necessários por time (7x7)
+        if ($@jogadoresblue1 < 7){
             mes "Eu sei que pessoas decentes não querem se associar com um resto de aborto que nem você, mas para prosseguir você precisa de ^ff00007 players^000000 na sua guild.";
             cutin "", 255;
             close;

@@ -23428,7 +23428,7 @@ Body:
       Name: SC_SHADOWFORM
       Description: Shadow Form
       MaxLevel: 5
-      TargetType: Attack
+      TargetType: Support
       DamageFlags:
           NoDamage: true
       Flags:
@@ -26352,15 +26352,15 @@ Body:
             Time: 17000
       Duration2:
           - Level: 1
-            Time: 8000
-          - Level: 2
-            Time: 10000
-          - Level: 3
             Time: 12000
-          - Level: 4
+          - Level: 2
             Time: 14000
-          - Level: 5
+          - Level: 3
             Time: 16000
+          - Level: 4
+            Time: 18000
+          - Level: 5
+            Time: 20000
       Requires:
           SpCost:
               - Level: 1
@@ -26520,13 +26520,13 @@ Body:
           - Level: 1
             Time: 60000
           - Level: 2
-            Time: 60000
+            Time: 65000
           - Level: 3
-            Time: 60000
+            Time: 70000
           - Level: 4
-            Time: 60000
+            Time: 75000
           - Level: 5
-            Time: 60000
+            Time: 80000
       Cooldown: 30000
       FixedCastTime: 500
       Requires:
@@ -27399,15 +27399,15 @@ Body:
       Duration1: 500
       Duration2:
           - Level: 1
-            Time: 12000
+            Time: 10500
           - Level: 2
-            Time: 14000
+            Time: 12500
           - Level: 3
-            Time: 16000
+            Time: 14500
           - Level: 4
-            Time: 18000
+            Time: 16500
           - Level: 5
-            Time: 20000
+            Time: 18500
       Cooldown: 5000
       FixedCastTime:
           - Level: 1

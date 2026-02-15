@@ -3497,11 +3497,35 @@ static bool is_attack_critical(struct Damage *wd, struct block_list *src, struct
 		switch (skill_id)
 		{
 		case 0:
-			if (sc && !sc->getSCE(SC_AUTOCOUNTER))
-				break;
-			clif_specialeffect(src, EF_AUTOCOUNTER, AREA);
-			status_change_end(src, SC_AUTOCOUNTER);
-			[[fallthrough]];
+			if (sc && sc->getSCE(SC_AUTOCOUNTER))
+			{
+				// Ataque proativo do contra-ataque - comportamento oficial
+				// Só funciona nos primeiros 400ms e se o alvo estiver na frente
+				status_change_entry *sce = sc->getSCE(SC_AUTOCOUNTER);
+				t_tick elapsed = DIFF_TICK(gettick(), (t_tick)sce->val2);
+				
+				if (elapsed <= 400)
+				{
+					// Verificar se o alvo está na frente do jogador
+					uint8 dir = map_calc_dir(src, target->x, target->y);
+					int32 s_dir = unit_getdir(src);
+					int32 dist = distance_bl(src, target);
+					
+					if (dist <= 0 || (!map_check_dir(dir, s_dir) && dist <= sstatus->rhw.range + 1))
+					{
+						// Alvo está na frente - executar contra-ataque proativo
+						clif_specialeffect(src, EF_AUTOCOUNTER, AREA);
+						status_change_end(src, SC_AUTOCOUNTER);
+						// Força 100% crit no ataque proativo
+						cri = 1000;
+						break;
+					}
+				}
+				// Fora da janela de 400ms ou alvo não está na frente - bloqueia ataque
+				// (isso não deveria acontecer pois NoAttackCond bloqueia, mas por segurança)
+				return false;
+			}
+			break;
 		case KN_AUTOCOUNTER:
 			if (battle_config.auto_counter_type &&
 				(battle_config.auto_counter_type & src->type))
@@ -12832,7 +12856,20 @@ int32 battle_check_target(struct block_list *src, struct block_list *target, int
 		if (sc != nullptr && !sc->empty())
 		{
 			if (sc->getSCE(SC_VOICEOFSIREN) && sc->getSCE(SC_VOICEOFSIREN)->val2 == target->id)
-				return -1;
+			{
+				// Allow certain skills to target seduced allies
+				uint16 skill_id = battle_getcurrentskill(src);
+				if (skill_id != SA_DISPELL && 
+					skill_id != SC_SHADOWFORM && 
+					skill_id != SC_BLOODYLUST &&
+					skill_id != SC_BODYPAINT &&
+					skill_id != MG_SIGHT &&
+					skill_id != AL_RUWACH &&
+					skill_id != AC_CONCENTRATION)
+				{
+					return -1;
+				}
+			}
 		}
 	}
 	break;

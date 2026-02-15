@@ -26,8 +26,8 @@ izlude,134,143,3	script	Red Team	10066,{
 
     set .@guild_id, getcharid(2);
     if( (getguildmasterid(.@guild_id)) == (getcharid(0)) ){
-        $@jogadoresred1 = 2; // Número de jogadores necessários por time (7x7)
-        if ($@jogadoresred1 < 2){
+        $@jogadoresred1 = 7; // Número de jogadores necessários por time (7x7)
+        if ($@jogadoresred1 < 7){
             mes "Tadinho, você é tão fracasso assim? Nem mesmo tem ^ff00007 players^000000 na sua guild. Vá fazer alguns amigos antes de passar vergonha no 7x7.";
             cutin "", 255;
         }

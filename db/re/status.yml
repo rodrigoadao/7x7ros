@@ -399,6 +399,7 @@ Body:
       Earthweapon: true
       Shadowweapon: true
       Ghostweapon: true
+      Enchantarms: true
   - Status: Poisonreact
     Icon: EFST_POISONREACT
     DurationLookup: AS_POISONREACT
@@ -2681,6 +2682,7 @@ Body:
     EndOnStart:
       Enchantarms: true
       Aspersio: true
+      Encpoison: true
   - Status: Magicalattack
     DurationLookup: NPC_MAGICALATTACK
     CalcFlags:
@@ -4017,6 +4019,7 @@ Body:
       Inspiration: true
       Warmer: true
       Crystalize: true
+    MinDuration: 3700
   - Status: Striking
     Icon: EFST_STRIKING
     DurationLookup: SO_STRIKING
@@ -4199,7 +4202,7 @@ Body:
       RemoveOnDamaged: true
       NoSave: true
       Debuff: true
-    MinDuration: 5000
+    MinDuration: 9000
     Fail:
       Refresh: true
       Inspiration: true

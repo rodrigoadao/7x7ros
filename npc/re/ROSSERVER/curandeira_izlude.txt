@@ -643,7 +643,11 @@ if (qtd7049 > 0) {
         skill 152,1,SKILL_PERM;
         skill 1005,1,SKILL_PERM;
     }
-
+    if (Class == 4077){// sura
+        skill 156,1,SKILL_PERM;
+        skill 1015,1,SKILL_PERM;
+        skill 1016,1,SKILL_PERM;
+        }
     if (Class == 4065) {// GX
             skill 1004,1,SKILL_PERM;
             skill 1003,1,SKILL_PERM;
