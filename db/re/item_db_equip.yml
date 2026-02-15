@@ -12297,7 +12297,7 @@ Body:
       bonus2 bComaRace,RC_Player_Human,10;
       bonus bAspdRate,getrefine();
       if (BaseJob == Job_Sage)
-         bonus3 bAutoSpell,"NPC_HELLJUDGEMENT",5,20;
+         bonus3 bAutoSpell,"NPC_HELLJUDGEMENT",5,200;
   - Id: 1566
     AegisName: Diary_Of_Great_Basil
     Name: Diary Of Great Basil
@@ -93447,6 +93447,7 @@ Body:
       NoMail: true
       NoAuction: true
     Script: |
+      bonus bUnbreakableHelm;
       bonus2 bSubRace,RC_Player_Human,13;
       bonus2 bSubRace,RC_Player_Doram,13;
   - Id: 18960

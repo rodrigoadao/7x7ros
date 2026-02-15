@@ -2928,18 +2928,48 @@ case SR_TIGERCANNON:
 	// 	unit_stop_walking(src, USW_FIXPOS);
 	// }
 //custom moskaum 2026 02 13 pra tirar delay de unhide
+// if (!ud->state.running)
+// {
+//     // Custom MoskaumRO: Não parar walking ao usar TF_HIDING/ST_CHASEWALK/KO_YAMIKUMO para sair do hide
+//     bool is_unhide_toggle = false;
+//     if (sc && (skill_id == TF_HIDING || skill_id == ST_CHASEWALK || skill_id == KO_YAMIKUMO))
+//     {
+//         sc_type toggle_sc = skill_get_sc(skill_id);
+//         if (toggle_sc != SC_NONE && sc->getSCE(toggle_sc))
+//             is_unhide_toggle = true;
+//     }
+//     if (!is_unhide_toggle)
+//         unit_stop_walking(src, USW_FIXPOS);
+// }
+//fim do custom
+//início custom moskaum 2026 02 15 pra tirar gargalos das coisas de shura pq eu quero
 if (!ud->state.running)
 {
+    bool skip_stop_walk = false;
+    
     // Custom MoskaumRO: Não parar walking ao usar TF_HIDING/ST_CHASEWALK/KO_YAMIKUMO para sair do hide
-    bool is_unhide_toggle = false;
     if (sc && (skill_id == TF_HIDING || skill_id == ST_CHASEWALK || skill_id == KO_YAMIKUMO))
     {
         sc_type toggle_sc = skill_get_sc(skill_id);
         if (toggle_sc != SC_NONE && sc->getSCE(toggle_sc))
-            is_unhide_toggle = true;
+            skip_stop_walk = true;
     }
-    if (!is_unhide_toggle)
-        unit_stop_walking(src, USW_FIXPOS);
+    
+    // Custom MoskaumRO: Skills que não devem parar o walking
+    switch (skill_id)
+    {
+        case MO_EXPLOSIONSPIRITS:
+        case MO_ABSORBSPIRITS:
+        case CH_SOULCOLLECT:
+        case SR_CRESCENTELBOW:
+        case SR_RAISINGDRAGON:
+        case SR_LIGHTNINGWALK:
+            skip_stop_walk = true;
+            break;
+    }
+    
+    if (!skip_stop_walk)
+        unit_stop_walking(src, (src->type == BL_PC) ? USW_NONE : USW_FIXPOS);
 }
 //fim do custom
 	// SC_MAGICPOWER needs to switch states at start of cast

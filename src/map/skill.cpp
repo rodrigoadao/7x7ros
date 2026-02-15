@@ -4884,7 +4884,11 @@ int64 skill_attack(int32 attack_type, struct block_list *src, struct block_list 
 			status_change *ssc = status_get_sc(src);
 			if (ssc && ssc->getSCE(SC_POISONINGWEAPON) && rnd() % 100 < 70 + 5 * skill_lv)
 			{
-				sc_start4(src, bl, (sc_type)ssc->getSCE(SC_POISONINGWEAPON)->val2, 100, ssc->getSCE(SC_POISONINGWEAPON)->val1, 0, 1, 0, skill_get_time2(GC_POISONINGWEAPON, 1));
+				{
+					sc_type poison_sc = (sc_type)ssc->getSCE(SC_POISONINGWEAPON)->val2;
+					int poison_duration = (poison_sc == SC_VENOMBLEED) ? skill_get_time2(GC_POISONINGWEAPON, 1) : skill_get_time2(GC_POISONINGWEAPON, 2);
+					sc_start4(src, bl, poison_sc, 100, ssc->getSCE(SC_POISONINGWEAPON)->val1, 0, 1, 0, poison_duration);
+				}
 				status_change_end(src, SC_POISONINGWEAPON);
 				clif_skill_nodamage(src, *bl, skill_id, skill_lv);
 			}
@@ -8033,17 +8037,20 @@ int32 skill_castend_damage_id(struct block_list *src, struct block_list *bl, uin
 		break;
 	}
 	case GC_PHANTOMMENACE:
-		if (flag & 1)
-		{ // Only Hits Invisible Targets
-			if (tsc && (tsc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK) || tsc->getSCE(SC_CAMOUFLAGE) || tsc->getSCE(SC_STEALTHFIELD)))
-			{
-				status_change_end(bl, SC_CLOAKINGEXCEED);
-				skill_attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
-			}
-			if (tsc && tsc->getSCE(SC__SHADOWFORM) && rnd() % 100 < 100 - tsc->getSCE(SC__SHADOWFORM)->val1 * 10) // [100 - (Skill Level x 10)] %
-				status_change_end(bl, SC__SHADOWFORM);															  // Should only end, no damage dealt.
+	if (flag & 1)
+	{ // Only Hits Invisible Targets
+		if (tsc && (tsc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK) || tsc->getSCE(SC_CAMOUFLAGE) || tsc->getSCE(SC_STEALTHFIELD)))
+		{
+			status_change_end(bl, SC_HIDING);
+			status_change_end(bl, SC_CLOAKING);
+			status_change_end(bl, SC_CLOAKINGEXCEED);
+			status_change_end(bl, SC_CAMOUFLAGE);
+			skill_attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
 		}
-		break;
+		if (tsc && tsc->getSCE(SC__SHADOWFORM) && rnd() % 100 < 100 - tsc->getSCE(SC__SHADOWFORM)->val1 * 10)
+			status_change_end(bl, SC__SHADOWFORM);
+	}
+	break;
 
 	case GC_DARKCROW:
 		skill_attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
@@ -10335,8 +10342,8 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 			
 			if (i == count)
 			{ // Target doesn't have devotion yet, need to check if we have space
-				// If all slots are occupied (total == count), cancel devotions out of range to make room
-				if (total_devotions >= count && out_of_range_count > 0)
+				// Always cancel devotions out of range
+				if (out_of_range_count > 0)
 				{
 					for (int32 j = 0; j < out_of_range_count; j++)
 					{
@@ -10361,8 +10368,8 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 				}
 			}
 			else
-			{ // Target already has devotion - still cancel out of range devotions if slots are full
-				if (total_devotions >= count && out_of_range_count > 0)
+			{ // Target already has devotion - always cancel out of range devotions
+				if (out_of_range_count > 0)
 				{
 					for (int32 j = 0; j < out_of_range_count; j++)
 					{
@@ -11360,7 +11367,14 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 				status_change_end(bl, SC_SLEEP);
 				status_change_end(bl, SC_STONEWAIT);
 				status_change_end(bl, SC_BURNING);
-				status_change_end(bl, SC_WHITEIMPRISON);
+				if (tsc->getSCE(SC_WHITEIMPRISON)) {
+					struct block_list *wi_src = map_id2bl(tsc->getSCE(SC_WHITEIMPRISON)->val2);
+					status_change_end(bl, SC_WHITEIMPRISON);
+					if (wi_src) {
+						clif_damage(*bl, *bl, tick, 0, 0, 1, 0, DMG_NORMAL, 0, false);
+						status_fix_damage(wi_src, bl, 1, 1, WL_WHITEIMPRISON);
+					}
+				}
 			}
 			// Resetting bodystate to normal always also resets the monster AI to idle
 			if (dstmd)
@@ -12621,7 +12635,7 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 		bool trap_removed = false;
 
 		// Method 1: Traditional approach - target is a skill unit (trap)
-		if (su && (sg = su->group) && (skill_group = skill_db.find(sg->skill_id)) && skill_group->inf2[INF2_ISTRAP])
+		if (su && (sg = su->group) && (skill_group = skill_db.find(sg->skill_id)) && skill_group->inf2[INF2_ISTRAP] && sg->skill_id != WM_POEMOFNETHERWORLD)
 		{
 			clif_skill_nodamage(src, *bl, skill_id, skill_lv);
 			// Custom: HT_REMOVETRAP does NOT recover trap items
@@ -21110,8 +21124,10 @@ int32 skill_unit_onplace_timer(struct skill_unit *unit, struct block_list *bl, t
 		break;
 
 	case UNT_POISONSMOKE:
-		if (battle_check_target(ss, bl, BCT_ENEMY) > 0 && !(tsc && tsc->getSCE(sg->val2)) && rnd() % 100 < 50)
-			sc_start4(ss, bl, (sc_type)sg->val2, 100, sg->val3, 0, 1, 0, skill_get_time2(GC_POISONINGWEAPON, 1));
+		if (battle_check_target(ss, bl, BCT_ENEMY) > 0 && !(tsc && tsc->getSCE(sg->val2)) && rnd() % 100 < 50) {
+			int poison_duration = ((sc_type)sg->val2 == SC_VENOMBLEED) ? skill_get_time2(GC_POISONINGWEAPON, 1) : skill_get_time2(GC_POISONINGWEAPON, 2);
+			sc_start4(ss, bl, (sc_type)sg->val2, 100, sg->val3, 0, 1, 0, poison_duration);
+		}
 		break;
 
 	case UNT_EPICLESIS:
@@ -28543,11 +28559,24 @@ void skill_poisoningweapon(map_session_data &sd, t_itemid nameid)
 		return;
 	}
 
-	status_change_end(&sd, SC_POISONINGWEAPON);											   // End the status so a new poison can be applied (if changed)
-	chance = 2 + 2 * sd.menuskill_val;													   // 2 + 2 * skill_lv
-	sc_start4(&sd, &sd, SC_POISONINGWEAPON, 100, pc_checkskill(&sd, GC_RESEARCHNEWPOISON), // in Aegis it store the level of GC_RESEARCHNEWPOISON in val1
-			  type, chance, 0, skill_get_time(GC_POISONINGWEAPON, sd.menuskill_val));
-	status_change_start(&sd, &sd, type, 10000, sd.menuskill_val, 0, 0, 0, skill_get_time(GC_POISONINGWEAPON, sd.menuskill_val), SCSTART_NOAVOID | SCSTART_NOICON); // Apply bonus to caster
+	// status_change_end(&sd, SC_POISONINGWEAPON);											   // End the status so a new poison can be applied (if changed)
+	// chance = 2 + 2 * sd.menuskill_val;													   // 2 + 2 * skill_lv
+	// sc_start4(&sd, &sd, SC_POISONINGWEAPON, 100, pc_checkskill(&sd, GC_RESEARCHNEWPOISON), // in Aegis it store the level of GC_RESEARCHNEWPOISON in val1
+	// 		  type, chance, 0, skill_get_time(GC_POISONINGWEAPON, sd.menuskill_val));
+	// status_change_start(&sd, &sd, type, 10000, sd.menuskill_val, 0, 0, 0, skill_get_time(GC_POISONINGWEAPON, sd.menuskill_val), SCSTART_NOAVOID | SCSTART_NOICON); // Apply bonus to caster
+	//custom fatal 15 02 2026
+	status_change_end(&sd, SC_POISONINGWEAPON);
+	// Remove qualquer toxina de bônus ativa no caster antes de aplicar a nova
+	for (int32 i = SC_TOXIN; i <= SC_LEECHESEND; i++) {
+		status_change *sc = status_get_sc(&sd);
+		if (sc && sc->getSCE((sc_type)i) && sc->getSCE((sc_type)i)->val3 == 0)
+			status_change_end(&sd, (sc_type)i);
+	}
+	chance = 2 + 2 * sd.menuskill_val;
+	sc_start4(&sd, &sd, SC_POISONINGWEAPON, 100, pc_checkskill(&sd, GC_RESEARCHNEWPOISON),
+			type, chance, 0, skill_get_time(GC_POISONINGWEAPON, sd.menuskill_val));
+	status_change_start(&sd, &sd, type, 10000, sd.menuskill_val, 0, 0, 0, skill_get_time(GC_POISONINGWEAPON, sd.menuskill_val), SCSTART_NOAVOID | SCSTART_NOICON);
+	//fim do custom
 
 	sprintf(output, msg_txt(&sd, 721), msg);
 	clif_messagecolor(&sd, color_table[COLOR_WHITE], output, false, SELF);

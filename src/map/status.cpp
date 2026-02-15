@@ -11794,7 +11794,10 @@ t_tick status_get_sc_def(block_list *src, block_list *bl, sc_type type, int32 ra
 		break;
 	case SC_OBLIVIONCURSE: // 100% - (100 - 0.8 x INT)
 		sc_def = status->int_ * 80;
-		sc_def = max(sc_def, 500); // minimum of 5% resist
+		// sc_def = max(sc_def, 500); // minimum of 5% resist
+		// sc_def = min(sc_def, 9500); // Máximo 95% resist = mínimo 5% chance
+		sc_def = max(sc_def, 1000);  // mínimo 10% resist
+		sc_def = min(sc_def, 9000); // máximo 90% resist (garante 5% de chance mínima)
 		tick_def = 0;
 		tick_def2 = (status->vit + status->luk) * 500;
 		break;
@@ -14391,7 +14394,7 @@ static bool status_change_start_post_delay(block_list *src, block_list *bl, sc_t
 			val4 = tick - tick_time; // Remaining time
 			break;
 		case SC_SWINGDANCE:
-			val3 = 3 * val1 + val2; // Walk speed and aspd reduction.
+			val3 = 5 * val1 + val2; // Walk speed and aspd reduction.
 			break;
 		case SC_SYMPHONYOFLOVER:
 			val3 = 2 * val1 + val2 + (sd ? sd->status.job_level : 50) / 4; // MDEF Increase
@@ -15544,6 +15547,8 @@ static bool status_change_start_post_delay(block_list *src, block_list *bl, sc_t
 				status_change_end(bl, SC_DANCING);
 			}
 			break;
+		case SC_NETHERWORLD:
+        	break; // Não para imediatamente; NoMove impede novos comandos e o alvo completa o passo atual
 		default:
 			if (!unit_blown_immune(bl, 0x1))
 				unit_stop_walking(bl, USW_FIXPOS);
@@ -15978,6 +15983,15 @@ int32 status_change_end(struct block_list *bl, enum sc_type type, int32 tid)
 
 	switch (type)
 	{
+	//custom fatal pra switch arma remover toxina
+	case SC_POISONINGWEAPON:
+		// Remove a toxina de bônus do caster ao perder o coating
+		for (int32 i = SC_TOXIN; i <= SC_LEECHESEND; i++) {
+			if (sc->getSCE((sc_type)i) && sc->getSCE((sc_type)i)->val3 == 0)
+				status_change_end(bl, (sc_type)i);
+		}
+    break;
+	//fim do custom
 	case SC_KEEPING:
 	case SC_BARRIER:
 		if (unit_data *ud = unit_bl2ud(bl); ud != nullptr)
@@ -16319,13 +16333,13 @@ int32 status_change_end(struct block_list *bl, enum sc_type type, int32 tid)
 	case SC_HALLUCINATIONWALK:
 		sc_start(bl, bl, SC_HALLUCINATIONWALK_POSTDELAY, 100, val1, skill_get_time2(GC_HALLUCINATIONWALK, val1));
 		break;
-	case SC_WHITEIMPRISON:
+case SC_WHITEIMPRISON:
 	{
 		struct block_list *src = map_id2bl(val2);
 		if (tid == -1 || !src)
 			break; // Terminated by Damage
-		clif_damage(*bl, *bl, gettick(), 0, 0, 400 * val1, 0, DMG_NORMAL, 0, false);
-		status_fix_damage(src, bl, 400 * val1, 1, WL_WHITEIMPRISON);
+		clif_damage(*bl, *bl, gettick(), 0, 0, 1, 0, DMG_NORMAL, 0, false);
+		status_fix_damage(src, bl, 1, 1, WL_WHITEIMPRISON);
 	}
 	break;
 	case SC_WUGDASH:

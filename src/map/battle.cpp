@@ -2334,11 +2334,18 @@ if (tsc->getSCE(SC_DEFENDER) &&
 		if (flag & BF_MAGIC && bl->type == BL_PC && sc->getSCE(SC_GVG_GIANT) && sc->getSCE(SC_GVG_GIANT)->val4)
 			damage += damage * sc->getSCE(SC_GVG_GIANT)->val4 / 100;
 
-		if (sc->getSCE(SC_POISONINGWEAPON) && flag & BF_SHORT && damage > 0)
+if (sc->getSCE(SC_POISONINGWEAPON) && flag & BF_SHORT && damage > 0)
 		{
 			damage += damage * 10 / 100;
 			if (rnd() % 100 < sc->getSCE(SC_POISONINGWEAPON)->val3)
 				sc_start4(src, bl, (sc_type)sc->getSCE(SC_POISONINGWEAPON)->val2, 100, sc->getSCE(SC_POISONINGWEAPON)->val1, 0, 1, 0, (sc->getSCE(SC_POISONINGWEAPON)->val2 == SC_VENOMBLEED ? skill_get_time2(GC_POISONINGWEAPON, 1) : skill_get_time2(GC_POISONINGWEAPON, 2)));
+		}
+
+		if (sc->getSCE(SC_PYREXIA) && sc->getSCE(SC_PYREXIA)->val3 == 0 && skill_id == 0 && damage > 0)
+		{
+			int32 base_level = status_get_lv(src);
+			int32 bonus_percent = 15 + (base_level / 20);
+			damage += damage * bonus_percent / 100;
 		}
 
 		if (sc->getSCE(SC__DEADLYINFECT) && (flag & (BF_SHORT | BF_MAGIC)) == BF_SHORT && damage > 0 && rnd() % 100 < 30 + 10 * sc->getSCE(SC__DEADLYINFECT)->val1)
@@ -8898,7 +8905,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			{
 				wd.damage2 += wd.masteryAtk2;
 			}
-
+//original
 			// CritAtkRate modifier
 			if (wd.type == DMG_CRITICAL || wd.type == DMG_MULTI_HIT_CRITICAL)
 			{
@@ -8915,7 +8922,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 						wd.damage2 += (int64)floor((float)(wd.damage2 * sd->bonus.crit_atk_rate / 100));
 				}
 			}
-
+//fim do original
 			if (wd.flag & BF_SHORT)
 				ATK_ADDRATE(wd.damage, wd.damage2, sd->bonus.short_attack_atk_rate);
 			if (wd.flag & BF_LONG && (skill_id != RA_WUGBITE && skill_id != RA_WUGSTRIKE)) // Long damage rate addition doesn't use weapon + equip attack
@@ -11365,7 +11372,7 @@ int64 battle_calc_return_damage(struct block_list *tbl, struct block_list *src, 
 		{
 			rdamage += damage * tsd->bonus.short_weapon_damage_return / 100;
 		}
-		else if (status_reflect && tsc != nullptr && !tsc->empty() && tsc->getSCE(SC_REFLECTSHIELD) && skill_id != WS_CARTTERMINATION && skill_id != NPC_MAXPAIN_ATK)
+else if (status_reflect && tsc != nullptr && !tsc->empty() && tsc->getSCE(SC_REFLECTSHIELD) && skill_id != WS_CARTTERMINATION && skill_id != NPC_MAXPAIN_ATK)
 		{
 			status_change_entry *sce_d = tsc->getSCE(SC_DEVOTION);
 			block_list *d_bl = nullptr; // Ponteiro para o Paladino
@@ -11374,29 +11381,44 @@ int64 battle_calc_return_damage(struct block_list *tbl, struct block_list *src, 
 			status_change *reflect_sc = tsc;
 			status_change_entry *reflect_sce = tsc->getSCE(SC_REFLECTSHIELD); // SCE do Reflect Shield do alvo
 
+			bool devotion_out_of_range = false;
+
 			// Verifica se o alvo (Professor) está em Redenção ativa
 			if (sce_d && (d_bl = map_id2bl(sce_d->val1)) &&
 				((d_bl->type == BL_MER && ((TBL_MER *)d_bl)->master && ((TBL_MER *)d_bl)->master->id == tbl->id) ||
-				 (d_bl->type == BL_PC && ((TBL_PC *)d_bl)->devotion[sce_d->val2] == tbl->id)) &&
-				check_distance_bl(tbl, d_bl, sce_d->val3))
+				 (d_bl->type == BL_PC && ((TBL_PC *)d_bl)->devotion[sce_d->val2] == tbl->id)))
 			{
-				// Redenção está ativa e na distância correta.
-				// Pega o status_change do Paladino (d_bl)
-				status_change *caster_sc = status_get_sc(d_bl);
-
-				// Se o Paladino tiver SC_REFLECTSHIELD, ele se torna a fonte da reflexão
-				if (caster_sc && caster_sc->getSCE(SC_REFLECTSHIELD))
+				if (check_distance_bl(tbl, d_bl, sce_d->val3))
 				{
-					reflect_sc = caster_sc;
-					reflect_sce = caster_sc->getSCE(SC_REFLECTSHIELD); // SCE do Reflect Shield do Paladino
+					// Redenção está ativa e na distância correta.
+					// Pega o status_change do Paladino (d_bl)
+					status_change *caster_sc = status_get_sc(d_bl);
+
+					// Se o Paladino tiver SC_REFLECTSHIELD, ele se torna a fonte da reflexão
+					if (caster_sc && caster_sc->getSCE(SC_REFLECTSHIELD))
+					{
+						reflect_sc = caster_sc;
+						reflect_sce = caster_sc->getSCE(SC_REFLECTSHIELD); // SCE do Reflect Shield do Paladino
+					}
+				}
+				else
+				{
+					// Devotion existe mas está fora do range
+					devotion_out_of_range = true;
 				}
 			}
 
 			// Se reflect_sce não for nulo (alguém - alvo ou paladino - tem o buff ativo)
 			if (reflect_sce)
 			{
+				// Se o reflect é herdado (val4=1) e o devotion está fora do range, não reflete
+				if (reflect_sce->val4 && devotion_out_of_range)
+				{
+					// Reflect herdado não funciona fora do range do devotion
+					// Não precisa fazer nada, rdamage continua 0
+				}
 				// Faz a checagem do 'devotion_rdamage_skill_only' usando o val4 do refletor correto (Paladino se em redenção)
-				if (!skill_id && battle_config.devotion_rdamage_skill_only && reflect_sce->val4)
+				else if (!skill_id && battle_config.devotion_rdamage_skill_only && reflect_sce->val4)
 				{
 					// Não reflete ataques normais se a config estiver ativa e for o buff herdado (val4=1 no status.cpp)
 					// Não precisa fazer nada, rdamage continua 0

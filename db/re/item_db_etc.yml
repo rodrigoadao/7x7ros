@@ -8577,7 +8577,7 @@ Body:
       DropEffect: CLIENT
     Script: |
       bonus bStr,2;
-      autobonus "{ bonus bCritical,100; }",5,5000,BF_NORMAL,"{ specialeffect2 EF_ENHANCE; }";
+      autobonus "{ bonus bCritical,100; }",50,5000,BF_WEAPON|BF_SHORT|BF_NORMAL|BF_SKILL,"{ specialeffect2 EF_ENHANCE; }";
   - Id: 4412
     AegisName: Isilla_Card
     Name: Isilla Card

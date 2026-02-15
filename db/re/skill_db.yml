@@ -8663,6 +8663,7 @@ Body:
       TargetType: Attack
       Flags:
           AllowWhenPerforming: true
+          AlterRangeVulture: true
       Range: 9
       Hit: Single
       HitCount: 2
@@ -8938,6 +8939,7 @@ Body:
       TargetType: Attack
       Flags:
           AllowWhenPerforming: true
+          AlterRangeVulture: true
       Range: 9
       Hit: Single
       HitCount: 2
@@ -20466,6 +20468,8 @@ Body:
           Weapon:
               Dagger: true
               Katar: true
+              1hSword: true
+              1hAxe: true
       Status: PoisoningWeapon
     - Id: 2028
       Name: GC_WEAPONBLOCKING

@@ -809,6 +809,8 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
       RemoveOnChangeMap: true
+    Fail:
+      Netherworld: true
   - Status: Keeping
     DurationLookup: NPC_KEEPING
     CalcFlags:
@@ -3646,6 +3648,7 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
       SendVal3: true
+      RemoveOnUnequipWeapon: true
   - Status: Weaponblocking
     Icon: EFST_WEAPONBLOCKING
     DurationLookup: GC_WEAPONBLOCKING
@@ -4078,9 +4081,6 @@ Body:
     EndOnStart:
       Symphonyoflover: true
       Moonlitserenade: true
-      Rushwindmill: true
-      Echosong: true
-      Harmonize: true
   - Status: Symphonyoflover
     Icon: EFST_SYMPHONY_LOVE
     DurationLookup: WA_SYMPHONY_OF_LOVER
@@ -4093,9 +4093,6 @@ Body:
     EndOnStart:
       Swingdance: true
       Moonlitserenade: true
-      Rushwindmill: true
-      Echosong: true
-      Harmonize: true
   - Status: Moonlitserenade
     Icon: EFST_MOONLIT_SERENADE
     DurationLookup: WA_MOONLIT_SERENADE
@@ -4106,11 +4103,8 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
     EndOnStart:
-      Swingdance: true
       Symphonyoflover: true
-      Rushwindmill: true
-      Echosong: true
-      Harmonize: true
+      Swingdance: true
   - Status: Rushwindmill
     Icon: EFST_RUSH_WINDMILL
     DurationLookup: MI_RUSH_WINDMILL
@@ -4122,9 +4116,6 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
     EndOnStart:
-      Swingdance: true
-      Symphonyoflover: true
-      Moonlitserenade: true
       Echosong: true
       Harmonize: true
   - Status: Echosong
@@ -4137,9 +4128,6 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
     EndOnStart:
-      Swingdance: true
-      Symphonyoflover: true
-      Moonlitserenade: true
       Rushwindmill: true
       Harmonize: true
   - Status: Harmonize
@@ -4153,9 +4141,6 @@ Body:
       Dex: true
       Luk: true
     EndOnStart:
-      Swingdance: true
-      Symphonyoflover: true
-      Moonlitserenade: true
       Rushwindmill: true
       Echosong: true
   - Status: Voiceofsiren
@@ -4169,8 +4154,6 @@ Body:
     MinDuration: 10000
     EndOnStart:
       Deepsleep: true
-      Gloomyday: true
-      Gloomyday_Sk: true
       Songofmana: true
       Dancewithwug: true
       Saturdaynightfever: true
@@ -4210,16 +4193,14 @@ Body:
     EndOnStart:
       Dancing: true
       Voiceofsiren: true
-      Gloomyday: true
-      Gloomyday_Sk: true
-      Songofmana: true
-      Dancewithwug: true
-      Saturdaynightfever: true
-      Leradsdew: true
-      Melodyofsink: true
-      Beyondofwarcry: true
-      Unlimitedhummingvoice: true
-      Sircleofnature: true
+      # Songofmana: true
+      # Dancewithwug: true
+      # Saturdaynightfever: true
+      # Leradsdew: true
+      # Melodyofsink: true
+      # Beyondofwarcry: true
+      # Unlimitedhummingvoice: true
+      # Sircleofnature: true
   - Status: Sircleofnature
     Icon: EFST_SIRCLEOFNATURE
     DurationLookup: WM_SIRCLEOFNATURE
@@ -4280,7 +4261,7 @@ Body:
       Aspd: true
     EndOnStart:
       Voiceofsiren: true
-      Deepsleep: true
+      # Deepsleep: true ##notsure
       Gloomyday: true
       Gloomyday_Sk: true
       Songofmana: true
@@ -4310,7 +4291,7 @@ Body:
       Inspiration: true
     EndOnStart:
       Voiceofsiren: true
-      Deepsleep: true
+      # Deepsleep: true ##notsure
       Gloomyday: true
       Gloomyday_Sk: true
       Songofmana: true
@@ -4333,7 +4314,7 @@ Body:
       Berserk: true
     EndOnStart:
       Voiceofsiren: true
-      Deepsleep: true
+      ## Deepsleep: true ##notsure
       Gloomyday: true
       Gloomyday_Sk: true
       Songofmana: true
@@ -4355,7 +4336,7 @@ Body:
       NoClearance: true
     EndOnStart:
       Voiceofsiren: true
-      Deepsleep: true
+      ## Deepsleep: true ##notsure
       Gloomyday: true
       Gloomyday_Sk: true
       Songofmana: true

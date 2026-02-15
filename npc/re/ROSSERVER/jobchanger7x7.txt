@@ -256,7 +256,7 @@ izlude,129,152,4	script	Job Master	650,{
             goto restockagemdajobchanger;
             break;
 
-        case 6:// meca
+        case 6:// meca mecha
             jobchange 0; 
             resetlvl(1);
             jobchange .job;
@@ -307,9 +307,10 @@ izlude,129,152,4	script	Job Master	650,{
             }
             getitem2 18959, 1, 1, 0, 0, 4403, 0, 0, 0; // dighi-titica kiel
             equip 18959;
-            getitem2 18158, 1, 1, 0, 0, 4403, 0, 0, 0; // angel wings kiel
-            equip 18158;
-            getitem 18670,1;
+            // getitem2 18158, 1, 1, 0, 0, 4403, 0, 0, 0; // angel wings kiel
+            // equip 18158;
+            getitem 7831,1;
+            getitem 18670,5;
             equip 18670;
             getitem2 2357, 1, 1, 4, 0, 4302, 0, 0, 0; // valk armor tgk
             equip 2357;
@@ -639,6 +640,7 @@ izlude,129,152,4	script	Job Master	650,{
             getitem 1025,45;//teia
             getitem 992,9;//frescor vento
             getitem 991,6;//cristal azul
+            getitem 6363,4;//fragmento verde
             goto restockagemdajobchanger;
             break;
 
