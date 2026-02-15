@@ -6,18 +6,18 @@
  * Arena 7x7 - Sistema de Batalha PvP em Equipes
  * =============================================================================
  *
- * Este arquivo contm as definies de estruturas e funes para o sistema
+ * Este arquivo contï¿½m as definiï¿½ï¿½es de estruturas e funï¿½ï¿½es para o sistema
  * de arena 7x7, onde duas equipes se enfrentam em batalhas PvP.
  *
- * Principais caractersticas:
- * - Equipes de at 7 jogadores cada
- * - Sistema de morte permanente (jogador vira tumba at o fim da partida)
- * - Tracking completo de estatsticas (dano, kills, assists, healing, itens)
- * - Integrao com sistema de ranking e temporadas
- * - Persistncia em banco de dados para anlise no site
+ * Principais caracterï¿½sticas:
+ * - Equipes de atï¿½ 7 jogadores cada
+ * - Sistema de morte permanente (jogador vira tumba atï¿½ o fim da partida)
+ * - Tracking completo de estatï¿½sticas (dano, kills, assists, healing, itens)
+ * - Integraï¿½ï¿½o com sistema de ranking e temporadas
+ * - Persistï¿½ncia em banco de dados para anï¿½lise no site
  *
  * Arquivos relacionados:
- * - arena7x7.cpp: Implementao das funes
+ * - arena7x7.cpp: Implementaï¿½ï¿½o das funï¿½ï¿½es
  * - npc/custom/arena7x7_*.txt: Scripts NPC do sistema
  * - sql-files/arena7x7_*.sql: Esquemas do banco de dados
  *
@@ -42,30 +42,30 @@ class map_session_data;
 struct block_list;
 
 // ============================================================================
-// Constantes de Configurao
+// Constantes de Configuraï¿½ï¿½o
 // ============================================================================
 
 /// Habilitar mensagens de debug (0 = desabilitado, 1 = habilitado)
-#define ARENA7X7_DEBUG 1
+#define ARENA7X7_DEBUG 0
 
-/// Nmero mximo de jogadores por time (7 jogadores = arena 7x7)
+/// Nï¿½mero mï¿½ximo de jogadores por time (7 jogadores = arena 7x7)
 #define ARENA7X7_MAX_PLAYERS_PER_TEAM 7
 
 /// Total de jogadores em uma partida (2 times * 7 jogadores)
 #define ARENA7X7_TOTAL_PLAYERS 14
 
-/// Janela de tempo para contabilizar assistncias (em milissegundos)
-/// Se um jogador causou dano em algum nos ltimos 5 segundos antes da morte,
-/// ele recebe uma assistncia
+/// Janela de tempo para contabilizar assistï¿½ncias (em milissegundos)
+/// Se um jogador causou dano em alguï¿½m nos ï¿½ltimos 5 segundos antes da morte,
+/// ele recebe uma assistï¿½ncia
 #define ARENA7X7_ASSIST_WINDOW 5000
 
 // ============================================================================
-// Enumeraes
+// Enumeraï¿½ï¿½es
 // ============================================================================
 
 /**
  * Identificadores dos times na arena
- * NONE: Jogador no est em nenhum time
+ * NONE: Jogador nï¿½o estï¿½ em nenhum time
  * BLUE: Time azul (usa bgscore_lion no placar)
  * RED: Time vermelho (usa bgscore_eagle no placar)
  */
@@ -81,7 +81,7 @@ enum e_arena7x7_team : uint8
  * WAITING: Aguardando jogadores entrarem
  * ACTIVE: Partida em andamento
  * FINISHED: Partida finalizada normalmente
- * CANCELLED: Partida cancelada (por desconexo, shutdown, etc)
+ * CANCELLED: Partida cancelada (por desconexï¿½o, shutdown, etc)
  */
 enum e_arena7x7_match_status : uint8
 {
@@ -92,7 +92,7 @@ enum e_arena7x7_match_status : uint8
 };
 
 /**
- * Tipos de skill de suporte (para categorizao nas estatsticas)
+ * Tipos de skill de suporte (para categorizaï¿½ï¿½o nas estatï¿½sticas)
  */
 enum e_arena7x7_support_type : uint8
 {
@@ -103,19 +103,19 @@ enum e_arena7x7_support_type : uint8
 };
 
 /**
- * Tipos de itens consumveis (para categorizao nas estatsticas)
+ * Tipos de itens consumï¿½veis (para categorizaï¿½ï¿½o nas estatï¿½sticas)
  */
 enum e_arena7x7_item_type : uint8
 {
-	ARENA7X7_ITEM_HP = 1,		///< Poes de HP (Red Potion, White Potion, etc)
-	ARENA7X7_ITEM_SP = 2,		///< Poes de SP (Blue Potion, etc)
+	ARENA7X7_ITEM_HP = 1,		///< Poï¿½ï¿½es de HP (Red Potion, White Potion, etc)
+	ARENA7X7_ITEM_SP = 2,		///< Poï¿½ï¿½es de SP (Blue Potion, etc)
 	ARENA7X7_ITEM_BUFF = 3,		///< Itens de buff (Box of Sunlight, etc)
 	ARENA7X7_ITEM_OTHER = 4,	///< Outros itens
 	ARENA7X7_ITEM_GEMSTONE = 5, ///< Gemas (Yellow, Red, Blue Gemstone)
-	ARENA7X7_ITEM_ARROW = 6,	///< Flechas e munies
+	ARENA7X7_ITEM_ARROW = 6,	///< Flechas e muniï¿½ï¿½es
 	ARENA7X7_ITEM_CATALYST = 7, ///< Catalisadores (Poison Bottle, etc)
 	ARENA7X7_ITEM_FOOD = 8,		///< Comidas/Stats
-	ARENA7X7_ITEM_THROWING = 9	///< Itens arremessveis
+	ARENA7X7_ITEM_THROWING = 9	///< Itens arremessï¿½veis
 };
 
 // ============================================================================
@@ -123,10 +123,10 @@ enum e_arena7x7_item_type : uint8
 // ============================================================================
 
 /**
- * Estrutura para tracking de dano recente (usado para calcular assistncias)
+ * Estrutura para tracking de dano recente (usado para calcular assistï¿½ncias)
  * Quando um jogador causa dano em outro, registramos o atacante e timestamp.
- * Se a vtima morrer dentro de ARENA7X7_ASSIST_WINDOW, os atacantes recentes
- * (exceto o killer) recebem assistncia.
+ * Se a vï¿½tima morrer dentro de ARENA7X7_ASSIST_WINDOW, os atacantes recentes
+ * (exceto o killer) recebem assistï¿½ncia.
  */
 struct s_arena7x7_recent_damage
 {
@@ -137,13 +137,13 @@ struct s_arena7x7_recent_damage
 };
 
 /**
- * Estatsticas de um jogador em uma partida especfica
- * Contm todos os dados de performance que sero salvos no banco de dados
- * e exibidos no site de estatsticas.
+ * Estatï¿½sticas de um jogador em uma partida especï¿½fica
+ * Contï¿½m todos os dados de performance que serï¿½o salvos no banco de dados
+ * e exibidos no site de estatï¿½sticas.
  */
 struct s_arena7x7_player_stats
 {
-	// Identificao do jogador
+	// Identificaï¿½ï¿½o do jogador
 	uint32 char_id;			///< ID do personagem
 	uint32 account_id;		///< ID da conta
 	std::string char_name;	///< Nome do personagem
@@ -151,24 +151,24 @@ struct s_arena7x7_player_stats
 	uint32 guild_id;		///< ID da guild (se tiver)
 	std::string guild_name; ///< Nome da guild
 	uint16 job_class;		///< Classe do personagem
-	uint16 base_level;		///< Nvel base
-	bool is_leader;			///< Se  lder do time
+	uint16 base_level;		///< Nï¿½vel base
+	bool is_leader;			///< Se ï¿½ lï¿½der do time
 	bool is_deserter;		///< Se abandonou a partida
-	bool is_dead;			///< Se est morto (tumba) - no pode ressuscitar
+	bool is_dead;			///< Se estï¿½ morto (tumba) - nï¿½o pode ressuscitar
 
-	// Estatsticas de dano
+	// Estatï¿½sticas de dano
 	uint32 damage_done;		///< Total de dano causado
 	uint32 damage_received; ///< Total de dano recebido
-	uint32 top_damage;		///< Maior dano em um nico hit
+	uint32 top_damage;		///< Maior dano em um ï¿½nico hit
 
-	// Estatsticas de combate
-	uint16 kills;		   ///< Nmero de kills
-	uint16 deaths;		   ///< Nmero de mortes
-	uint16 assists;		   ///< Nmero de assistncias
-	uint16 current_streak; ///< Sequncia atual de kills
-	uint16 best_streak;	   ///< Melhor sequncia de kills na partida
+	// Estatï¿½sticas de combate
+	uint16 kills;		   ///< Nï¿½mero de kills
+	uint16 deaths;		   ///< Nï¿½mero de mortes
+	uint16 assists;		   ///< Nï¿½mero de assistï¿½ncias
+	uint16 current_streak; ///< Sequï¿½ncia atual de kills
+	uint16 best_streak;	   ///< Melhor sequï¿½ncia de kills na partida
 
-	// Estatsticas de suporte
+	// Estatï¿½sticas de suporte
 	uint32 healing_done;		///< HP curado em aliados
 	uint32 healing_received;	///< HP recebido de cura
 	uint16 support_skills_used; ///< Quantidade de skills de suporte usadas
@@ -177,9 +177,9 @@ struct s_arena7x7_player_stats
 	uint32 total_skills_used;	///< Total de todas as skills usadas
 	uint32 total_items_used;	///< Total de todos os itens consumidos
 
-	// Consumveis usados
-	uint16 hp_potions;	   ///< Poes de HP usadas
-	uint16 sp_potions;	   ///< Poes de SP usadas
+	// Consumï¿½veis usados
+	uint16 hp_potions;	   ///< Poï¿½ï¿½es de HP usadas
+	uint16 sp_potions;	   ///< Poï¿½ï¿½es de SP usadas
 	uint16 yellow_gems;	   ///< Yellow Gemstones consumidas
 	uint16 red_gems;	   ///< Red Gemstones consumidas
 	uint16 blue_gems;	   ///< Blue Gemstones consumidas
@@ -188,15 +188,15 @@ struct s_arena7x7_player_stats
 
 	// Recursos consumidos
 	uint32 sp_consumed;	  ///< SP total gasto em skills
-	uint32 zeny_consumed; ///< Zeny gasto (se aplicvel)
+	uint32 zeny_consumed; ///< Zeny gasto (se aplicï¿½vel)
 
 	// Tracking de tempo
 	t_tick join_time;		///< Momento que entrou na partida
-	t_tick last_death_time; ///< Momento da ltima morte
+	t_tick last_death_time; ///< Momento da ï¿½ltima morte
 	uint32 time_alive;		///< Tempo vivo (em ms)
 	uint32 time_dead;		///< Tempo morto (em ms)
 
-	// Lista de danos recentes para clculo de assistncias
+	// Lista de danos recentes para cï¿½lculo de assistï¿½ncias
 	std::vector<s_arena7x7_recent_damage> recent_damage_taken;
 
 	// Mapa de skills usadas: skill_id -> {use_count, skill_name}
@@ -385,9 +385,9 @@ struct s_arena7x7_match
 
 	t_tick start_time;
 	t_tick end_time;
-	uint32 duration_seconds; // Durao da partida em segundos
+	uint32 duration_seconds; // Duraï¿½ï¿½o da partida em segundos
 
-	// Jogadores e estatsticas
+	// Jogadores e estatï¿½sticas
 	std::unordered_map<uint32, std::shared_ptr<s_arena7x7_player_stats>> players; // char_id -> stats
 
 	// Logs detalhados (para salvar no SQL no final)
@@ -415,7 +415,7 @@ struct s_arena7x7_match
 };
 
 // ============================================================================
-// Variveis Globais
+// Variï¿½veis Globais
 // ============================================================================
 
 /// Mapa de partidas ativas (match_id -> match data)
@@ -424,11 +424,11 @@ extern std::unordered_map<uint32, std::shared_ptr<s_arena7x7_match>> arena7x7_ma
 /// Mapa de jogadores em partida (char_id -> match_id)
 extern std::unordered_map<uint32, uint32> arena7x7_player_match;
 
-/// Contador de match_id (ser sincronizado com SQL)
+/// Contador de match_id (serï¿½ sincronizado com SQL)
 extern uint32 arena7x7_match_counter;
 
 // ============================================================================
-// Funes de Gerenciamento de Partida
+// Funï¿½ï¿½es de Gerenciamento de Partida
 // ============================================================================
 
 /**
@@ -439,11 +439,11 @@ extern uint32 arena7x7_match_counter;
 uint32 arena7x7_create_match(const char *map_name);
 
 /**
- * Adiciona um jogador  partida
+ * Adiciona um jogador ï¿½ partida
  * @param match_id ID da partida
  * @param sd Session data do jogador
  * @param team Time do jogador
- * @param is_leader Se  lder do time
+ * @param is_leader Se ï¿½ lï¿½der do time
  * @return true se adicionado com sucesso
  */
 bool arena7x7_add_player(uint32 match_id, map_session_data *sd, e_arena7x7_team team, bool is_leader = false);
@@ -478,8 +478,8 @@ bool arena7x7_start_match(uint32 match_id);
  * Finaliza uma partida
  * @param match_id ID da partida
  * @param winner_team Time vencedor (0 = empate)
- * @param blue_score Pontuao do time azul
- * @param red_score Pontuao do time vermelho
+ * @param blue_score Pontuaï¿½ï¿½o do time azul
+ * @param red_score Pontuaï¿½ï¿½o do time vermelho
  * @return true se finalizada com sucesso
  */
 bool arena7x7_finish_match(uint32 match_id, e_arena7x7_team winner_team, uint16 blue_score, uint16 red_score);
@@ -492,35 +492,35 @@ bool arena7x7_finish_match(uint32 match_id, e_arena7x7_team winner_team, uint16 
 bool arena7x7_cancel_match(uint32 match_id);
 
 /**
- * Obtm a partida de um jogador
+ * Obtï¿½m a partida de um jogador
  * @param char_id ID do personagem
  * @return Ponteiro para a partida ou nullptr
  */
 std::shared_ptr<s_arena7x7_match> arena7x7_get_player_match(uint32 char_id);
 
 /**
- * Verifica se um jogador est em uma partida ativa
+ * Verifica se um jogador estï¿½ em uma partida ativa
  * @param char_id ID do personagem
  * @return true se estiver em partida ativa
  */
 bool arena7x7_is_in_match(uint32 char_id);
 
 /**
- * Verifica se um jogador est "morto" (tumba) na arena
+ * Verifica se um jogador estï¿½ "morto" (tumba) na arena
  * @param char_id ID do personagem
  * @return true se estiver morto/tumba na arena
  */
 bool arena7x7_is_player_dead(uint32 char_id);
 
 /**
- * Obtm uma partida pelo ID
+ * Obtï¿½m uma partida pelo ID
  * @param match_id ID da partida
  * @return Ponteiro para a partida ou nullptr
  */
 std::shared_ptr<s_arena7x7_match> arena7x7_get_match(uint32 match_id);
 
 // ============================================================================
-// Funes de Tracking de Estatsticas
+// Funï¿½ï¿½es de Tracking de Estatï¿½sticas
 // ============================================================================
 
 /**
@@ -530,7 +530,7 @@ std::shared_ptr<s_arena7x7_match> arena7x7_get_match(uint32 match_id);
  * @param target_id ID do alvo
  * @param skill_id ID da skill (0 = ataque normal)
  * @param damage Quantidade de dano
- * @param is_critical Se foi crtico
+ * @param is_critical Se foi crï¿½tico
  */
 void arena7x7_record_damage(std::shared_ptr<s_arena7x7_match> match,
 							uint32 attacker_id, uint32 target_id, uint16 skill_id, uint32 damage, bool is_critical);
@@ -539,7 +539,7 @@ void arena7x7_record_damage(std::shared_ptr<s_arena7x7_match> match,
  * Registra uma kill
  * @param match Partida
  * @param killer_id ID do matador
- * @param victim_id ID da vtima
+ * @param victim_id ID da vï¿½tima
  * @param skill_id Skill que causou a kill
  * @param kill_damage Dano final que causou a morte
  */
@@ -561,7 +561,7 @@ void arena7x7_record_support(std::shared_ptr<s_arena7x7_match> match,
 /**
  * Registra uso de item
  * @param match Partida
- * @param char_id ID do usurio
+ * @param char_id ID do usuï¿½rio
  * @param target_id ID do alvo (0 = si mesmo)
  * @param item_id ID do item
  * @param item_name Nome do item
@@ -589,7 +589,7 @@ void arena7x7_record_sp_use(std::shared_ptr<s_arena7x7_match> match, uint32 char
 void arena7x7_record_zeny_use(std::shared_ptr<s_arena7x7_match> match, uint32 char_id, uint32 zeny_amount);
 
 // ============================================================================
-// Funes de Persistncia SQL
+// Funï¿½ï¿½es de Persistï¿½ncia SQL
 // ============================================================================
 
 /**
@@ -602,7 +602,7 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match);
 /**
  * Atualiza o ranking acumulado de um jogador
  * @param char_id ID do personagem
- * @param stats Estatsticas da partida
+ * @param stats Estatï¿½sticas da partida
  * @param won Se venceu a partida
  * @param lost Se perdeu a partida
  * @param tie Se empatou
@@ -612,8 +612,8 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match);
 bool arena7x7_update_ranking(uint32 char_id, s_arena7x7_player_stats *stats, bool won, bool lost, bool tie, bool count_match = true);
 
 /**
- * Carrega o prximo match_id do banco
- * @return Prximo match_id disponvel
+ * Carrega o prï¿½ximo match_id do banco
+ * @return Prï¿½ximo match_id disponï¿½vel
  */
 uint32 arena7x7_load_next_match_id();
 
@@ -624,35 +624,35 @@ uint32 arena7x7_load_next_match_id();
 uint16 arena7x7_get_current_season();
 
 // ============================================================================
-// Funes de Utilidade
+// Funï¿½ï¿½es de Utilidade
 // ============================================================================
 
 /**
- * Verifica se um jogador est em uma partida ativa
+ * Verifica se um jogador estï¿½ em uma partida ativa
  * @param char_id ID do personagem
- * @return true se est em partida
+ * @return true se estï¿½ em partida
  */
 bool arena7x7_is_player_in_match(uint32 char_id);
 
 /**
- * Obtm o time de um jogador
+ * Obtï¿½m o time de um jogador
  * @param char_id ID do personagem
- * @return Time do jogador ou NONE se no est em partida
+ * @return Time do jogador ou NONE se nï¿½o estï¿½ em partida
  */
 e_arena7x7_team arena7x7_get_player_team(uint32 char_id);
 
 /**
- * Verifica se dois jogadores so do mesmo time
+ * Verifica se dois jogadores sï¿½o do mesmo time
  * @param char_id1 ID do primeiro jogador
  * @param char_id2 ID do segundo jogador
- * @return true se so do mesmo time
+ * @return true se sï¿½o do mesmo time
  */
 bool arena7x7_same_team(uint32 char_id1, uint32 char_id2);
 
 /**
- * Verifica se um jogador est morto (tumba) na arena
+ * Verifica se um jogador estï¿½ morto (tumba) na arena
  * @param char_id ID do personagem
- * @return true se est morto
+ * @return true se estï¿½ morto
  */
 bool arena7x7_is_player_dead(uint32 char_id);
 
@@ -681,20 +681,20 @@ void arena7x7_transform_to_tombstone(map_session_data *sd);
 void arena7x7_restore_from_tombstone(map_session_data *sd);
 
 /**
- * Restaura todos os túmulos de uma partida
+ * Restaura todos os tï¿½mulos de uma partida
  * @param match_id ID da partida
  */
 void arena7x7_restore_all_tombstones(uint32 match_id);
 
 /**
- * Obtm estatsticas de um jogador na partida atual
+ * Obtï¿½m estatï¿½sticas de um jogador na partida atual
  * @param char_id ID do personagem
- * @return Ponteiro para as estatsticas ou nullptr
+ * @return Ponteiro para as estatï¿½sticas ou nullptr
  */
 std::shared_ptr<s_arena7x7_player_stats> arena7x7_get_player_stats(uint32 char_id);
 
 // ============================================================================
-// Hooks para integrao com o cdigo existente
+// Hooks para integraï¿½ï¿½o com o cï¿½digo existente
 // ============================================================================
 
 /**
@@ -717,12 +717,12 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 void arena7x7_on_heal(map_session_data *caster, map_session_data *target, uint16 skill_id, int heal_amount);
 
 /**
- * Hook chamado quando um buff  aplicado
+ * Hook chamado quando um buff ï¿½ aplicado
  */
 void arena7x7_on_buff(map_session_data *caster, map_session_data *target, uint16 skill_id);
 
 /**
- * Hook chamado quando um item  usado
+ * Hook chamado quando um item ï¿½ usado
  * Deve ser chamado em pc_useitem()
  */
 void arena7x7_on_item_use(map_session_data *sd, map_session_data *target,
@@ -730,12 +730,12 @@ void arena7x7_on_item_use(map_session_data *sd, map_session_data *target,
 
 /**
  * Rastreia itens consumidos durante a partida (chamado em pc_delitem)
- * Monitora uma lista especfica de itens importantes para PvP
+ * Monitora uma lista especï¿½fica de itens importantes para PvP
  */
 void arena7x7_track_item_consume(map_session_data *sd, t_itemid item_id, const char *item_name, int amount);
 
 /**
- * Hook chamado quando SP  consumido
+ * Hook chamado quando SP ï¿½ consumido
  */
 void arena7x7_on_sp_consume(map_session_data *sd, int sp_amount);
 
@@ -748,7 +748,7 @@ void arena7x7_log_skill_damage(map_session_data *caster, struct block_list *targ
 
 /**
  * Hook para contar uso de skill (todas as skills)
- * Chamado em skill_consume_requirement quando uma skill  executada
+ * Chamado em skill_consume_requirement quando uma skill ï¿½ executada
  */
 void arena7x7_count_skill_use(map_session_data *sd, uint16 skill_id);
 
@@ -777,7 +777,7 @@ void arena7x7_log_normal_attack(map_session_data *attacker, struct block_list *t
 void arena7x7_save_detailed_logs(uint32 match_id);
 
 // ============================================================================
-// Inicializao e Finalizao
+// Inicializaï¿½ï¿½o e Finalizaï¿½ï¿½o
 // ============================================================================
 
 void do_init_arena7x7(void);

@@ -388,10 +388,10 @@ static inline unsigned char clif_bl_type(struct block_list *bl, bool walking)
 	switch (bl->type)
 	{
 	case BL_PC:
-		// Arena 7x7: Jogadores disfarçados de túmulo mantidos como mortos (dead_sit=2)
+		// Arena 7x7: Jogadores disfarï¿½ados de tï¿½mulo mantidos como mortos (dead_sit=2)
 		if (((map_session_data *)bl)->disguise == MOBID_ARENA_TOMBSTONE)
 		{
-			return 0x0; // PC_TYPE (morto, não atacável)
+			return 0x0; // PC_TYPE (morto, nï¿½o atacï¿½vel)
 		}
 		return (disguised(bl) && !pcdb_checkid(status_get_viewdata(bl)->look[LOOK_BASE])) ? 0x1 : 0x0; // PC_TYPE
 	case BL_ITEM:
@@ -1335,10 +1335,10 @@ static void clif_set_unit_idle(struct block_list *bl, bool walking, send_target 
 	if (disguised(bl))
 	{
 #if PACKETVER >= 20091103
-		// Arena 7x7: Jogadores disfarçados de túmulo (mortos, dead_sit=2)
+		// Arena 7x7: Jogadores disfarï¿½ados de tï¿½mulo (mortos, dead_sit=2)
 		if (bl->type == BL_PC && ((map_session_data *)bl)->disguise == MOBID_ARENA_TOMBSTONE)
 		{
-			p.objecttype = 0x0; // PC_TYPE (morto, sem espada/balão)
+			p.objecttype = 0x0; // PC_TYPE (morto, sem espada/balï¿½o)
 		}
 		else
 		{
@@ -1506,10 +1506,10 @@ static void clif_spawn_unit(struct block_list *bl, enum send_target target)
 		}
 
 #if PACKETVER >= 20091103
-		// Arena 7x7: Jogadores disfarçados de túmulo (mortos, dead_sit=2)
+		// Arena 7x7: Jogadores disfarï¿½ados de tï¿½mulo (mortos, dead_sit=2)
 		if (sd->disguise == MOBID_ARENA_TOMBSTONE)
 		{
-			p.objecttype = 0x0; // PC_TYPE (morto, sem espada/balão)
+			p.objecttype = 0x0; // PC_TYPE (morto, sem espada/balï¿½o)
 		}
 		else
 		{
@@ -12704,7 +12704,7 @@ void clif_parse_ActionRequest_sub(map_session_data &sd, uint8 action_type, int32
 		if (battle_config.mer_idle_no_share && sd.md && battle_config.idletime_mer_option & IDLE_ATTACK)
 			sd.idletime_mer = last_tick;
 		
-		// Arena7x7: Verificar se o alvo é um jogador morto na arena
+		// Arena7x7: Verificar se o alvo ï¿½ um jogador morto na arena
 		{
 			block_list *target_bl = map_id2bl(target_id);
 			if (target_bl && target_bl->type == BL_PC)
@@ -12712,7 +12712,7 @@ void clif_parse_ActionRequest_sub(map_session_data &sd, uint8 action_type, int32
 				map_session_data *target_sd = (map_session_data *)target_bl;
 				if (target_sd && arena7x7_is_player_dead(target_sd->status.char_id))
 				{
-					clif_displaymessage(sd.fd, "Este jogador está eliminado e não pode ser atacado.");
+					clif_displaymessage(sd.fd, "Este jogador estï¿½ eliminado e nï¿½o pode ser atacado.");
 					return;
 				}
 			}
@@ -13823,7 +13823,7 @@ static void clif_parse_UseSkillToId_homun(struct homun_data *hd, map_session_dat
 		if (tsd && arena7x7_is_player_dead(tsd->status.char_id))
 		{
 			if (hd->master)
-				clif_messagecolor(hd->master, color_table[COLOR_RED], "Este jogador está eliminado e não pode ser alvo de skills.", false, SELF);
+				clif_messagecolor(hd->master, color_table[COLOR_RED], msg_txt(hd->master, 1539), false, SELF);
 			return;
 		}
 	}
@@ -13896,14 +13896,14 @@ static void clif_parse_UseSkillToId_mercenary(s_mercenary_data *md, map_session_
 	if (!md)
 		return;
 
-	// Arena 7x7: Bloquear skills de mercenário em jogadores mortos
+	// Arena 7x7: Bloquear skills de mercenï¿½rio em jogadores mortos
 	if (md->id != target_id)
 	{
 		map_session_data *tsd = map_id2sd(target_id);
 		if (tsd && arena7x7_is_player_dead(tsd->status.char_id))
 		{
 			if (md->master)
-				clif_messagecolor(md->master, color_table[COLOR_RED], "Este jogador está eliminado e não pode ser alvo de skills.", false, SELF);
+				clif_messagecolor(md->master, color_table[COLOR_RED], msg_txt(md->master, 1539), false, SELF);
 			return;
 		}
 	}
@@ -13976,7 +13976,7 @@ void clif_parse_skill_toid(map_session_data *sd, uint16 skill_id, uint16 skill_l
 		map_session_data *tsd = map_id2sd(target_id);
 		if (tsd && arena7x7_is_player_dead(tsd->status.char_id))
 		{
-			clif_messagecolor(sd, color_table[COLOR_RED], "Este jogador está eliminado e não pode ser alvo de skills.", false, SELF);
+			clif_messagecolor(sd, color_table[COLOR_RED], msg_txt(sd, 1539), false, SELF);
 			return;
 		}
 	}

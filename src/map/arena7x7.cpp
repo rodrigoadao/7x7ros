@@ -6,19 +6,19 @@
  * Arena 7x7 - Sistema de Batalha PvP em Equipes
  * =============================================================================
  *
- * Este mdulo implementa um sistema de arena PvP onde duas equipes de at 7
+ * Este mï¿½dulo implementa um sistema de arena PvP onde duas equipes de atï¿½ 7
  * jogadores cada se enfrentam. O sistema inclui:
  *
  * - Gerenciamento de partidas (criar, iniciar, finalizar, cancelar)
- * - Tracking detalhado de estatsticas (dano, kills, assists, healing)
- * - Sistema de morte permanente (jogador vira tumba at o fim da partida)
- * - Persistncia em banco de dados SQL
- * - Integrao com sistema de ranking e seasons
- * - Logs detalhados para anlise no site
+ * - Tracking detalhado de estatï¿½sticas (dano, kills, assists, healing)
+ * - Sistema de morte permanente (jogador vira tumba atï¿½ o fim da partida)
+ * - Persistï¿½ncia em banco de dados SQL
+ * - Integraï¿½ï¿½o com sistema de ranking e seasons
+ * - Logs detalhados para anï¿½lise no site
  *
- * Configurao:
- * - Mximo de jogadores por time: definido em ARENA7X7_MAX_PLAYERS_PER_TEAM
- * - Janela de assistncia: ARENA7X7_ASSIST_WINDOW (5 segundos)
+ * Configuraï¿½ï¿½o:
+ * - Mï¿½ximo de jogadores por time: definido em ARENA7X7_MAX_PLAYERS_PER_TEAM
+ * - Janela de assistï¿½ncia: ARENA7X7_ASSIST_WINDOW (5 segundos)
  *
  * =============================================================================
  */
@@ -53,18 +53,18 @@
 using namespace rathena;
 
 // ============================================================================
-// Variveis Globais
+// Variï¿½veis Globais
 // ============================================================================
 
 /// Mapa de todas as partidas ativas indexadas por match_id
-/// Usa shared_ptr para gerenciamento automtico de memria
+/// Usa shared_ptr para gerenciamento automï¿½tico de memï¿½ria
 std::unordered_map<uint32, std::shared_ptr<s_arena7x7_match>> arena7x7_matches;
 
-/// Mapa rpido para encontrar qual partida um jogador est
+/// Mapa rï¿½pido para encontrar qual partida um jogador estï¿½
 /// Formato: char_id -> match_id
 std::unordered_map<uint32, uint32> arena7x7_player_match;
 
-/// Contador incremental para gerar IDs nicos de partidas
+/// Contador incremental para gerar IDs ï¿½nicos de partidas
 /// Inicializado do banco de dados no startup
 uint32 arena7x7_match_counter = 0;
 
@@ -73,7 +73,7 @@ uint32 arena7x7_match_counter = 0;
 uint16 arena7x7_current_season = 1;
 
 // ============================================================================
-// Funes de Gerenciamento de Partida
+// Funï¿½ï¿½es de Gerenciamento de Partida
 // ============================================================================
 
 /**
@@ -87,7 +87,7 @@ uint32 arena7x7_create_match(const char *map_name)
 		return 0;
 	}
 
-	// Incrementar contador (ser inicializado do SQL no init)
+	// Incrementar contador (serï¿½ inicializado do SQL no init)
 	uint32 new_id = ++arena7x7_match_counter;
 
 	auto match = std::make_shared<s_arena7x7_match>();
@@ -105,7 +105,7 @@ uint32 arena7x7_create_match(const char *map_name)
 }
 
 /**
- * Adiciona um jogador  partida
+ * Adiciona um jogador ï¿½ partida
  */
 bool arena7x7_add_player(uint32 match_id, map_session_data *sd, e_arena7x7_team team, bool is_leader)
 {
@@ -125,10 +125,10 @@ bool arena7x7_add_player(uint32 match_id, map_session_data *sd, e_arena7x7_team 
 		return false;
 	}
 
-	// Guardar referncia ao shared_ptr para evitar problemas se o iterador for invalidado
+	// Guardar referï¿½ncia ao shared_ptr para evitar problemas se o iterador for invalidado
 	std::shared_ptr<s_arena7x7_match> match = it->second;
 
-	// Validar se o ponteiro do match  vlido (verificar ponteiro interno tambm)
+	// Validar se o ponteiro do match ï¿½ vï¿½lido (verificar ponteiro interno tambï¿½m)
 	if (!match || !match.get())
 	{
 		// //showerror("arena7x7_add_player: ponteiro de partida %u invalido (match=%p, get=%p)\n",
@@ -143,17 +143,17 @@ bool arena7x7_add_player(uint32 match_id, map_session_data *sd, e_arena7x7_team 
 		return false;
 	}
 
-	// Verificar se jogador j est em alguma partida
+	// Verificar se jogador jï¿½ estï¿½ em alguma partida
 	if (arena7x7_player_match.find(sd->status.char_id) != arena7x7_player_match.end())
 	{
 		//showwarning("arena7x7_add_player: jogador %s ja esta em uma partida\n", sd->status.name);
 		return false;
 	}
 
-	// Criar estatsticas do jogador
+	// Criar estatï¿½sticas do jogador
 	auto stats = std::make_shared<s_arena7x7_player_stats>();
 
-	// Validar se a alocao foi bem sucedida
+	// Validar se a alocaï¿½ï¿½o foi bem sucedida
 	if (!stats || !stats.get())
 	{
 		// //showerror("arena7x7_add_player: falha ao alocar memoria para estatisticas do jogador %s\n", sd->status.name);
@@ -163,7 +163,7 @@ bool arena7x7_add_player(uint32 match_id, map_session_data *sd, e_arena7x7_team 
 	stats->char_id = sd->status.char_id;
 	stats->account_id = sd->status.account_id;
 
-	// Garantir que o nome est null-terminated antes de usar
+	// Garantir que o nome estï¿½ null-terminated antes de usar
 	char safe_name[NAME_LENGTH + 1];
 	memset(safe_name, 0, sizeof(safe_name)); // Zerar todo o buffer
 	safestrncpy(safe_name, sd->status.name, sizeof(safe_name));
@@ -186,14 +186,14 @@ bool arena7x7_add_player(uint32 match_id, map_session_data *sd, e_arena7x7_team 
 	stats->is_deserter = false;
 	stats->join_time = gettick();
 
-	// Capturar informaes da guild do jogador
+	// Capturar informaï¿½ï¿½es da guild do jogador
 	stats->guild_id = sd->status.guild_id;
 	if (sd->status.guild_id > 0)
 	{
 		auto g = guild_search(sd->status.guild_id);
 		if (g && g->guild.name)
 		{
-			// Garantir que o nome da guild est null-terminated
+			// Garantir que o nome da guild estï¿½ null-terminated
 			char safe_guild_name[NAME_LENGTH + 1];
 			memset(safe_guild_name, 0, sizeof(safe_guild_name)); // Zerar todo o buffer
 			safestrncpy(safe_guild_name, g->guild.name, sizeof(safe_guild_name));
@@ -209,7 +209,7 @@ bool arena7x7_add_player(uint32 match_id, map_session_data *sd, e_arena7x7_team 
 				stats->guild_name = ""; // Deixar vazio em caso de erro
 			}
 
-			// Atualizar nome da guild do time se ainda no foi definido
+			// Atualizar nome da guild do time se ainda nï¿½o foi definido
 			if (team == ARENA7X7_TEAM_BLUE && match->blue_guild_id == 0)
 			{
 				match->blue_guild_id = sd->status.guild_id;
@@ -223,11 +223,11 @@ bool arena7x7_add_player(uint32 match_id, map_session_data *sd, e_arena7x7_team 
 		}
 	}
 
-	// Adicionar  partida
+	// Adicionar ï¿½ partida
 	match->players[sd->status.char_id] = stats;
 	arena7x7_player_match[sd->status.char_id] = match_id;
 
-	// Incrementar contador de jogadores vivos para atualizao do placar
+	// Incrementar contador de jogadores vivos para atualizaï¿½ï¿½o do placar
 	if (team == ARENA7X7_TEAM_BLUE)
 	{
 		match->blue_alive++;
@@ -249,7 +249,7 @@ bool arena7x7_add_player(uint32 match_id, map_session_data *sd, e_arena7x7_team 
 
 /**
  * Remove um jogador da partida
- * A restaurao do tmulo  feita em pc_setpos quando o jogador muda de mapa
+ * A restauraï¿½ï¿½o do tï¿½mulo ï¿½ feita em pc_setpos quando o jogador muda de mapa
  */
 bool arena7x7_remove_player(map_session_data *sd, bool deserter)
 {
@@ -258,7 +258,7 @@ bool arena7x7_remove_player(map_session_data *sd, bool deserter)
 	auto it = arena7x7_player_match.find(sd->status.char_id);
 	if (it == arena7x7_player_match.end())
 	{
-		return false; // No est em partida
+		return false; // Nï¿½o estï¿½ em partida
 	}
 
 	uint32 match_id = it->second;
@@ -269,7 +269,7 @@ bool arena7x7_remove_player(map_session_data *sd, bool deserter)
 		return false;
 	}
 
-	// Marcar como desertor se aplicvel
+	// Marcar como desertor se aplicï¿½vel
 	auto pit = match->players.find(sd->status.char_id);
 	if (pit != match->players.end() && pit->second)
 	{
@@ -289,7 +289,7 @@ bool arena7x7_remove_player(map_session_data *sd, bool deserter)
 		}
 	}
 
-	// Remover do mapa de jogadores (mas manter nas estatsticas da partida para histrico)
+	// Remover do mapa de jogadores (mas manter nas estatï¿½sticas da partida para histï¿½rico)
 	arena7x7_player_match.erase(it);
 
 // #if ARENA7X7_DEBUG
@@ -356,7 +356,7 @@ bool arena7x7_finish_match(uint32 match_id, e_arena7x7_team winner_team, uint16 
 	match->red_score = red_score;
 	match->end_time = gettick();
 
-	// Calcular durao da partida em segundos
+	// Calcular duraï¿½ï¿½o da partida em segundos
 	match->duration_seconds = (uint32)(DIFF_TICK(match->end_time, match->start_time) / 1000);
 
 	// Calcular tempo vivo para jogadores que sobreviveram a partida inteira
@@ -367,8 +367,8 @@ bool arena7x7_finish_match(uint32 match_id, e_arena7x7_team winner_team, uint16 
 		if (!stats)
 			continue;
 
-		// Se time_alive ainda  0, significa que o jogador no morreu
-		// Ento o tempo vivo  desde join_time at agora (fim da partida)
+		// Se time_alive ainda ï¿½ 0, significa que o jogador nï¿½o morreu
+		// Entï¿½o o tempo vivo ï¿½ desde join_time atï¿½ agora (fim da partida)
 		if (stats->time_alive == 0)
 		{
 			stats->time_alive = (uint32)DIFF_TICK(now, stats->join_time);
@@ -391,9 +391,9 @@ bool arena7x7_finish_match(uint32 match_id, e_arena7x7_team winner_team, uint16 
 	// Salvar logs detalhados (skills, itens, ataques)
 	arena7x7_save_detailed_logs(match_id);
 
-	// NO restaurar jogadores aqui - sero restaurados em arena7x7_remove_player
+	// Nï¿½O restaurar jogadores aqui - serï¿½o restaurados em arena7x7_remove_player
 	// quando o script teleportar cada jogador individualmente
-	// Isso mantm os jogadores como tmulo at o momento do teleporte
+	// Isso mantï¿½m os jogadores como tï¿½mulo atï¿½ o momento do teleporte
 
 	// Atualizar ranking para cada jogador
 	for (auto &kv : match->players)
@@ -402,18 +402,18 @@ bool arena7x7_finish_match(uint32 match_id, e_arena7x7_team winner_team, uint16 
 		if (!stats)
 			continue;
 
-		// Se  desertor e j foi penalizado (no est mais no player_match), pular
+		// Se ï¿½ desertor e jï¿½ foi penalizado (nï¿½o estï¿½ mais no player_match), pular
 		// Isso evita aplicar dupla penalidade
 		if (stats->is_deserter && arena7x7_player_match.find(stats->char_id) == arena7x7_player_match.end())
 		{
 // #if ARENA7X7_DEBUG
-// 			ShowInfo("Arena7x7: Desertor %s j foi penalizado, pulando atualizao no finish\n",
+// 			ShowInfo("Arena7x7: Desertor %s jï¿½ foi penalizado, pulando atualizaï¿½ï¿½o no finish\n",
 // 					 stats->char_name.c_str());
 // #endif
-			continue; // J foi penalizado em arena7x7_remove_player
+			continue; // Jï¿½ foi penalizado em arena7x7_remove_player
 		}
 
-		// Desertor  sempre tratado como derrota, no importa o resultado do time
+		// Desertor ï¿½ sempre tratado como derrota, nï¿½o importa o resultado do time
 		bool won = (stats->is_deserter) ? false : (stats->team == winner_team);
 		bool lost = (stats->is_deserter) ? true : (winner_team != ARENA7X7_TEAM_NONE && stats->team != winner_team);
 		bool tie = (stats->is_deserter) ? false : (winner_team == ARENA7X7_TEAM_NONE);
@@ -421,16 +421,16 @@ bool arena7x7_finish_match(uint32 match_id, e_arena7x7_team winner_team, uint16 
 		arena7x7_update_ranking(stats->char_id, stats.get(), won, lost, tie);
 	}
 
-	// NO remover jogadores aqui - sero removidos em pc_setpos quando teleportarem
-	// Isso permite que a restaurao do tmulo acontea corretamente
+	// Nï¿½O remover jogadores aqui - serï¿½o removidos em pc_setpos quando teleportarem
+	// Isso permite que a restauraï¿½ï¿½o do tï¿½mulo aconteï¿½a corretamente
 
 	return true;
 }
 
 /**
  * Cancela uma partida
- * Se cancelada durante preparao (antes de iniciar), remove completamente e libera o ID
- * NO remove jogadores aqui - sero removidos em pc_setpos quando teleportarem
+ * Se cancelada durante preparaï¿½ï¿½o (antes de iniciar), remove completamente e libera o ID
+ * Nï¿½O remove jogadores aqui - serï¿½o removidos em pc_setpos quando teleportarem
  */
 bool arena7x7_cancel_match(uint32 match_id)
 {
@@ -441,8 +441,8 @@ bool arena7x7_cancel_match(uint32 match_id)
 		return false;
 	}
 
-	// Se a partida ainda estava em preparao (nunca iniciou), deletar completamente
-	// para liberar o match_id e no "pular" IDs
+	// Se a partida ainda estava em preparaï¿½ï¿½o (nunca iniciou), deletar completamente
+	// para liberar o match_id e nï¿½o "pular" IDs
 	if (match->status == ARENA7X7_MATCH_WAITING)
 	{
 		// Remover todos os jogadores da partida
@@ -457,7 +457,7 @@ bool arena7x7_cancel_match(uint32 match_id)
 		// Remover a partida do mapa
 		arena7x7_matches.erase(match_id);
 
-		// Se for a ltima partida criada, decrementar o contador para reutilizar o ID
+		// Se for a ï¿½ltima partida criada, decrementar o contador para reutilizar o ID
 		if (match_id == arena7x7_match_counter)
 		{
 			arena7x7_match_counter--;
@@ -476,19 +476,19 @@ bool arena7x7_cancel_match(uint32 match_id)
 		return true;
 	}
 
-	// Se a partida j tinha iniciado, apenas marca como cancelada (mantm no histrico)
+	// Se a partida jï¿½ tinha iniciado, apenas marca como cancelada (mantï¿½m no histï¿½rico)
 	match->status = ARENA7X7_MATCH_CANCELLED;
 	match->end_time = gettick();
 
 // #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Partida %u cancelada aps incio\n", match_id);
+// 	ShowInfo("Arena7x7: Partida %u cancelada apï¿½s inï¿½cio\n", match_id);
 // #endif
 	return true;
 }
 
 /**
  * Define os nomes das guilds para uma partida
- * Pode ser chamado pelo NPC quando os times so formados
+ * Pode ser chamado pelo NPC quando os times sï¿½o formados
  */
 bool arena7x7_set_guild_names(uint32 match_id, const char *blue_guild_name, const char *red_guild_name, uint32 blue_guild_id, uint32 red_guild_id)
 {
@@ -539,7 +539,7 @@ bool arena7x7_set_guild_names(uint32 match_id, const char *blue_guild_name, cons
 }
 
 /**
- * Obtm a partida de um jogador
+ * Obtï¿½m a partida de um jogador
  */
 std::shared_ptr<s_arena7x7_match> arena7x7_get_player_match(uint32 char_id)
 {
@@ -552,7 +552,7 @@ std::shared_ptr<s_arena7x7_match> arena7x7_get_player_match(uint32 char_id)
 }
 
 /**
- * Obtm uma partida pelo ID
+ * Obtï¿½m uma partida pelo ID
  */
 std::shared_ptr<s_arena7x7_match> arena7x7_get_match(uint32 match_id)
 {
@@ -565,15 +565,15 @@ std::shared_ptr<s_arena7x7_match> arena7x7_get_match(uint32 match_id)
 }
 
 /**
- * Verifica se um jogador est em uma partida (ativa ou finalizada)
- * Inclui partidas finalizadas para permitir a restaurao do tmulo no momento do warp
+ * Verifica se um jogador estï¿½ em uma partida (ativa ou finalizada)
+ * Inclui partidas finalizadas para permitir a restauraï¿½ï¿½o do tï¿½mulo no momento do warp
  */
 bool arena7x7_is_in_match(uint32 char_id)
 {
 	auto match = arena7x7_get_player_match(char_id);
 	if (!match)
 		return false;
-	// Incluir FINISHED e CANCELLED para permitir restaurao do tmulo no warp
+	// Incluir FINISHED e CANCELLED para permitir restauraï¿½ï¿½o do tï¿½mulo no warp
 	return (match->status == ARENA7X7_MATCH_ACTIVE ||
 			match->status == ARENA7X7_MATCH_WAITING ||
 			match->status == ARENA7X7_MATCH_FINISHED ||
@@ -581,8 +581,8 @@ bool arena7x7_is_in_match(uint32 char_id)
 }
 
 /**
- * Verifica se um jogador est "morto" (tumba) na arena
- * Jogadores mortos/tumba no podem receber dispell, dano, etc.
+ * Verifica se um jogador estï¿½ "morto" (tumba) na arena
+ * Jogadores mortos/tumba nï¿½o podem receber dispell, dano, etc.
  */
 bool arena7x7_is_player_dead(uint32 char_id)
 {
@@ -597,7 +597,7 @@ bool arena7x7_is_player_dead(uint32 char_id)
 }
 
 // ============================================================================
-// Funes de Tracking de Estatsticas
+// Funï¿½ï¿½es de Tracking de Estatï¿½sticas
 // ============================================================================
 
 /**
@@ -619,11 +619,11 @@ void arena7x7_record_damage(std::shared_ptr<s_arena7x7_match> match,
 	entry.skill_id = skill_id;
 	entry.damage = damage;
 	entry.is_critical = is_critical;
-	entry.is_kill = false; // Ser atualizado em record_kill se for o caso
+	entry.is_kill = false; // Serï¿½ atualizado em record_kill se for o caso
 	entry.timestamp = now;
 	match->damage_log.push_back(entry);
 
-	// Atualizar estatsticas do atacante
+	// Atualizar estatï¿½sticas do atacante
 	auto ait = match->players.find(attacker_id);
 	if (ait != match->players.end() && ait->second)
 	{
@@ -635,14 +635,14 @@ void arena7x7_record_damage(std::shared_ptr<s_arena7x7_match> match,
 		}
 	}
 
-	// Atualizar estatsticas do alvo
+	// Atualizar estatï¿½sticas do alvo
 	auto tit = match->players.find(target_id);
 	if (tit != match->players.end() && tit->second)
 	{
 		auto &tstats = tit->second;
 		tstats->damage_received += damage;
 
-		// Registrar dano recente para assistncias
+		// Registrar dano recente para assistï¿½ncias
 		s_arena7x7_recent_damage rd;
 		rd.attacker_id = attacker_id;
 		rd.skill_id = skill_id;
@@ -650,7 +650,7 @@ void arena7x7_record_damage(std::shared_ptr<s_arena7x7_match> match,
 		rd.timestamp = now;
 		tstats->recent_damage_taken.push_back(rd);
 
-		// Limpar danos antigos (fora da janela de assistncia)
+		// Limpar danos antigos (fora da janela de assistï¿½ncia)
 		tstats->recent_damage_taken.erase(
 			std::remove_if(tstats->recent_damage_taken.begin(), tstats->recent_damage_taken.end(),
 						   [now](const s_arena7x7_recent_damage &d)
@@ -667,7 +667,7 @@ void arena7x7_record_damage(std::shared_ptr<s_arena7x7_match> match,
 	{
 		skill_data.char_id = attacker_id;
 		skill_data.skill_id = skill_id;
-		// Nome da skill ser preenchido depois, se necessrio
+		// Nome da skill serï¿½ preenchido depois, se necessï¿½rio
 		skill_data.skill_name = skill_id > 0 ? skill_get_name(skill_id) : "Ataque Normal";
 	}
 	skill_data.total_damage += damage;
@@ -701,14 +701,14 @@ void arena7x7_record_kill(std::shared_ptr<s_arena7x7_match> match,
 
 	t_tick now = gettick();
 
-	// Buscar assistentes (quem causou dano recente na vtima)
+	// Buscar assistentes (quem causou dano recente na vï¿½tima)
 	std::vector<uint32> assists;
 	auto vit = match->players.find(victim_id);
 	if (vit != match->players.end() && vit->second)
 	{
 		auto &vstats = vit->second;
 
-		// Coletar atacantes nicos (exceto o killer)
+		// Coletar atacantes ï¿½nicos (exceto o killer)
 		std::unordered_set<uint32> assist_set;
 		for (auto &rd : vstats->recent_damage_taken)
 		{
@@ -727,15 +727,15 @@ void arena7x7_record_kill(std::shared_ptr<s_arena7x7_match> match,
 			assists.push_back(aid);
 		}
 
-		// Limpar danos recentes aps morte
+		// Limpar danos recentes apï¿½s morte
 		vstats->recent_damage_taken.clear();
 
-		// Atualizar estatsticas da vtima
+		// Atualizar estatï¿½sticas da vï¿½tima
 		vstats->deaths++;
 		vstats->current_streak = 0;
 		vstats->last_death_time = now;
 
-		// Calcular tempo vivo at este momento (morte permanente - tumba)
+		// Calcular tempo vivo atï¿½ este momento (morte permanente - tumba)
 		if (vstats->time_alive == 0)
 		{
 			vstats->time_alive = (uint32)DIFF_TICK(now, vstats->join_time);
@@ -753,7 +753,7 @@ void arena7x7_record_kill(std::shared_ptr<s_arena7x7_match> match,
 	kill.assist3_id = assists.size() > 2 ? assists[2] : 0;
 	kill.timestamp = now;
 
-	// Atualizar estatsticas do killer
+	// Atualizar estatï¿½sticas do killer
 	auto kit = match->players.find(killer_id);
 	if (kit != match->players.end() && kit->second)
 	{
@@ -769,7 +769,7 @@ void arena7x7_record_kill(std::shared_ptr<s_arena7x7_match> match,
 
 	match->kill_log.push_back(kill);
 
-	// Dar assistncias
+	// Dar assistï¿½ncias
 	for (uint32 assist_id : assists)
 	{
 		auto ait = match->players.find(assist_id);
@@ -814,7 +814,7 @@ void arena7x7_record_support(std::shared_ptr<s_arena7x7_match> match,
 	entry.timestamp = now;
 	match->support_log.push_back(entry);
 
-	// Atualizar estatsticas do caster
+	// Atualizar estatï¿½sticas do caster
 	auto cit = match->players.find(caster_id);
 	if (cit != match->players.end() && cit->second)
 	{
@@ -835,7 +835,7 @@ void arena7x7_record_support(std::shared_ptr<s_arena7x7_match> match,
 		}
 	}
 
-	// Atualizar estatsticas do alvo (se heal)
+	// Atualizar estatï¿½sticas do alvo (se heal)
 	if (type == ARENA7X7_SUPPORT_HEAL && target_id != caster_id)
 	{
 		auto tit = match->players.find(target_id);
@@ -889,7 +889,7 @@ void arena7x7_record_item_use(std::shared_ptr<s_arena7x7_match> match,
 	entry.timestamp = now;
 	match->item_log.push_back(entry);
 
-	// Atualizar estatsticas do jogador
+	// Atualizar estatï¿½sticas do jogador
 	auto it = match->players.find(char_id);
 	if (it != match->players.end() && it->second)
 	{
@@ -908,7 +908,7 @@ void arena7x7_record_item_use(std::shared_ptr<s_arena7x7_match> match,
 			break;
 		}
 
-		// Verificar itens especficos pelo ID
+		// Verificar itens especï¿½ficos pelo ID
 		switch (item_id)
 		{
 		case 715: // Yellow Gemstone
@@ -958,7 +958,7 @@ void arena7x7_record_zeny_use(std::shared_ptr<s_arena7x7_match> match, uint32 ch
 }
 
 // ============================================================================
-// Funes de Persistncia SQL
+// Funï¿½ï¿½es de Persistï¿½ncia SQL
 // ============================================================================
 
 /**
@@ -969,7 +969,7 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 	if (!match)
 		return false;
 
-	// Calcular durao em segundos
+	// Calcular duraï¿½ï¿½o em segundos
 	uint32 duration = 0;
 	if (match->end_time > match->start_time)
 	{
@@ -1079,7 +1079,7 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 		}
 	}
 
-	// Salvar log de dano detalhado (apenas os primeiros N para no sobrecarregar)
+	// Salvar log de dano detalhado (apenas os primeiros N para nï¿½o sobrecarregar)
 	// Usar INSERT em lote para performance
 	const size_t MAX_DAMAGE_LOGS = 10000;
 	const size_t BATCH_SIZE = 100; // Inserir 100 registros por vez
@@ -1278,7 +1278,7 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 
 /**
  * Atualiza o ranking acumulado de um jogador
- * @param count_match - Se false, no incrementa contador de partidas (usado para desertores de partidas canceladas)
+ * @param count_match - Se false, nï¿½o incrementa contador de partidas (usado para desertores de partidas canceladas)
  */
 bool arena7x7_update_ranking(uint32 char_id, s_arena7x7_player_stats *stats, bool won, bool lost, bool tie, bool count_match)
 {
@@ -1288,7 +1288,7 @@ bool arena7x7_update_ranking(uint32 char_id, s_arena7x7_player_stats *stats, boo
 	// Calcular pontos
 	int points = 0;
 
-	// Se o jogador  desertor, aplica penalidade de -3 pontos e +1 death
+	// Se o jogador ï¿½ desertor, aplica penalidade de -3 pontos e +1 death
 	if (stats->is_deserter)
 	{
 		points = -3;
@@ -1304,7 +1304,7 @@ bool arena7x7_update_ranking(uint32 char_id, s_arena7x7_player_stats *stats, boo
 	else
 		points = 1; // Empate
 
-	// Verificar se jogador j existe no ranking
+	// Verificar se jogador jï¿½ existe no ranking
 	if (SQL_ERROR == Sql_Query(mmysql_handle,
 							   "SELECT `char_id` FROM `arena7x7_ranking` WHERE `char_id` = %u",
 							   char_id))
@@ -1376,12 +1376,12 @@ bool arena7x7_update_ranking(uint32 char_id, s_arena7x7_player_stats *stats, boo
 		}
 	}
 
-	// Atualizar ranking por classe tambm
+	// Atualizar ranking por classe tambï¿½m
 	if (SQL_ERROR == Sql_Query(mmysql_handle,
 							   "SELECT `char_id` FROM `arena7x7_ranking_by_class` WHERE `char_id` = %u AND `class` = %u",
 							   char_id, stats->job_class))
 	{
-		return true; // No  crtico
+		return true; // Nï¿½o ï¿½ crï¿½tico
 	}
 
 	if (Sql_NumRows(mmysql_handle) > 0)
@@ -1420,7 +1420,7 @@ bool arena7x7_update_ranking(uint32 char_id, s_arena7x7_player_stats *stats, boo
 }
 
 /**
- * Carrega o prximo match_id do banco
+ * Carrega o prï¿½ximo match_id do banco
  */
 uint32 arena7x7_load_next_match_id()
 {
@@ -1469,11 +1469,11 @@ uint16 arena7x7_get_current_season()
 }
 
 // ============================================================================
-// Funes de Utilidade
+// Funï¿½ï¿½es de Utilidade
 // ============================================================================
 
 /**
- * Verifica se um jogador est em uma partida ativa
+ * Verifica se um jogador estï¿½ em uma partida ativa
  */
 bool arena7x7_is_player_in_match(uint32 char_id)
 {
@@ -1482,7 +1482,7 @@ bool arena7x7_is_player_in_match(uint32 char_id)
 }
 
 /**
- * Obtm o time de um jogador
+ * Obtï¿½m o time de um jogador
  */
 e_arena7x7_team arena7x7_get_player_team(uint32 char_id)
 {
@@ -1499,7 +1499,7 @@ e_arena7x7_team arena7x7_get_player_team(uint32 char_id)
 }
 
 /**
- * Verifica se dois jogadores so do mesmo time
+ * Verifica se dois jogadores sï¿½o do mesmo time
  */
 bool arena7x7_same_team(uint32 char_id1, uint32 char_id2)
 {
@@ -1560,7 +1560,7 @@ void arena7x7_update_score_display(std::shared_ptr<s_arena7x7_match> match)
 	mapdata->bgscore_lion = match->blue_alive;
 	mapdata->bgscore_eagle = match->red_alive;
 
-	// Enviar atualizao para todos os jogadores no mapa via protocolo BG
+	// Enviar atualizaï¿½ï¿½o para todos os jogadores no mapa via protocolo BG
 	clif_bg_updatescore(m);
 
 // #if ARENA7X7_DEBUG
@@ -1570,7 +1570,7 @@ void arena7x7_update_score_display(std::shared_ptr<s_arena7x7_match> match)
 // #endif
 }
 
-//início do custom moskaum
+//inï¿½cio do custom moskaum
 /**
  * Callback para remover SC_CURSEDCIRCLE_TARGET dos alvos
  */
@@ -1585,7 +1585,7 @@ static int arena7x7_remove_cursedcircle_callback(struct block_list *bl, va_list 
 	status_change *tsc = status_get_sc(bl);
 	
 	if (tsc && tsc->getSCE(SC_CURSEDCIRCLE_TARGET)) {
-		// Verificar se este alvo está preso pelo Shura que morreu
+		// Verificar se este alvo estï¿½ preso pelo Shura que morreu
 		if (tsc->getSCE(SC_CURSEDCIRCLE_TARGET)->val2 == (int)shura_id) {
 // #if ARENA7X7_DEBUG
 // 			ShowInfo("Arena7x7: Removendo SC_CURSEDCIRCLE_TARGET de %s\n", target->status.name);
@@ -1610,7 +1610,7 @@ static void arena7x7_remove_cursedcircle_targets(map_session_data *sd)
 	// Verificar se o jogador tem SC_CURSEDCIRCLE_ATKER ativo
 	status_change *sc = status_get_sc((struct block_list *)sd);
 	if (!sc || !sc->getSCE(SC_CURSEDCIRCLE_ATKER))
-		return; // Não tem Cursed Circle ativo
+		return; // Nï¿½o tem Cursed Circle ativo
 
 	uint32 shura_id = sd->id;
 
@@ -1619,20 +1619,20 @@ static void arena7x7_remove_cursedcircle_targets(map_session_data *sd)
 // 		sd->status.name, shura_id);
 // #endif
 
-	// Procurar em toda a área do mapa
+	// Procurar em toda a ï¿½rea do mapa
 	map_foreachinmap(arena7x7_remove_cursedcircle_callback, sd->m, BL_PC, shura_id);
 
-	// Remover o status do próprio Shura também
+	// Remover o status do prï¿½prio Shura tambï¿½m
 	status_change_end((struct block_list *)sd, SC_CURSEDCIRCLE_ATKER);
 }
 //fim do custom
 /**
  * Transforma jogador em tumba (morte permanente na arena)
- * O jogador fica MORTO e no pode ser ressuscitado at o fim da partida
+ * O jogador fica MORTO e nï¿½o pode ser ressuscitado atï¿½ o fim da partida
  */
 /**
  * Transforma jogador em tumba (morte permanente na arena)
- * O jogador fica MORTO e no pode ser ressuscitado at o fim da partida.
+ * O jogador fica MORTO e nï¿½o pode ser ressuscitado atï¿½ o fim da partida.
  * Usa disguise para mostrar visualmente uma tumba de MVP.
  */
 void arena7x7_transform_to_tombstone(map_session_data *sd)
@@ -1652,10 +1652,10 @@ void arena7x7_transform_to_tombstone(map_session_data *sd)
 		return;
 	}
 
-// 	// OFICIAL: Player fica MORTO mas com disguise visível
-// 	// Não reviver! O disguise funciona com player morto
+// 	// OFICIAL: Player fica MORTO mas com disguise visï¿½vel
+// 	// Nï¿½o reviver! O disguise funciona com player morto
 	
-// 	// Garantir que está no estado morto correto
+// 	// Garantir que estï¿½ no estado morto correto
 // 	if (!pc_isdead(sd)) {
 // 		sd->state.dead_sit = 1; // Morto deitado
 // 		sd->vd.dead_sit = 1;
@@ -1665,8 +1665,8 @@ void arena7x7_transform_to_tombstone(map_session_data *sd)
 // // 	ShowInfo("Arena7x7 DEBUG: Player permanece morto (dead_sit=%d)\n", sd->state.dead_sit);
 // // #endif
 
-// 	// AGORA marcar como morto no sistema Arena7x7 (impede ressurreição e dano futuros)
-// 	// Fazer isso ANTES do disguise para que a proteo contra dano j esteja ativa
+// 	// AGORA marcar como morto no sistema Arena7x7 (impede ressurreiï¿½ï¿½o e dano futuros)
+// 	// Fazer isso ANTES do disguise para que a proteï¿½ï¿½o contra dano jï¿½ esteja ativa
 // 	stats->is_dead = true;
 // // #if ARENA7X7_DEBUG
 // // 	ShowInfo("Arena7x7 DEBUG: Marcado is_dead=true\n");
@@ -1692,7 +1692,7 @@ void arena7x7_transform_to_tombstone(map_session_data *sd)
 // // 	ShowInfo("Arena7x7 DEBUG: Aplicando SC_STOP...\n");
 // // #endif
 // 	status_change_start(NULL, sd, SC_STOP, 10000, 0, 0, 0, 0, 1800000, SCSTART_NOAVOID | SCSTART_NOTICKDEF | SCSTART_NORATEDEF, 0);
-	// Marcar como morto no sistema Arena7x7 (impede ressurreição e dano futuros)
+	// Marcar como morto no sistema Arena7x7 (impede ressurreiï¿½ï¿½o e dano futuros)
 	stats->is_dead = true;
 
 #if ARENA7X7_DEBUG
@@ -1703,23 +1703,38 @@ void arena7x7_transform_to_tombstone(map_session_data *sd)
 	// Isso remove o efeito visual e impede que o jogador morto continue protegendo outros
 	status_change_end(sd, SC_DEVOTION);
 
-	// IMPORTANTE: Garantir que jogador está MORTO e DEITADO
+	// IMPORTANTE: Cancelar status de invisibilidade ANTES de mostrar como morto
+	// Isso corrige o bug onde Feint Bomb impedia o jogador de aparecer deitado
+	status_change_end(sd, SC__FEINTBOMB);
+	status_change_end(sd, SC_CLOAKING);
+	status_change_end(sd, SC_CLOAKINGEXCEED);
+	status_change_end(sd, SC_CHASEWALK);
+	status_change_end(sd, SC_CAMOUFLAGE);
+	status_change_end(sd, SC_STEALTHFIELD);
+	status_change_end(sd, SC_SUHIDE);
+	status_change_end(sd, SC__INVISIBILITY);
+
+	// IMPORTANTE: Remover TODOS os status/buffs do jogador ao morrer na arena
+	// Isso Ã© mais limpo e evita comportamentos estranhos (jogador morto com buffs)
+	status_change_clear(sd, 3); // 3 = clear all (equivalente a morte)
+
+	// IMPORTANTE: Garantir que jogador estï¿½ MORTO e DEITADO
 	// Setar HP para 0 para garantir estado de morte
 	sd->status.hp = 0;
 	sd->battle_status.hp = 0;
 	
-	// Forçar estado visual de morto (deitado)
+	// Forï¿½ar estado visual de morto (deitado)
 	sd->state.dead_sit = 1;
 	sd->vd.dead_sit = 1;
 
-	// Parar qualquer movimento/ação
+	// Parar qualquer movimento/aï¿½ï¿½o
 	unit_stop_walking(sd, USW_FIXPOS);
 	unit_stop_attack(sd);
 
 	// Cancelar qualquer cast em andamento
 	unit_skillcastcancel(sd, 0);
 
-	// Enviar packet para forçar cliente mostrar jogador morto (deitado)
+	// Enviar packet para forï¿½ar cliente mostrar jogador morto (deitado)
 	clif_clearunit_area(*sd, CLR_DEAD);
 	clif_spawn(sd);
 
@@ -1728,7 +1743,7 @@ void arena7x7_transform_to_tombstone(map_session_data *sd)
 		SCSTART_NOAVOID | SCSTART_NOTICKDEF | SCSTART_NORATEDEF, 0);
 
 	// IMPORTANTE: Cancelar respawn timer se foi adicionado por pc_dead()
-	// O pc_dead()  chamado ANTES de arena7x7_on_death em status_damage()
+	// O pc_dead() ï¿½ chamado ANTES de arena7x7_on_death em status_damage()
 	if (sd->respawn_tid != INVALID_TIMER)
 	{
 // #if ARENA7X7_DEBUG
@@ -1786,10 +1801,10 @@ void arena7x7_restore_from_tombstone(map_session_data *sd)
 	auto stats = arena7x7_get_player_stats(sd->status.char_id);
 	if (stats)
 	{
-		stats->is_dead = false; // Permite aes novamente
+		stats->is_dead = false; // Permite aï¿½ï¿½es novamente
 	}
 
-	// Remover status de imobilizao
+	// Remover status de imobilizaï¿½ï¿½o
 	status_change_end(sd, SC_STOP);
 	status_change_end(sd, SC_STONE);
 	status_change_end(sd, SC_ANKLE);
@@ -1808,7 +1823,7 @@ void arena7x7_restore_from_tombstone(map_session_data *sd)
 }
 
 /**
- * Restaura todos os túmulos de uma partida
+ * Restaura todos os tï¿½mulos de uma partida
  * Chamado no fim da partida para restaurar todos os jogadores mortos
  */
 void arena7x7_restore_all_tombstones(uint32 match_id)
@@ -1830,7 +1845,7 @@ void arena7x7_restore_all_tombstones(uint32 match_id)
 		uint32 char_id = kv.first;
 		auto stats = kv.second;
 
-		// Verificar se o jogador está morto (tumba)
+		// Verificar se o jogador estï¿½ morto (tumba)
 		if (stats && stats->is_dead)
 		{
 			// Encontrar o jogador online
@@ -1857,7 +1872,7 @@ void arena7x7_restore_all_tombstones(uint32 match_id)
 }
 
 /**
- * Obtm estatsticas de um jogador na partida atual
+ * Obtï¿½m estatï¿½sticas de um jogador na partida atual
  */
 std::shared_ptr<s_arena7x7_player_stats> arena7x7_get_player_stats(uint32 char_id)
 {
@@ -1874,7 +1889,7 @@ std::shared_ptr<s_arena7x7_player_stats> arena7x7_get_player_stats(uint32 char_i
 }
 
 // ============================================================================
-// Hooks para integrao com o cdigo existente
+// Hooks para integraï¿½ï¿½o com o cï¿½digo existente
 // ============================================================================
 
 /**
@@ -1912,7 +1927,7 @@ void arena7x7_on_damage(struct block_list *src, struct block_list *target,
 
 	map_session_data *target_sd = (map_session_data *)target;
 
-	// Verificar se ambos esto na mesma partida
+	// Verificar se ambos estï¿½o na mesma partida
 	auto match = arena7x7_get_player_match(src_sd->status.char_id);
 	if (!match)
 		return;
@@ -1931,7 +1946,7 @@ void arena7x7_on_damage(struct block_list *src, struct block_list *target,
  */
 /**
  * Hook chamado quando um jogador morre na arena.
- * Registra a kill/morte nas estatsticas e transforma o jogador em tumba.
+ * Registra a kill/morte nas estatï¿½sticas e transforma o jogador em tumba.
  */
 void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint16 skill_id)
 {
@@ -1956,7 +1971,7 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 		return;
 	}
 
-	// Verificar se o jogador j est morto (tumba) - evita processar duas vezes
+	// Verificar se o jogador jï¿½ estï¿½ morto (tumba) - evita processar duas vezes
 	auto vstats = arena7x7_get_player_stats(victim->status.char_id);
 	if (vstats && vstats->is_dead)
 	{
@@ -1967,10 +1982,10 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 	}
 
 	uint32 killer_id = killer ? killer->status.char_id : 0;
-	uint16 final_skill_id = skill_id; // skill_id=0 é válido (ataque normal)
+	uint16 final_skill_id = skill_id; // skill_id=0 ï¿½ vï¿½lido (ataque normal)
 	uint32 final_kill_damage = 0;
 
-	// Se killer não está na partida, não registrar como kill normal
+	// Se killer nï¿½o estï¿½ na partida, nï¿½o registrar como kill normal
 	if (killer)
 	{
 		auto killer_match = arena7x7_get_player_match(killer->status.char_id);
@@ -1980,13 +1995,13 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 		}
 	}
 
-	// Se não temos killer direto, tentar descobrir pelo último dano recebido
+	// Se nï¿½o temos killer direto, tentar descobrir pelo ï¿½ltimo dano recebido
 	if (killer_id == 0)
 	{
 		auto vit = match->players.find(victim->status.char_id);
 		if (vit != match->players.end() && vit->second && !vit->second->recent_damage_taken.empty())
 		{
-			// Buscar o atacante mais recente que está na partida
+			// Buscar o atacante mais recente que estï¿½ na partida
 			t_tick now = gettick();
 			t_tick most_recent = 0;
 			
@@ -1995,7 +2010,7 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 				// Verificar se o dano foi recente (dentro da janela de assist)
 				if (DIFF_TICK(now, rd.timestamp) <= ARENA7X7_ASSIST_WINDOW)
 				{
-					// Verificar se este atacante está na partida
+					// Verificar se este atacante estï¿½ na partida
 					auto attacker_match = arena7x7_get_player_match(rd.attacker_id);
 					if (attacker_match && attacker_match->match_id == match->match_id)
 					{
@@ -2003,8 +2018,8 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 						{
 							most_recent = rd.timestamp;
 							killer_id = rd.attacker_id;
-							final_skill_id = rd.skill_id; // skill_id=0 é válido (ataque normal)
-							final_kill_damage = rd.damage; // Dano do último hit
+							final_skill_id = rd.skill_id; // skill_id=0 ï¿½ vï¿½lido (ataque normal)
+							final_kill_damage = rd.damage; // Dano do ï¿½ltimo hit
 						}
 					}
 				}
@@ -2023,13 +2038,13 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 		auto vit = match->players.find(victim->status.char_id);
 		if (vit != match->players.end() && vit->second && !vit->second->recent_damage_taken.empty())
 		{
-			// Buscar o último dano deste killer específico
+			// Buscar o ï¿½ltimo dano deste killer especï¿½fico
 			for (auto it = vit->second->recent_damage_taken.rbegin(); it != vit->second->recent_damage_taken.rend(); ++it)
 			{
 				if (it->attacker_id == killer_id)
 				{
 					final_kill_damage = it->damage;
-					if (skill_id == 0) // Se não temos skill_id direto, usar do registro
+					if (skill_id == 0) // Se nï¿½o temos skill_id direto, usar do registro
 						final_skill_id = it->skill_id;
 					break;
 				}
@@ -2049,7 +2064,7 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 	}
 	else
 	{
-		// Apenas atualizar morte da vítima (morte por ambiente, queda, etc)
+		// Apenas atualizar morte da vï¿½tima (morte por ambiente, queda, etc)
 		auto vit = match->players.find(victim->status.char_id);
 		if (vit != match->players.end() && vit->second)
 		{
@@ -2057,9 +2072,9 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 			vit->second->current_streak = 0;
 			vit->second->last_death_time = gettick();
 
-			// Calcular tempo vivo até este momento
-			// Se já tinha morrido antes, considera o tempo desde o join_time até a última morte
-			// Como é morte permanente (tumba), só morre uma vez
+			// Calcular tempo vivo atï¿½ este momento
+			// Se jï¿½ tinha morrido antes, considera o tempo desde o join_time atï¿½ a ï¿½ltima morte
+			// Como ï¿½ morte permanente (tumba), sï¿½ morre uma vez
 			if (vit->second->time_alive == 0)
 			{
 				vit->second->time_alive = (uint32)DIFF_TICK(gettick(), vit->second->join_time);
@@ -2069,15 +2084,15 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 		}
 	}
 //custom moskaum
-	// Se é um Shura com Cursed Circle ativo, remover de todos os alvos
+	// Se ï¿½ um Shura com Cursed Circle ativo, remover de todos os alvos
 	arena7x7_remove_cursedcircle_targets(victim);
 //fim do custom
 	// Transformar jogador em tumba (morte permanente)
 	arena7x7_transform_to_tombstone(victim);
 
 	// IMPORTANTE: Disparar evento de morte do BG manualmente
-	// Como retornamos 0 em pc_dead(), o cdigo em status.cpp no chega a executar
-	// o evento die_event, ento precisamos dispar-lo aqui
+	// Como retornamos 0 em pc_dead(), o cï¿½digo em status.cpp nï¿½o chega a executar
+	// o evento die_event, entï¿½o precisamos disparï¿½-lo aqui
 	if (victim->bg_id)
 	{
 		std::shared_ptr<s_battleground_data> bg = util::umap_find(bg_team_db, victim->bg_id);
@@ -2104,12 +2119,12 @@ void arena7x7_on_heal(map_session_data *caster, map_session_data *target, uint16
 	if (!match)
 		return;
 
-	// Verificar se o alvo est na mesma partida
+	// Verificar se o alvo estï¿½ na mesma partida
 	auto target_match = arena7x7_get_player_match(target->status.char_id);
 	if (!target_match || target_match->match_id != match->match_id)
 		return;
 
-	// Verificar se so do mesmo time (heal em inimigo no conta como suporte)
+	// Verificar se sï¿½o do mesmo time (heal em inimigo nï¿½o conta como suporte)
 	if (!arena7x7_same_team(caster->status.char_id, target->status.char_id))
 		return;
 
@@ -2118,7 +2133,7 @@ void arena7x7_on_heal(map_session_data *caster, map_session_data *target, uint16
 }
 
 /**
- * Hook chamado quando um buff  aplicado
+ * Hook chamado quando um buff ï¿½ aplicado
  */
 void arena7x7_on_buff(map_session_data *caster, map_session_data *target, uint16 skill_id)
 {
@@ -2133,23 +2148,23 @@ void arena7x7_on_buff(map_session_data *caster, map_session_data *target, uint16
 	if (!target_match || target_match->match_id != match->match_id)
 		return;
 
-	// Verificar se so do mesmo time
+	// Verificar se sï¿½o do mesmo time
 	if (!arena7x7_same_team(caster->status.char_id, target->status.char_id))
 	{
-		//  debuff em inimigo
+		// ï¿½ debuff em inimigo
 		arena7x7_record_support(match, caster->status.char_id, target->status.char_id,
 								skill_id, ARENA7X7_SUPPORT_DEBUFF, 0);
 	}
 	else
 	{
-		//  buff em aliado
+		// ï¿½ buff em aliado
 		arena7x7_record_support(match, caster->status.char_id, target->status.char_id,
 								skill_id, ARENA7X7_SUPPORT_BUFF, 0);
 	}
 }
 
 /**
- * Hook chamado quando um item  usado
+ * Hook chamado quando um item ï¿½ usado
  */
 void arena7x7_on_item_use(map_session_data *sd, map_session_data *target,
 						  t_itemid item_id, const char *item_name, int value)
@@ -2167,7 +2182,7 @@ void arena7x7_on_item_use(map_session_data *sd, map_session_data *target,
 	// Determinar tipo de item
 	e_arena7x7_item_type type = ARENA7X7_ITEM_OTHER;
 
-	// IDs de poes de HP comuns
+	// IDs de poï¿½ï¿½es de HP comuns
 	switch (item_id)
 	{
 	case 501:
@@ -2199,7 +2214,7 @@ void arena7x7_on_item_use(map_session_data *sd, map_session_data *target,
 
 /**
  * Rastreia itens consumidos durante a partida (chamado em pc_delitem)
- * Monitora uma lista especfica de itens importantes para PvP
+ * Monitora uma lista especï¿½fica de itens importantes para PvP
  */
 void arena7x7_track_item_consume(map_session_data *sd, t_itemid item_id, const char *item_name, int amount)
 {
@@ -2210,8 +2225,8 @@ void arena7x7_track_item_consume(map_session_data *sd, t_itemid item_id, const c
 	if (!match || match->status != ARENA7X7_MATCH_ACTIVE)
 		return;
 
-	// Lista de itens que so requisitos de skills (no contam para APM)
-	// Esses itens so consumidos automaticamente ao usar skills
+	// Lista de itens que sï¿½o requisitos de skills (nï¿½o contam para APM)
+	// Esses itens sï¿½o consumidos automaticamente ao usar skills
 	static const std::unordered_set<t_itemid> skill_requirement_items = {
 		// Elemental Stones
 		990,
@@ -2259,8 +2274,8 @@ void arena7x7_track_item_consume(map_session_data *sd, t_itemid item_id, const c
 		7049, // Stone
 	};
 
-	// Lista de flechas - s contam para APM quando usadas em ataque bsico (related_skill_id == 0)
-	// Quando usadas por skills (Arrow Storm, etc), NO contam para APM
+	// Lista de flechas - sï¿½ contam para APM quando usadas em ataque bï¿½sico (related_skill_id == 0)
+	// Quando usadas por skills (Arrow Storm, etc), Nï¿½O contam para APM
 	static const std::unordered_set<t_itemid> arrow_items = {
 		1750, // Arrow
 		1751, // Silver_Arrow
@@ -2276,9 +2291,9 @@ void arena7x7_track_item_consume(map_session_data *sd, t_itemid item_id, const c
 		1770, // Iron_Arrow
 	};
 
-	// Lista de IDs de itens consumveis a serem monitorados (para APM)
+	// Lista de IDs de itens consumï¿½veis a serem monitorados (para APM)
 	static const std::unordered_set<t_itemid> tracked_items = {
-		// Poes de HP bsicas
+		// Poï¿½ï¿½es de HP bï¿½sicas
 		501,
 		502,
 		503,
@@ -2308,7 +2323,7 @@ void arena7x7_track_item_consume(map_session_data *sd, t_itemid item_id, const c
 		11501,
 		11502, // Siege Potions
 
-		// Poes de SP
+		// Poï¿½ï¿½es de SP
 		509,
 		510,
 		511,
@@ -2386,23 +2401,23 @@ void arena7x7_track_item_consume(map_session_data *sd, t_itemid item_id, const c
 		12031, // Token items
 	};
 
-	// Verificar se  um item que  requisito de skill (log mas no conta APM)
+	// Verificar se ï¿½ um item que ï¿½ requisito de skill (log mas nï¿½o conta APM)
 	bool is_skill_requirement = (skill_requirement_items.find(item_id) != skill_requirement_items.end());
 
-	// Verificar se  uma flecha (tratamento especial)
+	// Verificar se ï¿½ uma flecha (tratamento especial)
 	bool is_arrow = (arrow_items.find(item_id) != arrow_items.end());
 
-	// Verificar se  um item rastrevel (conta para APM)
+	// Verificar se ï¿½ um item rastreï¿½vel (conta para APM)
 	bool is_tracked = (tracked_items.find(item_id) != tracked_items.end());
 
-	// Se no  nem requisito de skill, nem flecha, nem rastrevel, ignorar
+	// Se nï¿½o ï¿½ nem requisito de skill, nem flecha, nem rastreï¿½vel, ignorar
 	if (!is_skill_requirement && !is_arrow && !is_tracked)
 		return;
 
 	// Determinar tipo de item
 	e_arena7x7_item_type type = ARENA7X7_ITEM_OTHER;
 
-	// Poes de HP
+	// Poï¿½ï¿½es de HP
 	if ((item_id >= 501 && item_id <= 506) || item_id == 545 || item_id == 546 ||
 		item_id == 547 || item_id == 522 || item_id == 607 || item_id == 645 ||
 		item_id == 656 || item_id == 657 || (item_id >= 11547 && item_id <= 11549) ||
@@ -2410,7 +2425,7 @@ void arena7x7_track_item_consume(map_session_data *sd, t_itemid item_id, const c
 	{
 		type = ARENA7X7_ITEM_HP;
 	}
-	// Poes de SP
+	// Poï¿½ï¿½es de SP
 	else if ((item_id >= 509 && item_id <= 512) || item_id == 12427 ||
 			 item_id == 12425 || item_id == 12426)
 	{
@@ -2421,14 +2436,14 @@ void arena7x7_track_item_consume(map_session_data *sd, t_itemid item_id, const c
 	{
 		type = ARENA7X7_ITEM_GEMSTONE;
 	}
-	// Itens arremessveis (Kunai, Shuriken, etc)
+	// Itens arremessï¿½veis (Kunai, Shuriken, etc)
 	else if ((item_id >= 1750 && item_id <= 1757) || item_id == 1762 ||
 			 item_id == 1765 || item_id == 1767 || item_id == 1770 ||
 			 (item_id >= 13265 && item_id <= 13268) || (item_id >= 13277 && item_id <= 13283))
 	{
 		type = ARENA7X7_ITEM_THROWING;
 	}
-	// Flechas e munies
+	// Flechas e muniï¿½ï¿½es
 	else if ((item_id >= 1750 && item_id <= 1770) || item_id == 1065 ||
 			 (item_id >= 12004 && item_id <= 12015))
 	{
@@ -2501,14 +2516,14 @@ void arena7x7_track_item_consume(map_session_data *sd, t_itemid item_id, const c
 
 	match->item_usage_log.push_back(log_entry);
 
-	// Tambm registrar no item_log antigo para estatsticas
+	// Tambï¿½m registrar no item_log antigo para estatï¿½sticas
 	for (int i = 0; i < amount; i++)
 	{
 		arena7x7_record_item_use(match, sd->status.char_id, 0, item_id, item_name, type, 1);
 	}
 
-	// Atualizar contador de itens usados (apenas para itens rastreados, no requisitos de skill)
-	// Itens que so requisitos de skill (gemas, flechas, etc) no contam para APM
+	// Atualizar contador de itens usados (apenas para itens rastreados, nï¿½o requisitos de skill)
+	// Itens que sï¿½o requisitos de skill (gemas, flechas, etc) nï¿½o contam para APM
 	if (is_tracked && !is_skill_requirement)
 	{
 		auto it = match->players.find(sd->status.char_id);
@@ -2520,7 +2535,7 @@ void arena7x7_track_item_consume(map_session_data *sd, t_itemid item_id, const c
 }
 
 /**
- * Hook chamado quando SP  consumido
+ * Hook chamado quando SP ï¿½ consumido
  */
 void arena7x7_on_sp_consume(map_session_data *sd, int sp_amount)
 {
@@ -2535,7 +2550,7 @@ void arena7x7_on_sp_consume(map_session_data *sd, int sp_amount)
 }
 
 // ============================================================================
-// Funes de Log Detalhado para o Site
+// Funï¿½ï¿½es de Log Detalhado para o Site
 // ============================================================================
 
 /**
@@ -2549,7 +2564,7 @@ void arena7x7_log_skill_damage(map_session_data *caster, struct block_list *targ
 	if (!caster || !target || damage <= 0)
 		return;
 	if (target->type != BL_PC)
-		return; // S logar dano em jogadores
+		return; // Sï¿½ logar dano em jogadores
 
 	auto match = arena7x7_get_player_match(caster->status.char_id);
 	if (!match)
@@ -2557,12 +2572,12 @@ void arena7x7_log_skill_damage(map_session_data *caster, struct block_list *targ
 
 	map_session_data *target_sd = (map_session_data *)target;
 
-	// Verificar se o alvo est na mesma partida
+	// Verificar se o alvo estï¿½ na mesma partida
 	auto target_match = arena7x7_get_player_match(target_sd->status.char_id);
 	if (!target_match || target_match->match_id != match->match_id)
 		return;
 
-	// Verificar se so times diferentes (no logar dano em aliados)
+	// Verificar se sï¿½o times diferentes (nï¿½o logar dano em aliados)
 	if (arena7x7_same_team(caster->status.char_id, target_sd->status.char_id))
 		return;
 
@@ -2586,7 +2601,7 @@ void arena7x7_log_skill_damage(map_session_data *caster, struct block_list *targ
 
 /**
  * Hook para contar uso de skill (todas as skills, incluindo suporte)
- * Incrementa total_skills_used nas estatsticas do jogador
+ * Incrementa total_skills_used nas estatï¿½sticas do jogador
  * e registra cada skill individualmente no mapa skills_used_map
  */
 void arena7x7_count_skill_use(map_session_data *sd, uint16 skill_id)
@@ -2601,12 +2616,12 @@ void arena7x7_count_skill_use(map_session_data *sd, uint16 skill_id)
 	// Incrementar contador total de skills usadas
 	stats->total_skills_used++;
 
-	// Registrar skill especfica no mapa
+	// Registrar skill especï¿½fica no mapa
 	auto &skill_entry = stats->skills_used_map[skill_id];
 	skill_entry.first++; // Incrementar contador de uso
 	if (skill_entry.second.empty())
 	{
-		// Obter nome da skill se ainda no temos
+		// Obter nome da skill se ainda nï¿½o temos
 		const char *skill_name = skill_get_name(skill_id);
 		skill_entry.second = skill_name ? skill_name : "Unknown Skill";
 	}
@@ -2630,7 +2645,7 @@ void arena7x7_log_skill_item_consumption(map_session_data *sd, t_itemid item_id,
 	std::shared_ptr<item_data> id = item_db.find(item_id);
 	std::string item_name = id ? id->ename : "Unknown Item";
 
-	// Atualizar contador de itens usados nas estatsticas
+	// Atualizar contador de itens usados nas estatï¿½sticas
 	auto stats = arena7x7_get_player_stats(sd->status.char_id);
 	if (stats)
 	{
@@ -2653,8 +2668,8 @@ void arena7x7_log_skill_item_consumption(map_session_data *sd, t_itemid item_id,
 
 /**
  * Hook para logar uso de flechas em ataques
- * @param skill_id - ID da skill que consumiu a flecha (0 = ataque bsico)
- * Flechas s contam para APM quando usadas em ataque bsico (skill_id == 0)
+ * @param skill_id - ID da skill que consumiu a flecha (0 = ataque bï¿½sico)
+ * Flechas sï¿½ contam para APM quando usadas em ataque bï¿½sico (skill_id == 0)
  */
 void arena7x7_log_arrow_consumption(map_session_data *sd, t_itemid arrow_id, uint16 amount, int32 skill_id)
 {
@@ -2669,9 +2684,9 @@ void arena7x7_log_arrow_consumption(map_session_data *sd, t_itemid arrow_id, uin
 	std::shared_ptr<item_data> id = item_db.find(arrow_id);
 	std::string item_name = id ? id->ename : "Unknown Arrow";
 
-	// Atualizar contador de itens usados nas estatsticas
-	// APENAS se for ataque bsico (skill_id == 0)
-	// Flechas consumidas por skills (Arrow Storm, etc) NO contam para APM
+	// Atualizar contador de itens usados nas estatï¿½sticas
+	// APENAS se for ataque bï¿½sico (skill_id == 0)
+	// Flechas consumidas por skills (Arrow Storm, etc) Nï¿½O contam para APM
 	if (skill_id == 0)
 	{
 		auto stats = arena7x7_get_player_stats(sd->status.char_id);
@@ -2681,7 +2696,7 @@ void arena7x7_log_arrow_consumption(map_session_data *sd, t_itemid arrow_id, uin
 		}
 	}
 
-	// Criar entrada de log (sempre loga, independente de ser skill ou no)
+	// Criar entrada de log (sempre loga, independente de ser skill ou nï¿½o)
 	s_arena7x7_item_log log_entry;
 	log_entry.char_id = sd->status.char_id;
 	log_entry.char_name = sd->status.name;
@@ -2713,16 +2728,16 @@ void arena7x7_log_normal_attack(map_session_data *attacker, struct block_list *t
 
 	map_session_data *target_sd = (map_session_data *)target;
 
-	// Verificar se o alvo est na mesma partida
+	// Verificar se o alvo estï¿½ na mesma partida
 	auto target_match = arena7x7_get_player_match(target_sd->status.char_id);
 	if (!target_match || target_match->match_id != match->match_id)
 		return;
 
-	// Verificar se so times diferentes
+	// Verificar se sï¿½o times diferentes
 	if (arena7x7_same_team(attacker->status.char_id, target_sd->status.char_id))
 		return;
 
-	// Criar chave nica attacker->target
+	// Criar chave ï¿½nica attacker->target
 	uint64 key = ((uint64)attacker->status.char_id << 32) | target_sd->status.char_id;
 
 	// Atualizar ou criar entrada
@@ -3054,12 +3069,12 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 }
 
 // ============================================================================
-// Inicializao e Finalizao
+// Inicializaï¿½ï¿½o e Finalizaï¿½ï¿½o
 // ============================================================================
 
 void do_init_arena7x7(void)
 {
-	// Carregar prximo match_id do banco
+	// Carregar prï¿½ximo match_id do banco
 	arena7x7_match_counter = arena7x7_load_next_match_id() - 1;
 
 	// Carregar temporada atual

@@ -991,7 +991,7 @@ Body:
     Icon: EFST_AUTOCOUNTER
     DurationLookup: KN_AUTOCOUNTER
     States:
-      NoAttack: true
+      NoAttackCond: true  # Permite ataque proativo nos primeiros 400ms (comportamento oficial)
       NoMove: true
       NoDropItem: true
       NoInteract: true
@@ -3395,7 +3395,6 @@ Body:
     Flags:
       NoDispell: true
       NoBanishingBuster: true
-      NoClearance: true
   - Status: Stasis
     Icon: EFST_STASIS
     DurationLookup: WL_STASIS

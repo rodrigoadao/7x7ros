@@ -10073,7 +10073,8 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 		break;
 
 	case KN_AUTOCOUNTER:
-		sc_start(src, bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv));
+		// val1 = skill_lv, val2 = tick de início (para permitir ataque proativo nos primeiros 400ms)
+		sc_start2(src, bl, type, 100, skill_lv, (int32)tick, skill_get_time(skill_id, skill_lv));
 		skill_addtimerskill(src, tick + 100, bl->id, 0, 0, skill_id, skill_lv, BF_WEAPON, flag);
 		break;
 
@@ -13891,7 +13892,8 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 			if (src == bl)
 				rate = 100; // Success Chance: On self, 100%
 			else if (bl->type == BL_PC)
-				rate += 20 + 10 * skill_lv; // On Players, (20 + 10 * Skill Level) %
+				// rate += 20 + 10 * skill_lv; // On Players, (20 + 10 * Skill Level) %
+				rate += 20 + 5 * skill_lv; // On Players, (20 + 10 * Skill Level) %
 			else
 				rate += 40 + 10 * skill_lv; // On Monsters, (40 + 10 * Skill Level) %
 
@@ -14237,6 +14239,15 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 				status_change_end(bl, SC_NEWMOON);
 				if (tsc && tsc->getSCE(SC__SHADOWFORM) && rnd() % 100 < 100 - tsc->getSCE(SC__SHADOWFORM)->val1 * 10) // [100 - (Skill Level x 10)] %
 					status_change_end(bl, SC__SHADOWFORM);
+			}
+			// Reveal seduced targets if they are hidden (check separately)
+			if (tsc && tsc->getSCE(SC_VOICEOFSIREN) && 
+				((tsc->option & (OPTION_HIDE | OPTION_CLOAK)) || tsc->getSCE(SC_CAMOUFLAGE)))
+			{
+				status_change_end(bl, SC_HIDING);
+				status_change_end(bl, SC_CLOAKING);
+				status_change_end(bl, SC_CLOAKINGEXCEED);
+				status_change_end(bl, SC_CAMOUFLAGE);
 			}
 			// Attack Speed decrease and Blind happen to everyone around caster, not just hidden targets.
 			sc_start(src, bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv));
@@ -19799,6 +19810,27 @@ static int32 skill_unit_onplace(struct skill_unit *unit, struct block_list *bl, 
 
 	nullpo_ret(ss = map_id2bl(sg->src_id));
 
+	// CUSTOM moskaum: If skill unit caster is seduced, protect the seducer from skill unit damage
+	if (ss && ss->type == BL_PC && bl->type == BL_PC)
+	{
+		status_change *ss_sc = status_get_sc(ss);
+		if (ss_sc && ss_sc->getSCE(SC_VOICEOFSIREN) && ss_sc->getSCE(SC_VOICEOFSIREN)->val2 == bl->id)
+		{
+			// Caster (ss) is seduced and target (bl) is the seducer
+			// Check if skill is in exception list
+			if (sg->skill_id != SA_DISPELL && 
+				sg->skill_id != SC_SHADOWFORM && 
+				sg->skill_id != SC_BLOODYLUST &&
+				sg->skill_id != SC_BODYPAINT &&
+				sg->skill_id != MG_SIGHT &&
+				sg->skill_id != AL_RUWACH &&
+				sg->skill_id != AC_CONCENTRATION)
+			{
+				return 0; // Don't hit seducer
+			}
+		}
+	}
+
 	status_data *tstatus = status_get_status_data(*bl);
 
 	//if ((skill_get_type(sg->skill_id) == BF_MAGIC && ((battle_config.land_protector_behavior) ? map_getcell(bl->m, bl->x, bl->y, CELL_CHKLANDPROTECTOR) : map_getcell(unit->m, unit->x, unit->y, CELL_CHKLANDPROTECTOR)) && sg->skill_id != SA_LANDPROTECTOR && sg->skill_id != SC_BLOODYLUST && sg->skill_id != SO_WARMER && sg->skill_id != SO_ARRULLO && sg->skill_id != SC_CHAOSPANIC) ||
@@ -20297,6 +20329,27 @@ int32 skill_unit_onplace_timer(struct skill_unit *unit, struct block_list *bl, t
 
 	std::bitset<INF2_MAX> inf2 = skill_db.find(skill_id)->inf2;
 
+	// CUSTOM moskaum: If skill unit caster is seduced, protect the seducer from ground skill damage
+	if (ss && ss->type == BL_PC && bl && bl->type == BL_PC && sc)
+	{
+		struct status_change_entry *sce_siren = sc->getSCE(SC_VOICEOFSIREN);
+		if (sce_siren && sce_siren->val2 == bl->id)
+		{
+			// Caster (ss) is seduced and target (bl) is the seducer
+			// Check if skill is in exception list
+			if (sg->skill_id != SA_DISPELL && 
+				sg->skill_id != SC_SHADOWFORM && 
+				sg->skill_id != SC_BLOODYLUST &&
+				sg->skill_id != SC_BODYPAINT &&
+				sg->skill_id != MG_SIGHT &&
+				sg->skill_id != AL_RUWACH &&
+				sg->skill_id != AC_CONCENTRATION)
+			{
+				return 0; // Don't hit seducer with ground/area skills
+			}
+		}
+	}
+
 	if (sc && sc->getSCE(SC_VOICEOFSIREN) && sc->getSCE(SC_VOICEOFSIREN)->val2 == bl->id && inf2[INF2_ISTRAP])
 		return 0; // Traps cannot be activated by the Maestro or Wanderer that enticed the trapper with this skill.
 
@@ -20659,7 +20712,10 @@ int32 skill_unit_onplace_timer(struct skill_unit *unit, struct block_list *bl, t
 					// Apply the snare effect
 					if (((sg->unit_id == UNT_MANHOLE || sg->unit_id == UNT_ANKLESNARE) && bl->type == BL_PC) || !unit_blown_immune(bl, 0x1))
 					{
-						unit_movepos(bl, unit->x, unit->y, 0, 0);
+						// unit_movepos(bl, unit->x, unit->y, 0, 0);
+						// Preserve direction when moved by SC_ESCAPE trap
+						bool preserve_dir = (sg->skill_id == SC_ESCAPE);
+						unit_movepos(bl, unit->x, unit->y, 0, 0, preserve_dir);
 						clif_fixpos(*bl);
 					}
 					sg->val2 = bl->id;
@@ -20692,7 +20748,9 @@ int32 skill_unit_onplace_timer(struct skill_unit *unit, struct block_list *bl, t
 						}
 						if (((sg->unit_id == UNT_MANHOLE || sg->unit_id == UNT_ANKLESNARE) && bl->type == BL_PC) || !unit_blown_immune(bl, 0x1))
 						{
-							unit_movepos(bl, unit->x, unit->y, 0, 0);
+							// Preserve direction when moved by SC_ESCAPE trap
+							bool preserve_dir = (sg->skill_id == SC_ESCAPE);
+							unit_movepos(bl, unit->x, unit->y, 0, 0, preserve_dir);
 							clif_fixpos(*bl);
 						}
 					}
@@ -23814,7 +23872,7 @@ void skill_consume_requirement(map_session_data *sd, uint16 skill_id, uint16 ski
 				if (itemdb_group.item_exists(IG_GEMSTONE, require.itemid[i])) {
 					item_type = "gemstone";
 				} else {
-					std::shared_ptr<item_data> itd = itemdb_exists(require.itemid[i]);
+					std::shared_ptr<item_data> itd = item_db.find(require.itemid[i]);
 					if (itd && itd->type == IT_AMMO) {
 						item_type = "arrow";
 					}
@@ -25945,6 +26003,27 @@ static int32 skill_trap_splash(struct block_list *bl, va_list ap)
 		return 0;
 
 	nullpo_ret(ss = map_id2bl(sg->src_id));
+
+	// CUSTOM moskaum: If skill unit caster is seduced, protect the seducer from skill unit damage
+	if (ss && ss->type == BL_PC)
+	{
+		status_change *sc = status_get_sc(ss);
+		if (sc && sc->getSCE(SC_VOICEOFSIREN) && sc->getSCE(SC_VOICEOFSIREN)->val2 == bl->id)
+		{
+			// Caster (ss) is seduced and target (bl) is the seducer
+			// Check if skill is in exception list
+			if (sg->skill_id != SA_DISPELL && 
+				sg->skill_id != SC_SHADOWFORM && 
+				sg->skill_id != SC_BLOODYLUST &&
+				sg->skill_id != SC_BODYPAINT &&
+				sg->skill_id != MG_SIGHT &&
+				sg->skill_id != AL_RUWACH &&
+				sg->skill_id != AC_CONCENTRATION)
+			{
+				return 0; // Don't hit seducer
+			}
+		}
+	}
 
 	if (battle_check_target(src, bl, sg->target_flag) <= 0)
 		return 0;

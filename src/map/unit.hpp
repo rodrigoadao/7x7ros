@@ -146,7 +146,8 @@ t_tick unit_get_walkpath_time(struct block_list& bl);
 t_tick unit_escape(struct block_list *bl, struct block_list *target, int16 dist, uint8 flag = 0);
 
 // Instant unit changes
-bool unit_movepos(struct block_list *bl, int16 dst_x, int16 dst_y, int32 easy, bool checkpath);
+// bool unit_movepos(struct block_list *bl, int16 dst_x, int16 dst_y, int32 easy, bool checkpath);
+bool unit_movepos(struct block_list *bl, int16 dst_x, int16 dst_y, int32 easy, bool checkpath, bool preserve_direction = false);
 int32 unit_warp(struct block_list *bl, int16 map, int16 x, int16 y, clr_type type);
 bool unit_setdir(block_list *bl, uint8 dir, bool send_update = true);
 uint8 unit_getdir(struct block_list *bl);

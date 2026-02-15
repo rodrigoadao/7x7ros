@@ -9878,15 +9878,24 @@ int32 pc_dead(map_session_data *sd,struct block_list *src)
 		}
 	}
 
-	for(k = 0; k < MAX_DEVOTION; k++) {
-		if (sd->devotion[k]){
-			map_session_data *devsd = map_id2sd(sd->devotion[k]);
-			if (devsd)
-				status_change_end(devsd, SC_DEVOTION);
-			sd->devotion[k] = 0;
-		}
+	// for(k = 0; k < MAX_DEVOTION; k++) {
+	// 	if (sd->devotion[k]){
+	// 		map_session_data *devsd = map_id2sd(sd->devotion[k]);
+	// 		if (devsd)
+	// 			status_change_end(devsd, SC_DEVOTION);
+	// 		sd->devotion[k] = 0;
+	// 	}
+	// }
+// DEPOIS (corrigido):
+for(k = 0; k < MAX_DEVOTION; k++) {
+	if (sd->devotion[k]){
+		map_session_data *devsd = map_id2sd(sd->devotion[k]);
+		if (devsd)
+			status_change_end(devsd, SC_DEVOTION);
+		sd->devotion[k] = 0;
 	}
-
+}
+//
 	for (k = 0; k < MAX_STELLAR_MARKS; k++) {
 		if (sd->stellar_mark[k]) {
 			map_session_data *smarksd = map_id2sd(sd->stellar_mark[k]);
@@ -10027,8 +10036,8 @@ int32 pc_dead(map_session_data *sd,struct block_list *src)
 		pc_setparam(ssd, SP_KILLEDRID, sd->id);
 		npc_script_event( *ssd, NPCE_KILLPC );
 
-		// Arena7x7: A morte é tratada em status_damage() que tem acesso ao skill_id
-		// Não chamar arena7x7_on_death aqui para evitar duplicação
+		// Arena7x7: A morte ï¿½ tratada em status_damage() que tem acesso ao skill_id
+		// Nï¿½o chamar arena7x7_on_death aqui para evitar duplicaï¿½ï¿½o
 
 		if (battle_config.pk_mode&2) {
 			ssd->status.manner -= 5;
@@ -10218,7 +10227,7 @@ int32 pc_dead(map_session_data *sd,struct block_list *src)
 			if (bg->cemetery.map > 0) { // Respawn by BG
 				// Arena7x7: Verificar se estï¿½ em partida - nï¿½o fazer respawn automï¿½tico
 				if (arena7x7_is_in_match(sd->status.char_id)) {
-					// Verificar se já está morto (tumba) - evita processar duas vezes
+					// Verificar se jï¿½ estï¿½ morto (tumba) - evita processar duas vezes
 					if (arena7x7_is_player_dead(sd->status.char_id)) {
 #if ARENA7X7_DEBUG
 						ShowInfo("Arena7x7 DEBUG: pc_dead - %s ja esta morto (tumba), ignorando chamada duplicada\n", sd->status.name);
@@ -10226,8 +10235,8 @@ int32 pc_dead(map_session_data *sd,struct block_list *src)
 						return 0;
 					}
 					
-					// NOTA: A morte da Arena7x7 é tratada em status_damage() que tem acesso ao skill_id
-					// Este é um fallback caso status_damage não tenha processado (não deveria acontecer)
+					// NOTA: A morte da Arena7x7 ï¿½ tratada em status_damage() que tem acesso ao skill_id
+					// Este ï¿½ um fallback caso status_damage nï¿½o tenha processado (nï¿½o deveria acontecer)
 #if ARENA7X7_DEBUG
 					ShowInfo("Arena7x7 DEBUG: pc_dead detectou jogador %s em partida Arena7x7 - fallback sem skill_id\n", sd->status.name);
 #endif

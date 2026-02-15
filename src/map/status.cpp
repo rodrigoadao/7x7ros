@@ -1843,14 +1843,11 @@ int32 status_damage(struct block_list *src, struct block_list *target, int64 dhp
 				if ((type == SC_WINKCHARM || type == SC_VOICEOFSIREN || type == SC_DEEPSLEEP) && target->type != BL_PC && hp == 0)
 					continue;
 
-				// CUSTOM moskaum: Don't remove SC_DEEPSLEEP if damage was transferred via Devotion
-				if (type == SC_DEEPSLEEP && hp == 0 && sc->getSCE(SC_DEVOTION))
-				{
-					struct block_list *d_bl = map_id2bl(sc->getSCE(SC_DEVOTION)->val1);
-					if (d_bl && check_distance_bl(target, d_bl, sc->getSCE(SC_DEVOTION)->val3))
-						continue; // Devotion is active and in range, don't remove Deep Sleep
-				}
-				//fim do custom
+				// CUSTOM moskaum: Don't process RemoveOnDamaged when crusader dies with Devotion
+				// (devotee never received actual damage, it was transferred to crusader)
+				if (hp == 0)
+					continue;
+
 				if (sc->getSCE(type) && it.second->flag[SCF_REMOVEONDAMAGED])
 				{
 					// A status change that gets broken by damage should still be considered when calculating if a status change can be applied or not (for the same attack).
@@ -2588,9 +2585,9 @@ bool status_check_skilluse(struct block_list *src, struct block_list *target, ui
 			(src->type != BL_PC || ((TBL_PC *)src)->skillitem != skill_id))
 		{				   // Skills blocked through status changes...
 			if (!flag && ( // Blocked only from using the skill (stuff like autospell may still go through
-							 (sc->cant.cast && skill_id != RK_REFRESH && skill_id != SU_GROOMING && skill_id != SR_GENTLETOUCH_CURE) ||
+						 (sc->cant.cast && skill_id != RK_STORMBLAST && skill_id != RK_GIANTGROWTH && skill_id != RK_STONEHARDSKIN && skill_id != RK_VITALITYACTIVATION && skill_id != RK_ABUNDANCE && skill_id != RK_CRUSHSTRIKE && skill_id != RK_REFRESH && skill_id != RK_MILLENNIUMSHIELD && skill_id != RK_FIGHTINGSPIRIT && skill_id != RK_LUXANIMA && skill_id != SU_GROOMING && skill_id != SR_GENTLETOUCH_CURE) ||
 #ifndef RENEWAL
-							 (sc->getSCE(SC_BASILICA) && (sc->getSCE(SC_BASILICA)->val4 != src->id || skill_id != HP_BASILICA)) || // Only Basilica caster that can cast, and only Basilica to cancel it
+						 (sc->cant.cast && skill_id != RK_STORMBLAST && skill_id != RK_GIANTGROWTH && skill_id != RK_STONEHARDSKIN && skill_id != RK_VITALITYACTIVATION && skill_id != RK_ABUNDANCE && skill_id != RK_CRUSHSTRIKE && skill_id != RK_REFRESH && skill_id != RK_MILLENNIUMSHIELD && skill_id != RK_FIGHTINGSPIRIT && skill_id != RK_LUXANIMA && skill_id != SU_GROOMING && skill_id != SR_GENTLETOUCH_CURE) || 
 #endif
 							 (sc->getSCE(SC_MARIONETTE) && skill_id != CG_MARIONETTE) ||  // Only skill you can use is marionette again to cancel it
 							 (sc->getSCE(SC_MARIONETTE2) && skill_id == CG_MARIONETTE) || // Cannot use marionette if you are being buffed by another
@@ -7263,6 +7260,16 @@ void status_calc_state(block_list &bl, status_change &sc, std::shared_ptr<s_stat
 
 				case SC_LONGING:
 					// Does not do anything. SC_LONGING is just defined with SCS_NOATTACKCOND to trigger a recalculation with the conditions under SC_DANCING above
+					break;
+
+				case SC_AUTOCOUNTER:
+					// Comportamento oficial: permite ataque proativo nos primeiros 400ms
+					// val2 = tick de início do status
+					if( DIFF_TICK( gettick(), (t_tick)sce.val2 ) > 400 ){
+						// Após 400ms, bloqueia ataque
+						restriction = true;
+					}
+					// Nos primeiros 400ms, permite ataque (restriction permanece false)
 					break;
 
 				default:
@@ -17923,6 +17930,18 @@ int32 status_change_timer_sub(struct block_list *bl, va_list ap)
 		status_change_end(bl, SC_CLOAKINGEXCEED);
 		status_change_end(bl, SC_CAMOUFLAGE);
 		status_change_end(bl, SC_NEWMOON);
+		//custom mooskaum pra interagir com sedução
+		// Reveal seduced targets if they are hidden
+		if (tsc && tsc->getSCE(SC_VOICEOFSIREN) && 
+			(tsc->getSCE(SC_HIDING) || tsc->getSCE(SC_CLOAKING) || 
+			 tsc->getSCE(SC_CLOAKINGEXCEED) || tsc->getSCE(SC_CAMOUFLAGE)))
+		{
+			status_change_end(bl, SC_HIDING);
+			status_change_end(bl, SC_CLOAKING);
+			status_change_end(bl, SC_CLOAKINGEXCEED);
+			status_change_end(bl, SC_CAMOUFLAGE);
+		}
+		//
 		// custom moskaum antes da minha altera��o
 		//  if (tsc && tsc->getSCE(SC__SHADOWFORM) && (sce && sce->val4 > 0 && sce->val4 % 2000 == 0) && // For every 2 seconds do the checking
 		//  	rnd() % 100 < 100 - tsc->getSCE(SC__SHADOWFORM)->val1 * 10)								 // [100 - (Skill Level x 10)] %
@@ -17942,6 +17961,18 @@ int32 status_change_timer_sub(struct block_list *bl, va_list ap)
 			status_change_end(bl, SC_CAMOUFLAGE);
 			status_change_end(bl, SC_CLOAKINGEXCEED);
 			status_change_end(bl, SC_NEWMOON);
+			//custom moskaum pra interagir com sedução
+				// Reveal seduced targets if they are hidden
+			if (tsc && tsc->getSCE(SC_VOICEOFSIREN) && 
+				(tsc->getSCE(SC_HIDING) || tsc->getSCE(SC_CLOAKING) || 
+				tsc->getSCE(SC_CLOAKINGEXCEED) || tsc->getSCE(SC_CAMOUFLAGE)))
+			{
+				status_change_end(bl, SC_HIDING);
+				status_change_end(bl, SC_CLOAKING);
+				status_change_end(bl, SC_CLOAKINGEXCEED);
+				status_change_end(bl, SC_CAMOUFLAGE);
+			}
+			//
 			if (battle_check_target(src, bl, BCT_ENEMY) > 0)
 				skill_attack(BF_MAGIC, src, src, bl, AL_RUWACH, 1, tick, 0);
 		}

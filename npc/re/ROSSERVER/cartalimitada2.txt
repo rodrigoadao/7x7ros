@@ -1,4 +1,4 @@
-izlude,60,167,4	script	Gestão de cartas	651,{
+izlude,60,167,4	script	GestÃ£o de cartas	651,{
 	//  if (checkweight(1201,1) == 0) {
 	//  	mes "^3355FFgordo^000000";
 	//  	close;
@@ -8,7 +8,7 @@ izlude,60,167,4	script	Gestão de cartas	651,{
 	switch(select("Comprar cartas de MVP:Remover cartas:Devolver cartas de MvP:Resetar zenys")) {
 	//case de comprar cartas de mvp
 	case 1:
-		mes "Os tokens intransferí­veis que vêm na criação do seu personagem podem ser trocados por cartas MvPs. Escolha cautelosamente, pois você não receberá novos tokens no seu personagem.";
+		mes "Os tokens intransferÃ­veis que vÃªm na criaÃ§Ã£o do seu personagem podem ser trocados por cartas MvPs. Escolha cautelosamente, pois vocÃª nÃ£o receberÃ¡ novos tokens no seu personagem.";
 		switch(select("Bijou, 10 Totens:Cutie, 1 Toten:Immortal Cursed Knight, 1 Toten:Immortal Wind Ghost, 1 Toten:Beelzebub, 5 Totens:TGK, 10 Totens:Eremes, 10 Totens:Maya Purple, 10 Totens:Kiel, 5 Totens")) {
 		case 1:
 			delitem 7831,10;
@@ -48,7 +48,7 @@ izlude,60,167,4	script	Gestão de cartas	651,{
 			break;
 	}
 	next;
-	mes "Faça o favor de jogar direito. Busque o teto da performance.";
+	mes "FaÃ§a o favor de jogar direito. Busque o teto da performance.";
 	close;
 	end;
 
@@ -58,66 +58,64 @@ case 2:
 	mes "Qual equipamento deseja remover cartas?";
 
 	deletearray .@slot_map;
-	set .@menu$, "";
+	deletearray .@menu_options;
 	set .@menu_count, 0;
 
-	// Mapeamento: equip slot -> card slot
-	// ORDEM: Head Top, Head Mid, Armor, Left Hand, Right Hand, Garment, Shoes, Accessory L
-	
-	// Head Top (equip slot 7) -> card slot 6
-	if( getequipisequiped(7) ) {
+	// Mapeamento correto de slots
+	// 6 = Head Top (equip slot 1)
+	if( getequipisequiped(1) ) {
 		set .@menu_count, .@menu_count + 1;
 		set .@slot_map[.@menu_count], 6;
-		set .@menu$, .@menu$ + "Head Top [" + getequipname(6) + "]"+ ":";
+		set .@menu_options[.@menu_count], getitemname(getequipid(1));
 	}
 
-	// Head Mid (equip slot 9) -> card slot 5
+	// 5 = Head Mid (equip slot 9)
 	if( getequipisequiped(9) ) {
 		set .@menu_count, .@menu_count + 1;
 		set .@slot_map[.@menu_count], 5;
-		set .@menu$, .@menu$ + "Head Mid [" + getequipname(5) + "]"+ ":";
+		set .@menu_options[.@menu_count], getitemname(getequipid(9));
 	}
 
-	// Armor (equip slot 2) -> card slot 7
+	// 7 = Armor (equip slot 2)
 	if( getequipisequiped(2) ) {
 		set .@menu_count, .@menu_count + 1;
 		set .@slot_map[.@menu_count], 7;
-		set .@menu$, .@menu$ + "Armor [" + getequipname(7) + "]"+ ":";
+		set .@menu_options[.@menu_count], getitemname(getequipid(2));
 	}
 
-	// Left Hand (equip slot 3) -> card slot 9
+	// 9 = Left Hand (equip slot 3)
 	if( getequipisequiped(3) ) {
 		set .@menu_count, .@menu_count + 1;
 		set .@slot_map[.@menu_count], 9;
-		set .@menu$, .@menu$ + "Weapon [" + getequipname(9) + "]"+ ":";
+		set .@menu_options[.@menu_count], getitemname(getequipid(3));
 	}
 
-	// Right Hand (equip slot 4) -> card slot 8
+	// 8 = Right Hand (equip slot 4)
 	if( getequipisequiped(4) ) {
 		set .@menu_count, .@menu_count + 1;
 		set .@slot_map[.@menu_count], 8;
-		set .@menu$, .@menu$ + "Shield [" + getequipname(8) + "]"+ ":";
+		set .@menu_options[.@menu_count], getitemname(getequipid(4));
 	}
 
-	// Garment (equip slot 5) -> card slot 3
+	// 3 = Garment (equip slot 5)
 	if( getequipisequiped(5) ) {
 		set .@menu_count, .@menu_count + 1;
 		set .@slot_map[.@menu_count], 3;
-		set .@menu$, .@menu$ + "Garment [" + getequipname(3) + "]"+ ":";
+		set .@menu_options[.@menu_count], getitemname(getequipid(5));
 	}
 
-	// Shoes (equip slot 6) -> card slot 2
+	// 2 = Shoes (equip slot 6)
 	if( getequipisequiped(6) ) {
 		set .@menu_count, .@menu_count + 1;
 		set .@slot_map[.@menu_count], 2;
-		set .@menu$, .@menu$ + "Shoes [" + getequipname(2) + "]"+ ":";
+		set .@menu_options[.@menu_count], getitemname(getequipid(6));
 	}
 
-	// Accessory L (equip slot 1) -> card slot 1
-	if( getequipisequiped(1) ) {
+	// 1 = Accessory L (equip slot 7)
+	if( getequipisequiped(7) ) {
 		set .@menu_count, .@menu_count + 1;
 		set .@slot_map[.@menu_count], 1;
-		set .@menu$, .@menu$ + "Acessory Left [" + getequipname(1) + "]"+ ":";
+		set .@menu_options[.@menu_count], getitemname(getequipid(7));
 	}
 
 	if (.@menu_count == 0) {
@@ -126,7 +124,7 @@ case 2:
 	}
 
 	next;
-	set .@selected, select(.@menu$);
+	set .@selected, select(.@menu_options[0], .@menu_options[1], .@menu_options[2], .@menu_options[3], .@menu_options[4], .@menu_options[5], .@menu_options[6], .@menu_options[7]);
 	
 	if (.@selected > .@menu_count || .@selected == 0) {
 		mes "Seleção inválida.";
@@ -134,6 +132,7 @@ case 2:
 	}
 
 	set .@part, .@slot_map[.@selected];
+	set .@equip_selected, .@menu_options[.@selected];
 
 	if(.@part == 0) {
 		mes "Erro ao selecionar equipamento.";
@@ -141,7 +140,7 @@ case 2:
 	}
 
 	if(getequipcardcnt(.@part) == 0) {
-		mes "Este equipamento não possui cartas.";
+		mes "O equipamento " + .@equip_selected + " não possui cartas.";
 		close;
 	}
 
@@ -155,7 +154,7 @@ case 2:
 	next;
 	successremovecards .@part;
 	next;
-	mes "Sucesso! Cartas removidas.";
+	mes "Sucesso! Cartas removidas de " + .@equip_selected + ".";
 	close;
 	end;
 
@@ -169,7 +168,7 @@ case 2:
 					close;
 
 				case 2:
-					mes "Qual carta MvP você quer devolver?";
+					mes "Qual carta MvP vocÃª quer devolver?";
 					switch(select("Bijou, 10 Totens:Cutie, 1 Toten:Immortal Cursed Knight, 1 Toten:Immortal Wind Ghost, 1 Toten:Beelzebub, 5 Totens:TGK, 10 Totens:Eremes, 10 Totens:Maya Purple, 10 Totens:Kiel, 5 Totens")) {
 					case 1:
 						delitem 4636,1;
@@ -211,7 +210,7 @@ case 2:
 				break;
 			}
 		next;
-		mes "Faça o favor de jogar direito. Busque o teto da performance.";
+		mes "FaÃ§a o favor de jogar direito. Busque o teto da performance.";
 		close;
 		end;
 
@@ -222,11 +221,11 @@ case 2:
 			next;
 		}
 		next;
-		mes "Faça o favor de jogar direito. Busque o teto da performance.";
+		mes "FaÃ§a o favor de jogar direito. Busque o teto da performance.";
 		close;
 		end;
 
 	next;
-	mes "Faça o favor de jogar direito. Busque o teto da performance.";
+	mes "FaÃ§a o favor de jogar direito. Busque o teto da performance.";
 	close;
 }

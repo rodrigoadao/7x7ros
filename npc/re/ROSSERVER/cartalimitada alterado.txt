@@ -1,0 +1,248 @@
+izlude,60,167,4	script	Gestão de cartas	651,{
+	//  if (checkweight(1201,1) == 0) {
+	//  	mes "^3355FFgordo^000000";
+	//  	close;
+	//  }
+
+	//inicio do npc
+	switch(select("Comprar cartas de MVP:Remover cartas:Devolver cartas de MvP:Resetar zenys")) {
+	//case de comprar cartas de mvp
+	case 1:
+		mes "Os tokens intransferíveis que vêm na criação do seu personagem podem ser trocados por cartas MvPs. Escolha cautelosamente, pois você não receberá novos tokens no seu personagem.";
+		switch(select("Bijou, 10 Totens:Cutie, 1 Toten:Immortal Cursed Knight, 1 Toten:Immortal Wind Ghost, 1 Toten:Beelzebub, 5 Totens:TGK, 10 Totens:Eremes, 10 Totens:Maya Purple, 10 Totens:Kiel, 5 Totens")) {
+		case 1:
+			delitem 7831,10;
+			getitem 4636,1;
+			break;
+		case 2:
+			delitem 7831,1;
+			getitem 27152,1;
+			break;
+		case 3:
+			delitem 7831,1;
+			getitem 31024,1;
+			break;
+		case 4:
+			delitem 7831,1;
+			getitem 31025,1;
+			break;
+		case 5:
+			delitem 7831,5;
+			getitem 4145,1;
+			break;
+		case 6:
+			delitem 7831,10;
+			getitem 4302,1;
+			break;
+		case 7:
+			delitem 7831,10;
+			getitem 4359,1;
+			break;
+		case 8:
+			delitem 7831,10;
+			getitem 4198,1;
+			break;
+		case 9:
+			delitem 7831,5;
+			getitem 4403,1;
+			break;
+	}
+	next;
+	mes "Faça o favor de jogar direito. Busque o teto da performance.";
+	close;
+	end;
+
+	//case de remover cartas
+	//case de remover cartas
+//case de remover cartas
+case 2:
+	set .zenycost,200000;
+	set .percardcost,25000;
+	set .faildestroy,0;
+
+	mes "[Removedor de Cartas]";
+
+	set .@menu$, "";
+
+	// Head Top (slot 1)
+	if( getequipisequiped(1) )
+		set .@menu$, .@menu$ + "Head Top-[" + getequipname(1) + "]:";
+	// Head Mid (slot 9)
+	if( getequipisequiped(9) )
+		set .@menu$, .@menu$ + "Head Mid-[" + getequipname(9) + "]:";
+	// Head Low (slot 10)
+	if( getequipisequiped(10) )
+		set .@menu$, .@menu$ + "Head Low-[" + getequipname(10) + "]:";
+	// Armor (slot 2)
+	if( getequipisequiped(2) )
+		set .@menu$, .@menu$ + "Armor-[" + getequipname(2) + "]:";
+	// Left Hand/Shield (slot 3)
+	if( getequipisequiped(3) )
+		set .@menu$, .@menu$ + "Left Hand-[" + getequipname(3) + "]:";
+	// Right Hand/Weapon (slot 4)
+	if( getequipisequiped(4) )
+		set .@menu$, .@menu$ + "Right Hand-[" + getequipname(4) + "]:";
+	// Garment (slot 5)
+	if( getequipisequiped(5) )
+		set .@menu$, .@menu$ + "Garment-[" + getequipname(5) + "]:";
+	// Shoes (slot 6)
+	if( getequipisequiped(6) )
+		set .@menu$, .@menu$ + "Shoes-[" + getequipname(6) + "]:";
+	// Accessory L (slot 7)
+	if( getequipisequiped(7) )
+		set .@menu$, .@menu$ + "Accessory L-[" + getequipname(7) + "]:";
+	// Accessory R (slot 8)
+	if( getequipisequiped(8) )
+		set .@menu$, .@menu$ + "Accessory R-[" + getequipname(8) + "]:";
+
+	if (.@menu$ == "") {
+		mes "Você não está usando nenhum equipamento.";
+		close;
+	}
+
+	set .@selected, select(.@menu$);
+
+	set .@count, 0;
+	set .@part, 0;
+
+	if(getequipisequiped(1)) { set .@count, .@count + 1; if(.@selected == .@count) set .@part, 1; }
+	if(getequipisequiped(9)) { set .@count, .@count + 1; if(.@selected == .@count) set .@part, 9; }
+	if(getequipisequiped(10)) { set .@count, .@count + 1; if(.@selected == .@count) set .@part, 10; }
+	if(getequipisequiped(2)) { set .@count, .@count + 1; if(.@selected == .@count) set .@part, 2; }
+	if(getequipisequiped(3)) { set .@count, .@count + 1; if(.@selected == .@count) set .@part, 3; }
+	if(getequipisequiped(4)) { set .@count, .@count + 1; if(.@selected == .@count) set .@part, 4; }
+	if(getequipisequiped(5)) { set .@count, .@count + 1; if(.@selected == .@count) set .@part, 5; }
+	if(getequipisequiped(6)) { set .@count, .@count + 1; if(.@selected == .@count) set .@part, 6; }
+	if(getequipisequiped(7)) { set .@count, .@count + 1; if(.@selected == .@count) set .@part, 7; }
+	if(getequipisequiped(8)) { set .@count, .@count + 1; if(.@selected == .@count) set .@part, 8; }
+
+	if(.@part == 0) {
+		mes "Erro ao selecionar equipamento.";
+		close;
+	}
+
+	if(getequipcardcnt(.@part) == 0) {
+		mes "Este item não possui cartas.";
+		close;
+	}
+
+	set .@cardcount,getequipcardcnt(.@part);
+
+	if (!checkweight(1202,(.@cardcount+1))) { 
+		mes "^3355FFcalmaÊ!";
+		mes "vc é gordo d+";
+		mes "kKkkKKkK";
+		mes "faça um défict calórico meu filho";
+		close;
+	}
+
+	next;
+
+	set zeny,zeny - (.zenycost+(.@cardcount * .percardcost));
+
+	set .@failchance,rand(100);
+	if (.faildestroy==1) {
+		if(.@failchance < 2) {
+			next;
+			failedremovecards .@part,0;
+			close;
+		}
+
+		if(.@failchance < 8) {
+			if (.@failtype == 1) {
+				next;
+				failedremovecards .@part,1;
+				close;
+			}
+
+			if (.@failtype == 2) {
+				next;
+				failedremovecards .@part,2;
+				close;
+			}
+		}
+	}
+
+	if(.@failchance < 10) {
+		next;
+		failedremovecards .@part,3;
+		close;
+	}
+	next;
+	successremovecards .@part;
+	next;
+	mes "Faça o favor de jogar direito. Busque o teto da performance.";
+	close;
+	end;
+
+
+		//inicio do case devolver cartas mvp
+		case 3:
+			
+			switch(select("Fechar:Devolver cartas de MvP")) {
+				
+				case 1:
+					close;
+
+				case 2:
+					mes "Qual carta MvP você quer devolver?";
+					switch(select("Bijou, 10 Totens:Cutie, 1 Toten:Immortal Cursed Knight, 1 Toten:Immortal Wind Ghost, 1 Toten:Beelzebub, 5 Totens:TGK, 10 Totens:Eremes, 10 Totens:Maya Purple, 10 Totens:Kiel, 5 Totens")) {
+					case 1:
+						delitem 4636,1;
+						getitem 7831,10;
+						break;
+					case 2:
+						delitem 27152,1;
+						getitem 7831,1;
+						break;
+					case 3:
+						delitem 31024,1;
+						getitem 7831,1;
+						break;
+					case 4:
+						delitem 31025,1;
+						getitem 7831,1;
+						break;
+					case 5:
+						delitem 4145,1;
+						getitem 7831,5;
+						break;
+					case 6:
+						delitem 4302,1;
+						getitem 7831,10;
+						break;
+					case 7:
+						delitem 4359,1;
+						getitem 7831,10;
+						break;
+					case 8:
+						delitem 4198,1;
+						getitem 7831,10;
+						break;
+					case 9:
+						delitem 4403,1;
+						getitem 7831,5;
+						break;
+				}
+				break;
+			}
+		next;
+		mes "Faça o favor de jogar direito. Busque o teto da performance.";
+		close;
+		end;
+
+		case 4:
+			set Zeny, 20000000;
+			break;
+		
+			next;
+		}
+		next;
+		mes "Faça o favor de jogar direito. Busque o teto da performance.";
+		close;
+		end;
+
+	next;
+	mes "Faça o favor de jogar direito. Busque o teto da performance.";
+	close;
+}

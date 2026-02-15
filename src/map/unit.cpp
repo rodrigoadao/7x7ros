@@ -1299,7 +1299,8 @@ t_tick unit_escape(struct block_list *bl, struct block_list *target, int16 dist,
  * @param checkpath: Whether or not to do a cell and path check for NOPASS and NOREACH
  * @return True: Success False: Fail
  */
-bool unit_movepos(struct block_list *bl, int16 dst_x, int16 dst_y, int32 easy, bool checkpath)
+// bool unit_movepos(struct block_list *bl, int16 dst_x, int16 dst_y, int32 easy, bool checkpath)
+bool unit_movepos(struct block_list *bl, int16 dst_x, int16 dst_y, int32 easy, bool checkpath, bool preserve_direction)
 {
 	int16 dx, dy;
 	struct unit_data *ud = nullptr;
@@ -1319,10 +1320,19 @@ bool unit_movepos(struct block_list *bl, int16 dst_x, int16 dst_y, int32 easy, b
 	if (checkpath && (map_getcell(bl->m, dst_x, dst_y, CELL_CHKNOPASS) || !path_search(nullptr, bl->m, bl->x, bl->y, dst_x, dst_y, easy, CELL_CHKNOREACH)))
 		return false; // Unreachable
 
+	// ud->to_x = dst_x;
+	// ud->to_y = dst_y;
+
+	// unit_setdir(bl, map_calc_dir(bl, dst_x, dst_y), false);
+
+	// dx = dst_x - bl->x;
 	ud->to_x = dst_x;
 	ud->to_y = dst_y;
 
-	unit_setdir(bl, map_calc_dir(bl, dst_x, dst_y), false);
+	// Only change direction if not preserving it
+	if (!preserve_direction) {
+		unit_setdir(bl, map_calc_dir(bl, dst_x, dst_y), false);
+	}
 
 	dx = dst_x - bl->x;
 	dy = dst_y - bl->y;
@@ -2408,6 +2418,18 @@ int32 unit_skilluse_id2(struct block_list *src, int32 target_id, uint16 skill_id
 	if (!target || src->m != target->m || !src->prev || !target->prev)
 		return 0;
 
+	// Arena7x7: Bloquear uso de skills em jogadores mortos (túmulos) ANTES do cast iniciar
+	if (target->type == BL_PC && target->id != src->id)
+	{
+		map_session_data *target_sd = (map_session_data *)target;
+		if (target_sd && arena7x7_is_player_dead(target_sd->status.char_id))
+		{
+			if (sd)
+				clif_messagecolor(sd, color_table[COLOR_RED], msg_txt(sd, 1539), false, SELF);
+			return 0;
+		}
+	}
+
 	if (battle_config.ksprotection && sd && mob_ksprotected(src, target))
 		return 0;
 
@@ -2541,6 +2563,64 @@ int32 unit_skilluse_id2(struct block_list *src, int32 target_id, uint16 skill_id
 			}
 			break;
 			//fim custom
+		//custom moskaum avanço ofensivo charge atack
+		case KN_CHARGEATK:
+		{
+			// Check if straight path to target is walkable before starting cast
+			bool walkable_path = true;
+			int32 dx = target->x - src->x;
+			int32 dy = target->y - src->y;
+			int32 len = max(abs(dx), abs(dy));
+			
+			if (len > 0)
+			{
+				for (int32 i = 1; i < len; i++)
+				{
+					int16 check_x = src->x + (dx * i / len);
+					int16 check_y = src->y + (dy * i / len);
+					
+					if (map_getcell(src->m, check_x, check_y, CELL_CHKNOPASS))
+					{
+						walkable_path = false;
+						break;
+					}
+				}
+			}
+			
+			if (!walkable_path)
+			{
+				clif_skill_fail(*sd, skill_id);
+				return 0;
+			}
+			break;
+		}
+		//
+		//custom moskaum - bloquear máscaras quando conjurador estiver seduzido e tentar usar no sedutor
+		case SC_ENERVATION:
+		case SC_GROOMY:
+		case SC_LAZINESS:
+		case SC_IGNORANCE:
+		case SC_WEAKNESS:
+		case SC_UNLUCKY:
+		{
+			// Block Masquerade skills if user is seduced and trying to target the one who seduced them
+			status_change *src_sc = status_get_sc(src);
+			
+			if (src_sc && src_sc->getSCE(SC_VOICEOFSIREN))
+			{
+				// val2 stores the ID of who the seduced person is forced to follow (the seducer)
+				int32 seducer_id = src_sc->getSCE(SC_VOICEOFSIREN)->val2;
+				
+				// If trying to target the seducer, block the skill
+				if (target_id == seducer_id)
+				{
+					clif_skill_fail(*sd, skill_id);
+					return 0;
+				}
+			}
+			break;
+		}
+		//
 		case RL_C_MARKER:
 		{
 			uint8 i = 0;
@@ -3445,7 +3525,7 @@ int32 unit_attack(struct block_list *src, int32 target_id, int32 continuous)
 		return stop_flag;
 	}
 
-	// Arena7x7: Jogador morto n�o pode ser alvo de ataques
+	// Arena7x7: Jogador morto n�o pode ser alvo de ataques
 	if (target->type == BL_PC)
 	{
 		map_session_data *target_sd = (map_session_data *)target;

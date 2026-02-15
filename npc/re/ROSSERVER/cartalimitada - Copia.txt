@@ -1,4 +1,4 @@
-izlude,60,167,4	script	Gestão de cartas	651,{
+izlude,60,167,4	script	GestÃ£o de cartas	651,{
 	//  if (checkweight(1201,1) == 0) {
 	//  	mes "^3355FFgordo^000000";
 	//  	close;
@@ -8,7 +8,7 @@ izlude,60,167,4	script	Gestão de cartas	651,{
 	switch(select("Comprar cartas de MVP:Remover cartas:Devolver cartas de MvP:Resetar zenys")) {
 	//case de comprar cartas de mvp
 	case 1:
-		mes "Os tokens intransferí­veis que vêm na criação do seu personagem podem ser trocados por cartas MvPs. Escolha cautelosamente, pois você não receberá novos tokens no seu personagem.";
+		mes "Os tokens intransferÃ­veis que vÃªm na criaÃ§Ã£o do seu personagem podem ser trocados por cartas MvPs. Escolha cautelosamente, pois vocÃª nÃ£o receberÃ¡ novos tokens no seu personagem.";
 		switch(select("Bijou, 10 Totens:Cutie, 1 Toten:Immortal Cursed Knight, 1 Toten:Immortal Wind Ghost, 1 Toten:Beelzebub, 5 Totens:TGK, 10 Totens:Eremes, 10 Totens:Maya Purple, 10 Totens:Kiel, 5 Totens")) {
 		case 1:
 			delitem 7831,10;
@@ -48,12 +48,16 @@ izlude,60,167,4	script	Gestão de cartas	651,{
 			break;
 	}
 	next;
-	mes "Faça o favor de jogar direito. Busque o teto da performance.";
+	mes "FaÃ§a o favor de jogar direito. Busque o teto da performance.";
 	close;
 	end;
 
 	//case de remover cartas - REFATORADO COM MAPEAMENTO CORRETO
 case 2:
+	set .zenycost, 200000;
+	set .percardcost, 25000;
+	set .faildestroy, 0;
+
 	mes "[Removedor de Cartas]";
 	mes "Qual equipamento deseja remover cartas?";
 
@@ -61,63 +65,56 @@ case 2:
 	set .@menu$, "";
 	set .@menu_count, 0;
 
-	// Mapeamento: equip slot -> card slot
-	// ORDEM: Head Top, Head Mid, Armor, Left Hand, Right Hand, Garment, Shoes, Accessory L
-	
-	// Head Top (equip slot 7) -> card slot 6
-	if( getequipisequiped(7) ) {
-		set .@menu_count, .@menu_count + 1;
-		set .@slot_map[.@menu_count], 6;
-		set .@menu$, .@menu$ + "Head Top [" + getequipname(6) + "]"+ ":";
-	}
-
-	// Head Mid (equip slot 9) -> card slot 5
-	if( getequipisequiped(9) ) {
-		set .@menu_count, .@menu_count + 1;
-		set .@slot_map[.@menu_count], 5;
-		set .@menu$, .@menu$ + "Head Mid [" + getequipname(5) + "]"+ ":";
-	}
-
-	// Armor (equip slot 2) -> card slot 7
-	if( getequipisequiped(2) ) {
-		set .@menu_count, .@menu_count + 1;
-		set .@slot_map[.@menu_count], 7;
-		set .@menu$, .@menu$ + "Armor [" + getequipname(7) + "]"+ ":";
-	}
-
-	// Left Hand (equip slot 3) -> card slot 9
-	if( getequipisequiped(3) ) {
-		set .@menu_count, .@menu_count + 1;
-		set .@slot_map[.@menu_count], 9;
-		set .@menu$, .@menu$ + "Weapon [" + getequipname(9) + "]"+ ":";
-	}
-
-	// Right Hand (equip slot 4) -> card slot 8
-	if( getequipisequiped(4) ) {
-		set .@menu_count, .@menu_count + 1;
-		set .@slot_map[.@menu_count], 8;
-		set .@menu$, .@menu$ + "Shield [" + getequipname(8) + "]"+ ":";
-	}
-
-	// Garment (equip slot 5) -> card slot 3
-	if( getequipisequiped(5) ) {
-		set .@menu_count, .@menu_count + 1;
-		set .@slot_map[.@menu_count], 3;
-		set .@menu$, .@menu$ + "Garment [" + getequipname(3) + "]"+ ":";
-	}
-
-	// Shoes (equip slot 6) -> card slot 2
-	if( getequipisequiped(6) ) {
-		set .@menu_count, .@menu_count + 1;
-		set .@slot_map[.@menu_count], 2;
-		set .@menu$, .@menu$ + "Shoes [" + getequipname(2) + "]"+ ":";
-	}
-
-	// Accessory L (equip slot 1) -> card slot 1
+	// Mapeamento EMPÍRICO: o que você escolhe no menu ? slot real que será removido
 	if( getequipisequiped(1) ) {
 		set .@menu_count, .@menu_count + 1;
-		set .@slot_map[.@menu_count], 1;
-		set .@menu$, .@menu$ + "Acessory Left [" + getequipname(1) + "]"+ ":";
+		set .@slot_map[.@menu_count], 6;  // Head Top
+		set .@menu$, .@menu$ + "Head Top-[Hat]:";
+	}
+	if( getequipisequiped(9) ) {
+		set .@menu_count, .@menu_count + 1;
+		set .@slot_map[.@menu_count], 5;  // Head Mid
+		set .@menu$, .@menu$ + "Head Mid-[Angel Wing Ears]:";
+	}
+	if( getequipisequiped(10) ) {
+		set .@menu_count, .@menu_count + 1;
+		set .@slot_map[.@menu_count], 10;  // Head Low
+		set .@menu$, .@menu$ + "Head Low-[Hankie In Mouth]:";
+	}
+	if( getequipisequiped(2) ) {
+		set .@menu_count, .@menu_count + 1;
+		set .@slot_map[.@menu_count], 7;  // Armor
+		set .@menu$, .@menu$ + "Armor-[Valkyrian Armor]:";
+	}
+	if( getequipisequiped(3) ) {
+		set .@menu_count, .@menu_count + 1;
+		set .@slot_map[.@menu_count], 9;  // Left Hand
+		set .@menu$, .@menu$ + "Left Hand-[Knife]:";
+	}
+	if( getequipisequiped(4) ) {
+		set .@menu_count, .@menu_count + 1;
+		set .@slot_map[.@menu_count], 8;  // Right Hand ? Head Low
+		set .@menu$, .@menu$ + "Right Hand-[Poring Battle Shield]:";
+	}
+	if( getequipisequiped(5) ) {
+		set .@menu_count, .@menu_count + 1;
+		set .@slot_map[.@menu_count], 3;  // Garment ? Head Mid
+		set .@menu$, .@menu$ + "Garment-[Hydrorgg's Shadow Garb]:";
+	}
+	if( getequipisequiped(6) ) {
+		set .@menu_count, .@menu_count + 1;
+		set .@slot_map[.@menu_count], 2;  // Shoes ? Head Top
+		set .@menu$, .@menu$ + "Shoes-[Temporal Dex Boots]:";
+	}
+	if( getequipisequiped(7) ) {
+		set .@menu_count, .@menu_count + 1;
+		set .@slot_map[.@menu_count], 1;  // Accessory L ? Armor
+		set .@menu$, .@menu$ + "Accessory L-[Dark Rosary]:";
+	}
+	if( getequipisequiped(8) ) {
+		set .@menu_count, .@menu_count + 1;
+		set .@slot_map[.@menu_count], 10;  // Accessory R ? Right Hand 2=bota, 3=garment 5=meio 6=cantor circo 7=hattopo 8=shield 9=knife
+		set .@menu$, .@menu$ + "Accessory R-[Expert Ring]:";
 	}
 
 	if (.@menu_count == 0) {
@@ -125,14 +122,7 @@ case 2:
 		close;
 	}
 
-	next;
 	set .@selected, select(.@menu$);
-	
-	if (.@selected > .@menu_count || .@selected == 0) {
-		mes "Seleção inválida.";
-		close;
-	}
-
 	set .@part, .@slot_map[.@selected];
 
 	if(.@part == 0) {
@@ -153,9 +143,40 @@ case 2:
 	}
 
 	next;
-	successremovecards .@part;
-	next;
-	mes "Sucesso! Cartas removidas.";
+	mes "Custo: " + (.zenycost + (.@cardcount * .percardcost)) + " zenys";
+	mes "Deseja continuar?";
+
+	if (select("Sim:Não") == 2) {
+		mes "Cancelado.";
+		close;
+	}
+
+	if (Zeny < (.zenycost + (.@cardcount * .percardcost))) {
+		mes "Zenys insuficientes!";
+		close;
+	}
+
+	set Zeny, Zeny - (.zenycost + (.@cardcount * .percardcost));
+
+	set .@failchance, rand(100);
+
+	if (.faildestroy == 0 || .@failchance >= 10) {
+		successremovecards .@part;
+		next;
+		mes "Sucesso! Cartas removidas.";
+	} else if (.@failchance < 2) {
+		failedremovecards .@part, 0;
+		next;
+		mes "Crítico! Equipamento destruído.";
+	} else if (.@failchance < 8) {
+		failedremovecards .@part, 1;
+		next;
+		mes "Falha! Cartas destruídas.";
+	} else {
+		failedremovecards .@part, 3;
+		next;
+		mes "Falha! Equipamento destruído.";
+	}
 	close;
 	end;
 
@@ -169,7 +190,7 @@ case 2:
 					close;
 
 				case 2:
-					mes "Qual carta MvP você quer devolver?";
+					mes "Qual carta MvP vocÃª quer devolver?";
 					switch(select("Bijou, 10 Totens:Cutie, 1 Toten:Immortal Cursed Knight, 1 Toten:Immortal Wind Ghost, 1 Toten:Beelzebub, 5 Totens:TGK, 10 Totens:Eremes, 10 Totens:Maya Purple, 10 Totens:Kiel, 5 Totens")) {
 					case 1:
 						delitem 4636,1;
@@ -211,7 +232,7 @@ case 2:
 				break;
 			}
 		next;
-		mes "Faça o favor de jogar direito. Busque o teto da performance.";
+		mes "FaÃ§a o favor de jogar direito. Busque o teto da performance.";
 		close;
 		end;
 
@@ -222,11 +243,11 @@ case 2:
 			next;
 		}
 		next;
-		mes "Faça o favor de jogar direito. Busque o teto da performance.";
+		mes "FaÃ§a o favor de jogar direito. Busque o teto da performance.";
 		close;
 		end;
 
 	next;
-	mes "Faça o favor de jogar direito. Busque o teto da performance.";
+	mes "FaÃ§a o favor de jogar direito. Busque o teto da performance.";
 	close;
 }
