@@ -1,0 +1,91 @@
+izlude,124,122,3	script	send the talk	617,{
+	mes "^FF0000Do not use cheats.^000000";
+	mes "^FF0000Cheat = auto pot, grf, auto click^000000";
+	mes "Sem usar cheats";
+	mes "huwag gumamit ng cheat";
+	mes "ne ispolzujte cit";
+	mes "Xya chi kar kong";
+	mes "Chiito o tsukawanai";
+	mes "no uses trampa";
+	next;
+	mes "7x7 rwc = jogar rag hardcore, se não é isso que vc quer, baixe o ROLA, o rTales, ou alguma bullshit do gênero e aproveite o friendly environment otakista rmtzista;";
+	mes "vc n precisa ser bom pra jogar aqui, mas vc precisa querer ficar bom ou pelo menos não pesar a barra dos coleguinhas;";
+	mes "7x7 rwc n é pra todo mundo e TUDO BEM;";
+	next;
+	mes "sobre comunidade e bans:";
+	mes "ademir a.k.a dEteNtôR dO c0diGu~* está #cansado e n quer ser community manager, logo, membros da comunidade (ativos, que jogam) se encarregarão de indicar seus representantes políticos";
+	mes "é aconselhável que o maior número de pessoas façam vídeos, divulguem, chamem os amigos, se organizem para fazer times FECHADOS ou unir times pela metade para fazer um";
+	next;
+	mes "não sejam estranhos (lmao, a cota já estourou), deem um jeito de ficar unidos e fazer as coisas acontecerem";
+	mes "pq vcs já viram q se n fizerem isso, n vai ter games... tipo ever again";
+	mes "LEMBREM-SE que os miguxos que fizerem aqui poderão ser ponte para jogar 7x7 third no ROLA e ganhar (finalmente?) grana competindo e ir pra fodendo tailandia, seja pra dar o rabo pra travequinho, seja pra reproduzir a lendária foto no 64º andar do lebua";
+	next;
+	mes "btw favor n se matar tomando droga e outras coisas em festinhas";
+
+
+	// mes "[Comunicado 29/07/2024]";
+	// mes "1. Foi instaurado o Supremo Tribunal Federal: os processos de banimento e desbanimento passar?o pelos ministros do STF: Moskaum, Sig e Fatal. Confira os avisos no discord.";
+	// mes "2. Existe agora uma sexta regra: ? obrigat?rio que na hora do jogo todos os jogadores estejam no canal de voz do discord.";
+	// mes "3. As habilidades Piada Inf?me e Esc?ndalo foram consertadas.";
+	// mes "Comportamento anterior (bugado): voc? aperta piada e, depois de alguns segundos, quem estava na sua tela quando voc? apertou sofre o efeito.";
+	// mes "Comportamento atual: voc? aperta piada e depois de 3 segundos sofre o efeito quem estiver em 31x31 (tela+1 c?lula) do usu?rio.";
+	// mes "[Comunicado 25/07/2024]";
+	// mes "1. Bruma consertada (agora de verdade)";
+	// mes "2. Agora s? pode acessar o espectador como aprendiz, para evitar qualquer interfer?ncia nos jogos";
+	// mes "[Comunicado 10/07/2024]";
+	// mes "1. Gra?as aos esfor?os infatig?veis do Fatal Hatred o 'gargalo' (fen?meno do personagem ser puxado para dentro da c?lula ap?s tentar castar uma skill no delay de outra) foi consertado.";
+	// mes "2. Soul burn consertado: o dano do soul burn n?o ? mais reduzido em cen?rio gvg.";
+	// next;
+	
+	// mes "[Comunicado 04/07/2024]";
+	// mes "Bloqueado adicionar como amigo e sentar nas arenas GVGs";
+	// mes "Adicionado NPC Espectador. Agora ? poss?vel assistir as partidas, com limite de 2 espectadores por partida";
+	// mes "Adicionado NPC para gerenciar builds. Agora ? poss?vel salvar quantas builds voc? quiser e depois selecion?-la novamente pelo NPC";
+	// mes "Obs: Como esse ? um npc delicado, e ele pode eventualmente bugar se algu?m achar uma brecha envolvendo resetadora, ou algo do tipo, pe?o pela boa vontade de voc?s que me reportem caso identifiquem algum problema";
+	// mes "[Comunicado 04/07/2024]";
+	// mes "Agora ? poss?vel mudar de time dentro da arena. Existe um NPC que somente o l?der pode interagir que teleporta a equipe para o outro time.";
+	// mes "E agora a maior mudan?a. Agora temos 2 salas de espera distintas, ou seja, 4 times (time blue, time red, time blue 2, time red 2). As arenas foram divididas em 6 arenas para cada sala de espera. Junto disso adicionamos um bloqueio que impede que mais que 2 times entrem na mesma sala de espera, para evitar a situa??o na qual estejam jogando 3 times e algu?m entre no chat de outro time e gere um bug na partida. Al?m disso, agora se o l?der deslogar ou interagir com o NPC de sair da sala de espera o time inteiro ? recallado para fora.";
+	// mes "Obs: Ainda vou mudar pra time green e yellow, mas por enquanto vai ficar nomeado times 1 e 2.";
+	// mes "[Comunicado 30/08/2024]";
+	// mes "Frost Nova n?o congela mais em cima do ME";
+	// mes "Todos os equips est?o tradeaveis agora";
+	// mes "Abracadabra e icewall desativados";
+	// next;
+
+	// mes "[Comunicado 29/08/2024]";
+	// mes "Consertado um bug introduzido na ?ltima manuten??o no qual recallar o time para a sala de espera estava recallando os jogadores que ainda estavam dentro da arena GVG";
+	// mes "Consertado arena GVG teste";
+	// mes "Cosertado todos os mapflags das arenas GVGs";
+	// mes "Reintroduzido estilista de cabelos (ontem estava bugado)";
+	// mes "Modificado NPC de restock - agora voc? s? precisa clicar nele para gravar os stuffs que est?o no seu invent?rio. Depois ? s? clicar na healer normalmente";
+	// mes "Removido NPC de obter falc?o/peco/carrinho - agora voc? s? precisa clicar na healer";
+	// mes "Removido NPC de refino - agora ? s? clicar na healer para refinar tudo para o safe level";
+	// mes "[Comunicado 28/08/2024]";
+	// mes "Agora ? poss?vel dar trade e colocar no armaz?m a maior parte dos equipamentos (preciso verificar e fazer isso para todos os equips)";
+	// mes "Agora n?o precisa mais de itens (elu, ori etc) para refinar";
+	// mes "Consertado o bug que existia quando dois l?deres de pt conversavam com os NPCs de time simultaneamente";
+	// mes "Corrigido arena 12";
+	// mes "Adicionado bless e agi na curandeira de izlude";
+	// mes "Adicionado estilista para cabelos";
+	// next;
+
+	// mes "[Comunicado 26/08/2024]";
+	// mes "Melhorias internas no servidor, por isso foi necess?rio novo download.";
+	// mes "Mestra das classes consertada, em breve todos irr?o ser transformados em aprendiz para n?o abusarem do bug de skill tree da antiga mestra das classes.";
+	// mes "Novas arenas adicionadas.";
+	// mes "[Comunicado 25/08/2024]";
+	// mes "1. Delays para andar ap?s skills foram otimizados.";
+	// mes "2. Adicionado flechas no restock e removido itens inadequados.";
+	// mes "3. Supostamente resolvido o problema de desequipar flechas.";
+	// mes "4. Reduzido o tempo de preparo dos rounds, de 20 segundos para 15 segundos.";
+	// mes "[Comunicado 25/08/2024]";
+	// mes "Foi feita uma planilha coment?vel para expor o que h? para ser feito no servidor.";
+	// mes "Recebemos a primeira doa??o para contratar servi?os para o servidor. Essa foi, e as pr?ximas tamb?m ser?o, documentadas e expostas (caixa e finalidade de uso). Ainda n?o foi o caso, mas ? poss?vel que o doador permane?a em anonimato se assim preferir.";
+	// mes "Interessados em ajudar com solu??o de problemas ou com doa??es, entrem em contato comigo no discord (Pedro Cartacho).";
+	// mes "[Comunicado 25/08/2024]";
+	// mes "1. Para deletar o personagem, clique em delete, espere cinco segundos, clique em deletar e aperte ok sem digitar nada.";
+	// mes "2. Controle de marionete, em mapa GvG, s? pode ser usado pelo alt+Z.";
+	next;
+
+	close;
+} 

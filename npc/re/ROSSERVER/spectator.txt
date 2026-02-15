@@ -1,0 +1,205 @@
+izlude,125,145,3	script	Spectator NPC	664,{
+	// cutin "fenrir_a",2;
+	// mes "temporariamente desativado";
+	// goto finalization;
+
+	if ($spectator_count1 == 0) set $spectator_count1, 0;
+	if ($spectator_count2 == 0) set $spectator_count2, 0;
+	if ($spectator_count3 == 0) set $spectator_count3, 0;
+	if ($spectator_count4 == 0) set $spectator_count4, 0;
+	if ($spectator_count5 == 0) set $spectator_count5, 0;
+	if ($spectator_count6 == 0) set $spectator_count6, 0;
+	if ($spectator_count7 == 0) set $spectator_count7, 0;
+	if ($spectator_count8 == 0) set $spectator_count8, 0;
+	if ($spectator_count9 == 0) set $spectator_count9, 0;
+	if ($spectator_count10 == 0) set $spectator_count10, 0;
+	if ($spectator_count11 == 0) set $spectator_count11, 0;
+	if ($spectator_count12 == 0) set $spectator_count12, 0;
+	if ($spectator_count13 == 0) set $spectator_count13, 0;
+	if ($spectator_count14 == 0) set $spectator_count14, 0;
+
+
+	// if (Class >= 1) {{
+	// 	cutin "fenrir_a",2;
+	// 	mes "[ Fenrir ]";
+	// 	mes "Voce precisa ser um ^CC00CCaprendiz^000000 para assistir uma partida: e caridoso da sua parte nao tirar do newbha seboso a oportunidade de ser massacrado de forma justa, por isso voce precisa ser um aprendiz para assistir.";
+	// 	next;
+	// 	goto finalization;
+	// }
+	// }
+
+	cutin "fenrir_a",2;
+	mes "[ Fenrir ]";
+	mes "Eu posso te levar ate uma arena, desse jeito voce pode ver com seus proprios olhos que ninguem joga tao mal quanto voce.";
+	next;
+	mes "[ Fenrir ]";
+	mes "Escolha a arena:";
+	next;
+
+	// Get the number of players in each arena
+	set .@players1, getmapusers("ros2024");
+	set .@players2, getmapusers("ros2025_1");
+	set .@players3, getmapusers("ros2025_2");
+	set .@players4, getmapusers("ros2025_3");
+	set .@players5, getmapusers("ros2025_4");
+	set .@players6, getmapusers("ros2025_5");
+	set .@players7, getmapusers("ros2025_6");
+	set .@players8, getmapusers("2012rwc_01");
+	set .@players9, getmapusers("2012rwc_02");
+	set .@players10, getmapusers("2012rwc_03");
+	set .@players11, getmapusers("2012rwc_04");
+	set .@players12, getmapusers("1@lab");
+	set .@players13, getmapusers("kvm");
+	set .@players14, getmapusers("bio4");
+
+	// // Create the menu with player counts
+	menu "So loko, num compensa...",Cancel,
+		"Arena 1 - " + .@players1 + " players",Arena1,
+		"Arena 2 - " + .@players2 + " players",Arena2,
+		"Arena 3 - " + .@players3 + " players",Arena3,
+		"Arena 4 - " + .@players4 + " players",Arena4,
+		"Arena 5 - " + .@players5 + " players",Arena5,
+		"Arena 6 - " + .@players6 + " players",Arena6,
+		"Arena 7 - " + .@players7 + " players",Arena7,
+		"Arena 8 - " + .@players8 + " players",Arena8,
+		"Arena 9 - " + .@players9 + " players",Arena9,
+		"Arena 10 - " + .@players10 + " players",Arena10,
+		"Arena 11 - " + .@players11 + " players",Arena11,
+		"Arena 12 - " + .@players12 + " players",Arena12,
+		"Arena 13 - " + .@players13 + " players",Arena13,
+		"Arena 14 - " + .@players14 + " players",Arena14;
+
+	Arena1:
+		callsub CheckSpectators, "ros2024", 1, 132,79;
+		end;
+
+	Arena2:
+		callsub CheckSpectators, "ros2025_1", 2, 177,142;
+		end;
+
+	Arena3:
+		callsub CheckSpectators, "ros2025_2", 3, 100,69;
+		end;
+
+	Arena4:
+		callsub CheckSpectators, "ros2025_3", 4, 67,101;
+		end;
+
+	Arena5:
+		callsub CheckSpectators, "ros2025_4", 5, 178,134;
+		end;
+
+	Arena6:
+		callsub CheckSpectators, "ros2025_5", 6, 98,70;
+		end;
+
+	Arena7:
+		callsub CheckSpectators, "ros2025_6", 7, 99,76;
+		end;
+
+	Arena8:
+		callsub CheckSpectators, "2012rwc_01", 8, 102,110;
+		end;
+
+	Arena9:
+		callsub CheckSpectators, "2012rwc_02", 9, 122,158;
+		end;
+
+	Arena10:
+		callsub CheckSpectators, "2012rwc_03", 10, 46,79;
+		end;
+
+	Arena11:
+		callsub CheckSpectators, "2012rwc_04", 11, 64,92;
+		end;
+
+	Arena12:
+		callsub CheckSpectators, "1@lab", 12, 56,117;
+		end;
+
+	Arena13:
+		callsub CheckSpectators, "kvm", 13, 53,12;
+		end;
+
+	Arena14:
+		callsub CheckSpectators, "bio04", 14, 123,247;
+		end;
+
+
+	Cancel:
+		mes "[ Fenrir ]";
+		mes "Nao esta preparado para um choque de realidade?";
+		cutin "", 255;
+		close;
+
+	OnPCLogoutEvent:
+		if (strcharinfo(3) == "guild_vs1") {
+			callsub ResetSpectator, 1;
+		}
+		if (strcharinfo(3) == "guild_vs3") {
+			callsub ResetSpectator, 2;
+		}
+		if (strcharinfo(3) == "guild_vs4") {
+			callsub ResetSpectator, 3;
+		}
+		if (strcharinfo(3) == "guild_vs5") {
+			callsub ResetSpectator, 4;
+		}
+		if (strcharinfo(3) == "2009rwc_01") {
+			callsub ResetSpectator, 5;
+		}
+		if (strcharinfo(3) == "2009rwc_02") {
+			callsub ResetSpectator, 6;
+		}
+		if (strcharinfo(3) == "2009rwc_03") {
+			callsub ResetSpectator, 7;
+		}
+		if (strcharinfo(3) == "2009rwc_04") {
+			callsub ResetSpectator, 8;
+		}
+		if (strcharinfo(3) == "2012rwc_01") {
+			callsub ResetSpectator, 9;
+		}
+		if (strcharinfo(3) == "2012rwc_02") {
+			callsub ResetSpectator, 10;
+		}
+		if (strcharinfo(3) == "2012rwc_03") {
+			callsub ResetSpectator, 11;
+		}
+		if (strcharinfo(3) == "2012rwc_04") {
+			callsub ResetSpectator, 12;
+		}
+		if (strcharinfo(3) == "rwc01") {
+			callsub ResetSpectator, 13;
+		}
+		if (strcharinfo(3) == "rwc03") {
+			callsub ResetSpectator, 14;
+		}
+		end;
+
+	CheckSpectators:
+		.@map$ = getarg(0);
+		.@arena = getarg(1);
+		.@x = getarg(2);
+		.@y = getarg(3);
+
+		warp .@map$, .@x, .@y;
+		setoption Option_Invisible | Option_Xmas, 1;
+		sc_start SC_NOCHAT,420000,0;
+		bonus bSpeedRate,50;
+		sc_start SC_SPEEDUP1,420000,0;
+		end;
+
+	ResetSpectator:
+		.@arena = getarg(0);
+
+		// Reset player state
+		set Manner, 0;
+		setoption 0x40 | Option_Invisible | Option_Xmas, 0;
+		sc_end SC_ALL;
+
+finalization:
+next;
+	cutin "", 255;
+	close;
+}

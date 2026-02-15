@@ -1,0 +1,20 @@
+izlude,123,148,3	script	sura	484,{
+// percentheal 100, 100;
+// percentheal -90, 100;
+// sc_end SC_BLESSING;
+// sc_end sc_all;
+        if (Class == 4077) { // shura
+        percentheal 100, 100;
+        percentheal -90, 100;
+        }
+}
+quiz_02,247,351,3	duplicate(sura)	sura Blue#quiz_02	484
+quiz_02,252,351,6	duplicate(sura)	Shura Red#quiz_02	483
+
+//
+//  *  SCCB_BUFFS: Clear Buffs
+//  *  SCCB_DEBUFFS: Clear Debuffs
+//  *  SCCB_REFRESH: Clear specific debuffs through RK_REFRESH
+//  *  SCCB_CHEM_PROTECT: Clear AM_CP_ARMOR/HELM/SHIELD/WEAPON
+//  *  SCCB_LUXANIMA: Bonus Script removed through RK_LUXANIMA
+//

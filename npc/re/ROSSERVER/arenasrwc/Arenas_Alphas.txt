@@ -1,0 +1,556 @@
+// TIME BLUE
+// *********************************************************************
+izlude,121,111,6	script	Blue Team	420,{
+	
+mes "[ ^0000FFBlue Team^000000 ]";
+mes "You need 7 members in guild and party^000000";
+next;
+
+// Checagem de Grupo
+if ( !getcharid(1) ) {
+mes "[ ^0000FFBlue Team^000000 ]";
+mes "^0000ffYou need a party.^000000";
+close;
+}
+
+
+// Checagem de cl�
+if ( !getcharid(2) ) {
+mes "[ ^0000FFBlue Team^000000 ]";
+mes "^0000ffYou need a guild.^000000";
+close;
+}
+
+set .@guild_id, getcharid(2);
+if( (getguildmasterid(.@guild_id)) == (getcharid(0)) ){
+//mes "Dentro da sala de espera, o L�DER pode clicar no NPCs para ajustar a quantidade de jogadores no chat";
+//mes "Informe quantas pessoas t�m o seu time";
+$@jogadoresblue1 = 2;
+//input $@jogadoresblue1;  // n�mero de jogadores
+if ($@jogadoresblue1 < 2){
+    mes "^ff0000You need 7 players^000000";
+    close;
+//mes "Informe quantas pessoas t�m o seu time";
+//input $@jogadoresblue1;   n�mero de jogadores
+//if ($@jogadoresblue1 < 7){
+//$@jogadoresblue1 = 7{
+//	mes "^ff0000Arena disponivel pra 2 jogadores ou mais^000000";
+//	close;
+}
+$@jogadoresblue = $@jogadoresblue1;
+$@jogadoresbluechat = $@jogadoresblue + 1;
+
+}
+
+set @GID2,getcharid(2);
+getpartymember getcharid(1),1;
+getpartymember getcharid(1),2;
+set @partymembercount,$@partymembercount;
+copyarray @partymembername$[0],$@partymembername$[0],@partymembercount;
+if ((@partymembercount==$@jogadoresblue)&&(getcharid(2))&&(strcharinfo(0) == getguildmaster(@GID2)) ){
+// check the party size
+if ( $@partymembercount < $@jogadoresblue ) {
+mes "[ ^0000FFBlue Team^000000 ]";
+mes "^0000ffYou need "+$@jogadoresblue+" party members online to enter.^000000";
+close;
+}
+
+// check if there is too little people in the party
+for ( set .@i,0; .@i < $@partymembercount; set .@i,.@i + 1 ) {
+if ( !isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ) continue;
+set .@islogin, .@islogin + 1;
+}
+if ( .@islogin < $@jogadoresblue ) {
+mes "[ ^0000FFBlue Team^000000 ]";
+mes "^0000ffYou need "+$@jogadoresblue+" party members online to enter.^000000";
+close;
+}
+mes "[ ^0000FFBlue Team^000000 ]";
+mes "Welcome ^0000ff[ "+strcharinfo(0)+" ]^000000.";
+mes "Guild leader of ^0000ff[ "+strcharinfo(2)+" ] ^000000.";
+mes "Do you want to enter the waiting room with his team?";
+	next;
+	if(select("Yes, please.:No, thanks.")==2) close;
+	next;
+
+// Tirar todos os Buffs do grupo.
+for ( set .@i,0; .@i < $@partymembercount; set .@i,.@i + 1 ) {
+if ( !isloggedin( $@partymemberaid[.@i],$@partymembercid[.@i] ) ) continue;
+attachrid $@partymemberaid[.@i];
+sc_end -1;
+}
+
+warpguild "quiz_02",141,347,getcharid(2);
+close;
+}
+
+else {
+mes "[ ^0000FFBlue Team^000000 ]";
+mes "^0000ffOn your team should have "+$@jogadoresblue+" pmembers, all in the same party/guild and also everyone has to be online.^000000";
+mes "^0000ffAfter that, the GUILD LEADER can enter the room with his team.^000000";
+close;
+
+}
+}
+
+
+
+
+
+
+
+
+
+// TIME RED
+// ********************************************************************************************************************************************
+izlude,135,111,3	script	Red Team	416,{
+	
+mes "[ ^ff0000Red Team^000000 ]";
+mes "You need 7 members in guild and party";
+next;
+
+// Checagem de Grupo
+if ( !getcharid(1) ) {
+mes "[ ^ff0000Red Team^000000 ]";
+mes "^ff0000You need a party.^000000";
+close;
+}
+
+
+// Checagem de cl�
+if ( !getcharid(2) ) {
+mes "[ ^ff0000Red Team^000000 ]";
+mes "^ff0000You need a guild.^000000";
+close;
+}
+
+set .@guild_id, getcharid(2);
+if( (getguildmasterid(.@guild_id)) == (getcharid(0)) ){
+//mes "Dentro da sala de espera, o L�DER pode clicar no NPCs para ajustar a quantidade de jogadores no chat";
+//mes "Informe quantas pessoas t�m o seu time";
+$@jogadoresred1 = 2;
+//input $@jogadoresred1;  // n�mero de jogadores
+if ($@jogadoresred1 < 2){
+	mes "^ff0000Arena disponivel pra 7 jogadores^000000";
+	close;
+}
+$@jogadoresred = $@jogadoresred1;
+$@jogadoresredchat = $@jogadoresred + 1;
+
+}
+
+
+set @GID2,getcharid(2);
+getpartymember getcharid(1),1;
+getpartymember getcharid(1),2;
+set @partymembercount,$@partymembercount;
+copyarray @partymembername$[0],$@partymembername$[0],@partymembercount;
+if ((@partymembercount==$@jogadoresred)&&(getcharid(2))&&(strcharinfo(0) == getguildmaster(@GID2)) ){
+// check the party size
+if ( $@partymembercount < $@jogadoresred ) {
+mes "[ ^ff0000Red Team^000000 ]";
+mes "^ff0000You need "+$@jogadoresred+" party members online to enter.^000000";
+close;
+}
+
+// check if there is too little people in the party
+for ( set .@i,0; .@i < $@partymembercount; set .@i,.@i + 1 ) {
+if ( !isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ) continue;
+set .@islogin, .@islogin + 1;
+}
+if ( .@islogin <  $@jogadoresred ) {
+mes "[ ^ff0000Red Team^000000 ]";
+mes "^ff0000You need  "+$@jogadoresred+" party members online to enter.^000000";
+close;
+}
+mes "[ ^ff0000Red Team^000000 ]";
+mes "Welcome ^ff0000[ "+strcharinfo(0)+" ]^000000.";
+mes "Guild leader of ^ff0000[ "+strcharinfo(2)+" ] ^000000.";
+mes "Do you want to enter the waiting room with his team?";
+	next;
+	if(select("Yes, please.:No, thanks.")==2) close;
+	next;
+
+// Tirar todos os Buffs do grupo.
+for ( set .@i,0; .@i < $@partymembercount; set .@i,.@i + 1 ) {
+if ( !isloggedin( $@partymemberaid[.@i],$@partymembercid[.@i] ) ) continue;
+attachrid $@partymemberaid[.@i];
+sc_end -1;
+}
+
+warpguild "quiz_02",154,347,getcharid(2);
+close;
+}
+
+else {
+mes "[ ^ff0000Red Team^000000 ]";
+mes "^ff0000On your team should have "+$@jogadoresred+" members, all in the same party/guild and also everyone has to be online.^000000";
+mes "^ff0000After that, the guild leader can enter the room with his team.^000000";
+close;
+
+}
+
+}
+
+// ========================================================= Teleporte
+//=======================================================================
+
+quiz_02,128,342,7	script	Employee#timeaz	417,{
+
+mes "[ ^0000ffEmployee^000000]";
+mes "Do you wanna go back?";
+switch(select("Yes.:No.")){
+
+case 1:
+warp "izlude",128,105;
+	close;
+
+case 2:
+close;
+
+}
+}
+
+quiz_02,167,342,1	script	Employee#timeve	413,{
+
+mes "[ ^0000ffEmployee^000000]";
+mes "Do you wanna go back?";
+switch(select("Yes.:No.")){
+
+case 1:
+warp "izlude",128,105;
+	close;
+
+case 2:
+close;
+
+}
+}
+
+
+quiz_02	mapflag	nosave
+quiz_02	mapflag	noteleport
+quiz_02	mapflag	nowarpto
+quiz_02	mapflag	nowarp
+quiz_02	mapflag	nomemo
+quiz_02	mapflag	nopenalty
+quiz_02	mapflag	nobranch
+quiz_02	mapflag	noloot
+quiz_02	mapflag	noexp
+quiz_02	mapflag	noicewall
+// Arenas RWC 2012
+2012rwc_01	mapflag	nopenalty
+2012rwc_01	mapflag	nosave	SavePoint
+2012rwc_01	mapflag	nowarp
+2012rwc_01	mapflag	noteleport
+2012rwc_01	mapflag	nomemo
+2012rwc_01	mapflag	gvg
+2012rwc_01	mapflag	loadevent
+2012rwc_01	mapflag	noreturn
+2012rwc_01	mapflag	nobranch
+2012rwc_01	mapflag	noicewall
+2012rwc_01	mapflag	notrade
+//
+2012rwc_02	mapflag	nopenalty
+2012rwc_02	mapflag	nosave	SavePoint
+2012rwc_02	mapflag	nowarp
+2012rwc_02	mapflag	noteleport
+2012rwc_02	mapflag	nomemo
+2012rwc_02	mapflag	gvg
+2012rwc_02	mapflag	loadevent
+2012rwc_02	mapflag	noreturn
+2012rwc_02	mapflag	nobranch
+2012rwc_02	mapflag	noicewall
+2012rwc_02	mapflag	notrade
+//
+2012rwc_03	mapflag	nopenalty
+2012rwc_03	mapflag	nosave	SavePoint
+2012rwc_03	mapflag	nowarp
+2012rwc_03	mapflag	noteleport
+2012rwc_03	mapflag	nomemo
+2012rwc_03	mapflag	gvg
+2012rwc_03	mapflag	loadevent
+2012rwc_03	mapflag	noreturn
+2012rwc_03	mapflag	nobranch
+2012rwc_03	mapflag	noicewall
+2012rwc_03	mapflag	notrade
+//
+2012rwc_04	mapflag	nopenalty
+2012rwc_04	mapflag	nosave	SavePoint
+2012rwc_04	mapflag	nowarp
+2012rwc_04	mapflag	noteleport
+2012rwc_04	mapflag	nomemo
+2012rwc_04	mapflag	gvg
+2012rwc_04	mapflag	loadevent
+2012rwc_04	mapflag	noreturn
+2012rwc_04	mapflag	nobranch
+2012rwc_04	mapflag	noicewall
+2012rwc_04	mapflag	notrade
+//
+2012rwc_05	mapflag	nopenalty
+2012rwc_05	mapflag	nosave	SavePoint
+2012rwc_05	mapflag	nowarp
+2012rwc_05	mapflag	noteleport
+2012rwc_05	mapflag	nomemo
+2012rwc_05	mapflag	gvg
+2012rwc_05	mapflag	loadevent
+2012rwc_05	mapflag	noreturn
+2012rwc_05	mapflag	nobranch
+2012rwc_05	mapflag	noicewall
+2012rwc_05	mapflag	notrade
+//
+2012rwc_06	mapflag	nopenalty
+2012rwc_06	mapflag	nosave	SavePoint
+2012rwc_06	mapflag	nowarp
+2012rwc_06	mapflag	noteleport
+2012rwc_06	mapflag	nomemo
+2012rwc_06	mapflag	gvg
+2012rwc_06	mapflag	loadevent
+2012rwc_06	mapflag	noreturn
+2012rwc_06	mapflag	nobranch
+2012rwc_06	mapflag	noicewall
+2012rwc_06	mapflag	notrade
+//
+2012rwc_07	mapflag	nopenalty
+2012rwc_07	mapflag	nosave	SavePoint
+2012rwc_07	mapflag	nowarp
+2012rwc_07	mapflag	noteleport
+2012rwc_07	mapflag	nomemo
+2012rwc_07	mapflag	gvg
+2012rwc_07	mapflag	loadevent
+2012rwc_07	mapflag	noreturn
+2012rwc_07	mapflag	nobranch
+2012rwc_07	mapflag	noicewall
+2012rwc_07	mapflag	notrade
+//
+2012rwc_08	mapflag	nopenalty
+2012rwc_08	mapflag	nosave	SavePoint
+2012rwc_08	mapflag	nowarp
+2012rwc_08	mapflag	noteleport
+2012rwc_08	mapflag	nomemo
+2012rwc_08	mapflag	gvg
+2012rwc_08	mapflag	loadevent
+2012rwc_08	mapflag	noreturn
+2012rwc_08	mapflag	nobranch
+2012rwc_08	mapflag	noicewall
+2012rwc_08	mapflag	noicewall
+2012rwc_08	mapflag	notrade
+//
+2012rwc_02	mapflag	nodrop
+2012rwc_03	mapflag	nodrop
+2012rwc_04	mapflag	nodrop
+2012rwc_05	mapflag	nodrop
+2012rwc_06	mapflag	nodrop
+2012rwc_07	mapflag	nodrop
+2012rwc_08	mapflag	nodrop
+//
+2012rwc_01	mapflag	partylock
+2012rwc_02	mapflag	partylock
+2012rwc_03	mapflag	partylock
+2012rwc_04	mapflag	partylock
+2012rwc_05	mapflag	partylock
+2012rwc_06	mapflag	partylock
+2012rwc_07	mapflag	partylock
+2012rwc_08	mapflag	partylock
+2012rwc_01	mapflag	guildlock
+2012rwc_02	mapflag	guildlock
+2012rwc_03	mapflag	guildlock
+2012rwc_04	mapflag	guildlock
+2012rwc_05	mapflag	guildlock
+2012rwc_06	mapflag	guildlock
+2012rwc_07	mapflag	guildlock
+2012rwc_08	mapflag	guildlock
+// Arenas RWC trans
+guild_vs1	mapflag	nopenalty
+guild_vs1	mapflag	nosave	SavePoint
+guild_vs1	mapflag	nowarp
+guild_vs1	mapflag	noteleport
+guild_vs1	mapflag	nomemo
+guild_vs1	mapflag	loadevent
+guild_vs1	mapflag	gvg
+guild_vs1	mapflag	noreturn
+guild_vs1	mapflag	nobranch
+guild_vs1	mapflag	noicewall
+guild_vs1	mapflag	partylock
+guild_vs1	mapflag	guildlock
+guild_vs1	mapflag	nodrop
+guild_vs1	mapflag	notrade
+//
+guild_vs2	mapflag	nopenalty
+guild_vs2	mapflag	nosave	SavePoint
+guild_vs2	mapflag	nowarp
+guild_vs2	mapflag	noteleport
+guild_vs2	mapflag	nomemo
+guild_vs2	mapflag	loadevent
+guild_vs2	mapflag	gvg
+guild_vs2	mapflag	noreturn
+guild_vs2	mapflag	nobranch
+guild_vs2	mapflag	noicewall
+guild_vs2	mapflag	partylock
+guild_vs2	mapflag	guildlock
+guild_vs2	mapflag	nodrop
+guild_vs2	mapflag	notrade
+//
+guild_vs3	mapflag	nopenalty
+guild_vs3	mapflag	nosave	SavePoint
+guild_vs3	mapflag	nowarp
+guild_vs3	mapflag	noteleport
+guild_vs3	mapflag	nomemo
+guild_vs3	mapflag	loadevent
+guild_vs3	mapflag	gvg
+guild_vs3	mapflag	noreturn
+guild_vs3	mapflag	nobranch
+guild_vs3	mapflag	noicewall
+guild_vs3	mapflag	partylock
+guild_vs3	mapflag	guildlock
+guild_vs3	mapflag	nodrop
+guild_vs3	mapflag	notrade
+//
+guild_vs4	mapflag	nopenalty
+guild_vs4	mapflag	nosave	SavePoint
+guild_vs4	mapflag	nowarp
+guild_vs4	mapflag	noteleport
+guild_vs4	mapflag	nomemo
+guild_vs4	mapflag	loadevent
+guild_vs4	mapflag	gvg
+guild_vs4	mapflag	noreturn
+guild_vs4	mapflag	nobranch
+guild_vs4	mapflag	noicewall
+guild_vs4	mapflag	partylock
+guild_vs4	mapflag	guildlock
+guild_vs4	mapflag	nodrop
+guild_vs4	mapflag	notrade
+//
+guild_vs5	mapflag	nopenalty
+guild_vs5	mapflag	nosave	SavePoint
+guild_vs5	mapflag	nowarp
+guild_vs5	mapflag	noteleport
+guild_vs5	mapflag	nomemo
+guild_vs5	mapflag	loadevent
+guild_vs5	mapflag	gvg
+guild_vs5	mapflag	noreturn
+guild_vs5	mapflag	nobranch
+guild_vs5	mapflag	noicewall
+guild_vs5	mapflag	partylock
+guild_vs5	mapflag	guildlock
+guild_vs5	mapflag	nodrop
+guild_vs5	mapflag	notrade
+//
+2009rwc_01	mapflag	nopenalty
+2009rwc_01	mapflag	nosave	SavePoint
+2009rwc_01	mapflag	nowarp
+2009rwc_01	mapflag	noteleport
+2009rwc_01	mapflag	nomemo
+2009rwc_01	mapflag	loadevent
+2009rwc_01	mapflag	gvg
+2009rwc_01	mapflag	noreturn
+2009rwc_01	mapflag	nobranch
+2009rwc_01	mapflag	noicewall
+2009rwc_01	mapflag	partylock
+2009rwc_01	mapflag	guildlock
+2009rwc_01	mapflag	nodrop
+2009rwc_01	mapflag	notrade
+//
+2009rwc_02	mapflag	nopenalty
+2009rwc_02	mapflag	nosave	SavePoint
+2009rwc_02	mapflag	nowarp
+2009rwc_02	mapflag	noteleport
+2009rwc_02	mapflag	nomemo
+2009rwc_02	mapflag	loadevent
+2009rwc_02	mapflag	noicewall
+2009rwc_02	mapflag	gvg
+2009rwc_02	mapflag	noreturn
+2009rwc_02	mapflag	nobranch
+2009rwc_02	mapflag	partylock
+2009rwc_02	mapflag	guildlock
+2009rwc_02	mapflag	nodrop
+2009rwc_02	mapflag	notrade
+//
+2009rwc_03	mapflag	nopenalty
+2009rwc_03	mapflag	nosave	SavePoint
+2009rwc_03	mapflag	nowarp
+2009rwc_03	mapflag	noteleport
+2009rwc_03	mapflag	nomemo
+2009rwc_03	mapflag	loadevent
+2009rwc_03	mapflag	noicewall
+2009rwc_03	mapflag	gvg
+2009rwc_03	mapflag	noreturn
+2009rwc_03	mapflag	nobranch
+2009rwc_03	mapflag	partylock
+2009rwc_03	mapflag	guildlock
+2009rwc_03	mapflag	nodrop
+2009rwc_03	mapflag	notrade
+//
+2009rwc_04	mapflag	nopenalty
+2009rwc_04	mapflag	nosave	SavePoint
+2009rwc_04	mapflag	nowarp
+2009rwc_04	mapflag	noteleport
+2009rwc_04	mapflag	nomemo
+2009rwc_04	mapflag	loadevent
+2009rwc_04	mapflag	noicewall
+2009rwc_04	mapflag	gvg
+2009rwc_04	mapflag	noreturn
+2009rwc_04	mapflag	nobranch
+2009rwc_04	mapflag	partylock
+2009rwc_04	mapflag	guildlock
+2009rwc_04	mapflag	nodrop
+2009rwc_04	mapflag	notrade
+//
+rwc01	mapflag	nopenalty
+rwc01	mapflag	nosave	SavePoint
+rwc01	mapflag	nowarp
+rwc01	mapflag	noteleport
+rwc01	mapflag	nomemo
+rwc01	mapflag	loadevent
+rwc01	mapflag	noicewall
+rwc01	mapflag	gvg
+rwc01	mapflag	noreturn
+rwc01	mapflag	nobranch
+rwc01	mapflag	partylock
+rwc01	mapflag	guildlock
+rwc01	mapflag	nodrop
+rwc01	mapflag	notrade
+//
+//rwc02	mapflag	nopenalty
+//rwc02	mapflag	nosave	SavePoint
+//rwc02	mapflag	nowarp
+//rwc02	mapflag	noteleport
+//rwc02	mapflag	nomemo
+//rwc02	mapflag	loadevent
+//rwc02	mapflag	noicewall
+//rwc02	mapflag	gvg
+//rwc02	mapflag	noreturn
+//rwc02	mapflag	nobranch
+//rwc02	mapflag	partylock
+//rwc02	mapflag	guildlock
+//rwc02	mapflag	nodrop
+//rwc02	mapflag	notrade
+//
+rwc03	mapflag	nopenalty
+rwc03	mapflag	nosave	SavePoint
+rwc03	mapflag	nowarp
+rwc03	mapflag	noteleport
+rwc03	mapflag	nomemo
+rwc03	mapflag	loadevent
+rwc03	mapflag	noicewall
+rwc03	mapflag	gvg
+rwc03	mapflag	noreturn
+rwc03	mapflag	nobranch
+rwc03	mapflag	partylock
+rwc03	mapflag	guildlock
+rwc03	mapflag	nodrop
+rwc03	mapflag	notrade
+//
+//ababa	mapflag	nopenalty
+//ababa	mapflag	nosave	SavePoint
+//ababa	mapflag	nowarp
+//ababa	mapflag	nomemo
+//ababa	mapflag	loadevent
+//ababa	mapflag	noicewall
+//ababa	mapflag	gvg
+//ababa	mapflag	noreturn
+//ababa	mapflag	nobranch
+//ababa	mapflag	partylock
+//ababa	mapflag	guildlock
+//ababa	mapflag	nodrop
+//ababa	mapflag	notrade

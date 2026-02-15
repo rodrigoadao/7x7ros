@@ -1,0 +1,1254 @@
+//versao 18 04 2025
+//script remendado
+//inicialmente copia qualquer de internet
+//depois, otimizacao por uniatrix e illegit
+//depois, por moskaum, unificacao de reset girl com build manager
+//seguido de uma fucao de disponibilizar build de status e skills padrao 
+//considere que as funcoes de salvar e puxar valores (build manager) requerem uma certa tabela na db
+//assim como e explicado abaixo
+
+//versao 18 04 2025 -- ainda e necessario preencher as build default de outras classes
+
+/* CREATE TABLE IF NOT EXISTS `ero_buildmanager` (
+	`id` int(11) unsigned NOT NULL auto_increment,
+	`aid` int(11) NOT NULL default '0',
+	`cid` int(11) NOT NULL default '0',
+	`build_name` varchar(255) NOT NULL default '',
+	`eaj_class` smallint(6) unsigned NOT NULL default '0',
+	`base_level` smallint(6) unsigned NOT NULL default '1',
+	`job_level` smallint(6) unsigned NOT NULL default '1',
+	`str` smallint(4) unsigned NOT NULL default '0',
+	`agi` smallint(4) unsigned NOT NULL default '0',
+	`vit` smallint(4) unsigned NOT NULL default '0',
+	`int` smallint(4) unsigned NOT NULL default '0',
+	`dex` smallint(4) unsigned NOT NULL default '0',
+	`luk` smallint(4) unsigned NOT NULL default '0',
+	`pow` smallint(4) unsigned NOT NULL default '0',
+	`sta` smallint(4) unsigned NOT NULL default '0',
+	`wis` smallint(4) unsigned NOT NULL default '0',
+	`spl` smallint(4) unsigned NOT NULL default '0',
+	`con` smallint(4) unsigned NOT NULL default '0',
+	`crt` smallint(4) unsigned NOT NULL default '0',
+	`status_point` int(11) unsigned NOT NULL default '0',
+	`skill_point` int(11) unsigned NOT NULL default '0',
+	`trait_point` int(11) unsigned NOT NULL default '0',
+	`created` datetime DEFAULT NULL,
+	PRIMARY KEY  (`id`),
+	INDEX (`aid`),
+	INDEX (`cid`)
+  ) ENGINE=MyISAM; */
+  
+izlude,127,145,3	script	Build Master	685,{
+	cutin "sakray.bmp",2;
+	mes "[ Sakray ]";
+	next;
+	if(Class == 0) {
+		mes "Primeiro você  vira gente, depois você aplica uma build.";
+		cutin "", 255;
+		close;
+	}
+	mes "Ei, newbha! Bora testar aquela build super retardada? Foda-se se os outros 6 membros do seu time ficarem com vontade de se jogar do penhasco.";
+	// mes "Reset ou Build Manager";
+	next;
+	menu "Close", Missclicked, "Reset", Reset, "Build Manager", BuildManager;
+	
+	Missclicked:
+	cutin "", 255;
+	close;
+
+	Reset:
+	set .@ResetStat,0;	// Zeny for stat reset
+	set .@ResetSkill,0;	// Zeny for skill reset
+	set .@ResetBoth,0;	// Zeny for resetting both together
+
+	mes "[ Sakray ]";
+	mes "Qual será sua peripécia de qi negativo?";
+	// mes "Reset Stats: "+ .@ResetStat +"z";
+	// mes "Reset Skills: "+ .@ResetSkill +"z";
+	// mes "Reset Both: "+ .@ResetBoth +"z";
+	mes "Não perca a oportunidade de decepcionar os outros.";
+	next;
+	switch(select("Close:^FF3355Reset Skills:Reset Stats:Reset Both^000000")) {
+	case 1:
+		cutin "", 255;
+		//edit
+		    if (Class == 4055) {
+            skill 157,1,SKILL_PERM;
+            } 
+			close; 
+		//
+	case 2:
+		mes "[ Sakray ]";
+		if (Zeny < .@ResetSkill) {
+			mes "Você não tem zeny.";
+			cutin "", 255;
+			close;
+		}
+		Zeny -= .@ResetSkill;
+		sc_end SC_ALL;
+		resetskill;
+
+			if (Class == 4060) {//rk
+				skill 144,1,SKILL_PERM;
+				skill 145,1,SKILL_PERM;
+				skill 146,1,SKILL_PERM;
+				skill 1001,1,SKILL_PERM;
+			}
+
+			
+			if (Class == 4061) {// WL
+				skill 157,1,SKILL_PERM;
+				skill 1006,1,SKILL_PERM;
+			}
+
+			if (Class == 4062) {// ranger
+				skill 148,1,SKILL_PERM;
+			}
+
+			if (Class == 4063) {// AB
+				skill 156,1,SKILL_PERM;
+			}
+
+			if (Class == 4064) {// meca
+				skill 155,1,SKILL_PERM;
+				skill 153,1,SKILL_PERM;
+			}
+//				skill "NV_TRICKDEAD",0,SKILL_PERM;
+			if (Class == 4065) {// GX
+				skill 142,1,SKILL_PERM;
+				skill 149,1,SKILL_PERM;
+				skill 150,1,SKILL_PERM;
+				skill 151,1,SKILL_PERM;
+				skill 152,1,SKILL_PERM;
+				// skill AS_SONICACCEL,1,SKILL_PERM;
+				// skill 1004,1,SKILL_PERM;
+				// skill 1003,1,SKILL_PERM;
+				// skill 1004,1,SKILL_PERM;
+				// skill 1003,1,SKILL_PERM;
+				// callfunc "F_GetPlatinumSkills"
+			}
+
+			if (Class == 4073) {// RG
+				skill 1002,1,SKILL_PERM;
+				skill 145,1,SKILL_PERM;
+				skill 144,1,SKILL_PERM;
+				skill 146,1,SKILL_PERM;
+			}
+
+			if (Class == 4074) {// SORC
+				skill 157,1,SKILL_PERM;
+			}
+
+			if (Class == 4075) {// minstrel trova
+				skill 148,1,SKILL_PERM;
+				skill 1010,1,SKILL_PERM;
+			}
+
+			if (Class == 4076) {// musa
+				skill 148,1,SKILL_PERM;
+				skill 1011,1,SKILL_PERM;//piscadela
+			}
+
+			if (Class == 4077) {// sura shura
+				skill 156,1,SKILL_PERM;
+			}
+
+			if (Class == 4078) {// genetic
+				skill 155,1,SKILL_PERM;
+				skill 153,1,SKILL_PERM;
+			}
+
+			if (Class == 4079) {// shadow chaser sc
+				skill 149,1,SKILL_PERM;
+				skill 150,1,SKILL_PERM;
+				skill 151,1,SKILL_PERM;
+				skill 152,1,SKILL_PERM;
+				skill 1005,1,SKILL_PERM;
+			}
+
+
+		mes "champson";
+		cutin "", 255;
+			close;
+	case 3:
+		mes "[ Sakray ]";
+		if (Zeny < .@ResetStat) {
+			mes "Você não tem zeny.";
+			cutin "", 255;
+			close;
+		}
+		Zeny -= .@ResetStat;
+		resetstatus;
+		mes "xampson";
+		cutin "", 255;
+			close;
+	case 4:
+		mes "[ Sakray ]";
+		if (Zeny < .@ResetBoth) {
+			mes "Você não tem zeny.";
+			cutin "", 255;
+			close;
+		}
+		Zeny -= .@ResetBoth;
+		sc_end SC_ALL;
+		resetskill;
+		if (Class == 4017) { // 4017 ï¿½ o ID do Scholar
+			set SkillPoint, 0;
+			set SkillPoint, 108;
+		}
+		resetstatus;
+		mes "jampson";
+		cutin "", 255;
+			close;
+	}
+
+	BuildManager:
+	mes "[ Sakray ]";
+	mes "Bem-vindo, senhor Newbha! Como vamos atrapalhar seu time hoje?";
+	next;
+	menu "Close", Cancel, "Salvar uma build", SaveBuild, "Aplicar uma build", ApplyBuild, "Aplicar build decente", ApplyStarterBuild, "Mostrar builds salvas", ShowBuilds, "Deletar uma build", DeleteBuild;
+
+	SaveBuild:
+		mes "[ Sakray ]";
+		mes "Dê nome a sua build:";
+		input @build_name$;
+
+		// Check for existing build with the same name for this character
+		if (query_sql("SELECT `id` FROM `ero_buildmanager` WHERE `cid` = "+getcharid(0)+" AND `build_name` = '"+escape_sql(@build_name$)+"'", .@id) > 0) {
+			mes "Uma build com esse nome já existe.";
+			cutin "", 255;
+			close;
+		}
+
+		.@cid = getcharid(0);
+		.@aid = getcharid(3);
+		.@class = eaclass();
+		.@base_level = BaseLevel;
+		.@job_level = JobLevel;
+		.@str = readparam(bStr);
+		.@agi = readparam(bAgi);
+		.@vit = readparam(bVit);
+		.@int = readparam(bInt);
+		.@dex = readparam(bDex);
+		.@luk = readparam(bLuk);
+		.@status_points = StatusPoint;
+		.@skill_points = SkillPoint;
+
+		// Insert the new build into the database
+		query_sql("INSERT INTO `ero_buildmanager` (`aid`, `cid`, `build_name`, `eaj_class`, `base_level`, `job_level`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `status_point`, `skill_point`, `created`) VALUES ("+
+			.@aid+", "+.@cid+", '"+escape_sql(@build_name$)+"', "+.@class+", "+.@base_level+", "+.@job_level+", "+.@str+", "+.@agi+", "+.@vit+", "+.@int+", "+.@dex+", "+.@luk+", "+.@status_points+", "+.@skill_points+", NOW())");
+
+		next;
+
+		mes "[ Sakray ]";
+		mes "Sua build foi salva.";
+		next;
+		mes "[ Sakray ]";
+		mes "Kkkkkj, horripilante.";
+		cutin "", 255;
+			close;
+
+	ApplyStarterBuild:
+		mes "[ Sakray ]";
+		//mes "Você estï¿½ aplicando a build decente.";
+		// next;
+
+		//menu "Close", Cancel2, "Apenas stats", ApplyStatsDefault, "Apenas skills", ApplySkillsDefault, "Ambas", ApplyBothDefault;
+		
+		// Cancel2:
+		// 	mes "[ Sakray ]";
+		// 	mes "Eu sabia que Você faria uma escolha ruim.";
+		// 	cutin "", 255;
+		// 	close;
+
+		// ApplyStatsDefault:
+
+		// if (Class == 4010) {//hw
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+        //     statusup2 bStr, 21;
+        //     statusup2 bVit, 54;
+        //     statusup2 bInt, 36;
+        //     statusup2 bDex, 98;
+        //     statusup2 bLuk, 2;
+		// 	}
+
+		// if (Class == 4012) { //sniper
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+        //     statusup2 bAgi, 54;
+        //     statusup2 bVit, 54;
+        //     statusup2 bInt, 39;
+        //     statusup2 bDex, 80;
+		// 	}
+
+		// if (Class == 4009) {//hp
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+        //     statusup2 bVit, 70;
+        //     statusup2 bInt, 75;
+        //     statusup2 bDex, 60;
+        //     statusup2 bLuk, 8;
+		// 	}
+
+		// if (Class == 4015) {// paladin
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+        //     statusup2 bStr, 30;
+        //     statusup2 bVit, 77;
+        //     statusup2 bDex, 98;
+		// 	}
+
+		// if (Class == 4017) {//scholar prof
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+        //     statusup2 bStr, 28;
+        //     statusup2 bVit, 78;
+        //     statusup2 bDex, 98;
+		// 	}
+
+		// if (Class == 4020) { // clown/gypsy
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+            
+		// 	if (Sex == SEX_MALE) {//clown
+		// 			//status
+		// 			set StatusPoint, 0;
+		// 			statusup2 bAgi, 3;
+		// 			statusup2 bVit, 57;
+		// 			statusup2 bInt, 98;
+		// 			statusup2 bDex, 57;
+		// 	} else { 
+			
+		// 	//gypsy
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+		// 	statusup2 bStr, 20;
+		// 	statusup2 bAgi, 38;
+		// 	statusup2 bVit, 70;
+		// 	statusup2 bInt, 11;
+		// 	statusup2 bDex, 93;
+		// 	statusup2 bLuk, 3;
+		// 	}
+		// }
+
+		// if (Class == 4016) {//champ
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+		// 	statusup2 bStr, 62;
+		// 	statusup2 bVit, 64;
+		// 	statusup2 bInt, 30;
+		// 	statusup2 bDex, 69;
+		// 	statusup2 bLuk, 6;
+		// }
+
+		// if (Class == 4018) {//stalker
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+        //     statusup2 bStr, 4;
+        //     statusup2 bVit, 67;
+        //     statusup2 bInt, 44;
+        //     statusup2 bDex, 98;
+        //     statusup2 bLuk, 3;
+		// 	}
+		// cutin "", 255;
+		// close;
+        
+        // ApplySkillsDefault:
+		
+		// if (Class == 4010) {//hw
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+        //     skill 1,9,0;
+        //     skill 9,1,SKILL_PERM;
+        //     skill 10,1,SKILL_PERM;
+        //     skill 11,7,0;
+        //     skill 12,7,0;
+        //     skill 13,5,0;
+        //     skill 14,5,0;
+        //     skill 15,10,0;
+        //     skill 16,10,0;
+        //     skill 17,5,0;
+        //     skill 18,1,SKILL_PERM;
+        //     skill 19,4,0;
+        //     skill 20,1,SKILL_PERM;
+        //     skill 80,10,0;
+        //     skill 81,1,SKILL_PERM;
+        //     skill 84,3,0;
+        //     skill 86,5,0;
+        //     skill 87,1,SKILL_PERM;
+        //     skill 88,10,0;
+        //     skill 89,10,0;
+        //     skill 90,3,0;
+        //     skill 91,1,SKILL_PERM;
+        //     skill 92,5,0;
+        //     skill 93,1,SKILL_PERM;
+        //     skill 120,1,SKILL_PERM;
+        //     skill 142,1,SKILL_PERM;
+        //     skill 157,1,SKILL_PERM;
+        //     skill 483,1,SKILL_PERM;
+        //     skill 1006,1,SKILL_PERM;
+		// 	}
+
+		// if (Class == 4012) { //sniper
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+		// 	skill 1,9,0;
+		// 	skill 43,10,0;
+		// 	skill 44,10,0;
+		// 	skill 45,10,0;
+		// 	skill 46,9,0;
+		// 	skill 47,10,0;
+		// 	skill 115,1,SKILL_PERM;
+		// 	skill 116,1,SKILL_PERM;
+		// 	skill 117,3,0;
+		// 	skill 118,2,0;
+		// 	skill 119,1,SKILL_PERM;
+		// 	skill 120,1,SKILL_PERM;
+		// 	skill 121,5,0;
+		// 	skill 122,1,SKILL_PERM;
+		// 	skill 123,1,SKILL_PERM;
+		// 	skill 124,1,SKILL_PERM;
+		// 	skill 126,1,SKILL_PERM;
+		// 	skill 127,1,SKILL_PERM;
+		// 	skill 128,10,0;
+		// 	skill 129,5,0;
+		// 	skill 130,4,0;
+		// 	skill 131,5,0;
+		// 	skill 142,1,SKILL_PERM;
+		// 	skill 147,1,SKILL_PERM;
+		// 	skill 148,1,SKILL_PERM;
+		// 	skill 380,1,SKILL_PERM;
+		// 	skill 381,5,0;
+		// 	skill 383,10,0;
+		// 	skill 1009,1,SKILL_PERM;			
+		// 	}
+
+		// if (Class == 4009) {//hp
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+        //     skill 22,10,0;
+        //     skill 1,9,0;
+        //     skill 9,5,0;
+        //     skill 12,7,0;
+        //     skill 16,1,SKILL_PERM;
+        //     skill 22,5,0;
+        //     skill 24,1,SKILL_PERM;
+        //     skill 25,1,SKILL_PERM;
+        //     skill 26,2,0;
+        //     skill 27,4,0;
+        //     skill 28,10,0;
+        //     skill 29,10,0;
+        //     skill 30,2,0;
+        //     skill 31,1,SKILL_PERM;
+        //     skill 33,2,0;
+        //     skill 34,10,0;
+        //     skill 35,1,SKILL_PERM;
+        //     skill 66,5,0;
+        //     skill 67,3,0;
+        //     skill 68,4,0;
+        //     skill 70,7,0;
+        //     skill 72,1,SKILL_PERM;
+        //     skill 73,10,0;
+        //     skill 74,3,0;
+        //     skill 75,5,0;
+        //     skill 76,5,0;
+        //     skill 78,1,SKILL_PERM;
+        //     skill 142,1,SKILL_PERM;
+        //     skill 156,1,SKILL_PERM;
+        //     skill 363,3,0;
+        //     skill 1014,1,SKILL_PERM;
+		// 	}
+
+		// if (Class == 4015) {// paladin
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+        //     skill 1,9,0;
+        //     skill 2,10,0;
+        //     skill 4,10,0;
+        //     skill 5,5,0;
+        //     skill 6,10,0;
+        //     skill 7,4,0;
+        //     skill 8,10,0;
+        //     skill 63,1,SKILL_PERM;
+        //     skill 142,1,SKILL_PERM;
+        //     skill 144,1,SKILL_PERM;
+        //     skill 145,1,SKILL_PERM;
+        //     skill 146,1,SKILL_PERM;
+        //     skill 248,10,0;
+        //     skill 249,5,0;
+        //     skill 250,3,0;
+        //     skill 251,5,0;
+        //     skill 252,10,0;
+        //     skill 253,6,0;
+        //     skill 254,4,0;
+        //     skill 255,5,0;
+        //     skill 367,5,0;
+        //     skill 480,5,0;
+        //     skill 1002,1,SKILL_PERM;
+		// 	//montaria
+		// 		if (getskilllv("KN_RIDING")) {
+		// 		atcommand "@option 0 0 32";
+		// 		}
+		// 	}
+
+		// if (Class == 4017) {//scholar prof
+
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+        //     skill 1,9,0;
+        //     skill 9,2,0;
+        //     skill 10,1,SKILL_PERM;
+        //     skill 11,7,0;
+        //     skill 12,7,0;
+        //     skill 13,5,0;
+        //     skill 14,5,0;
+        //     skill 15,10,0;
+        //     skill 16,10,0;
+        //     skill 19,1,SKILL_PERM;
+        //     skill 20,1,SKILL_PERM;
+        //     skill 157,1,SKILL_PERM;
+        //     skill 274,9,0;
+        //     skill 284,4,0;
+        //     skill 405,1,SKILL_PERM;
+        //     skill 275,5,0;
+        //     skill 278,1,SKILL_PERM;
+        //     skill 276,3,0;
+        //     skill 277,3,0;
+        //     skill 289,5,0;
+        //     skill 402,5,0;
+        //     skill 280,3,0;
+        //     skill 281,3,0;
+        //     skill 282,3,0;
+        //     skill 285,3,0;
+        //     skill 286,3,0;
+        //     skill 287,3,0;
+        //     skill 404,1,SKILL_PERM;
+        //     skill 288,5,0;
+        //     skill 374,1,SKILL_PERM;
+        //     skill 373,1,SKILL_PERM;
+        //     skill 375,5,0;
+		// 	}
+
+		// if (Class == 4020) { // clown/gypsy
+
+		// 	if (Sex == SEX_MALE) {//clown
+		// 			//skills
+		// 			//reseta e dps zera
+		// 			resetskill;
+		// 			set SkillPoint, 0;
+		// 			skill 1,9,0;
+		// 			skill 43,10,0;
+		// 			skill 44,10,0;
+		// 			skill 45,10,0;
+		// 			skill 46,9,0;
+		// 			skill 47,10,0;
+		// 			skill 142,1,SKILL_PERM;
+		// 			skill 147,1,SKILL_PERM;
+		// 			skill 148,1,SKILL_PERM;
+		// 			skill 304,1,SKILL_PERM;
+		// 			skill 305,1,SKILL_PERM;
+		// 			skill 311,1,SKILL_PERM;
+		// 			skill 315,10,0;
+		// 			skill 316,1,SKILL_PERM;
+		// 			skill 317,3,0;
+		// 			skill 318,5,0;
+		// 			skill 320,10,0;
+		// 			skill 321,10,0;
+		// 			skill 322,5,0;
+		// 			skill 394,8,0;
+		// 			skill 396,1,SKILL_PERM;
+		// 			skill 487,1,SKILL_PERM;
+		// 			skill 489,2,0;
+		// 			skill 1010,1,SKILL_PERM;
+		// 	} else { 
+		// 	//gypsy
+
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+		// 	skill 1,9,0;
+		// 	skill 43,10,0;
+		// 	skill 44,10,0;
+		// 	skill 45,10,0;
+		// 	skill 46,9,0;
+		// 	skill 47,10,0;
+		// 	skill 304,1,SKILL_PERM;
+		// 	skill 305,1,SKILL_PERM;
+		// 	skill 311,1,SKILL_PERM;
+		// 	skill 323,10,0;
+		// 	skill 324,1,SKILL_PERM;
+		// 	skill 325,3,0;
+		// 	skill 326,5,0;
+		// 	skill 328,10,0;
+		// 	skill 330,10,0;
+		// 	skill 394,10,0;
+		// 	skill 396,1,SKILL_PERM;
+		// 	skill 487,1,SKILL_PERM;
+		// 	skill 489,5,0;
+		// 	skill 1011,1,SKILL_PERM;
+		// 	}
+		// }
+
+		// if (Class == 4016) {//champ
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+		// 	skill 22,10,0;
+		// 	skill 23,10,0;
+		// 	skill 24,1,SKILL_PERM;
+		// 	skill 25,1,SKILL_PERM;
+		// 	skill 26,2,0;
+		// 	skill 27,4,0;
+		// 	skill 28,7,0;
+		// 	skill 29,5,0;
+		// 	skill 30,5,0;
+		// 	skill 34,10,0;
+		// 	skill 35,1,SKILL_PERM;
+		// 	skill 142,1,SKILL_PERM;
+		// 	skill 156,1,SKILL_PERM;
+		// 	skill 259,5,0;
+		// 	skill 260,2,0;
+		// 	skill 261,5,0;
+		// 	skill 262,1,SKILL_PERM;
+		// 	skill 263,5,0;
+		// 	skill 264,1,SKILL_PERM;
+		// 	skill 265,5,0;
+		// 	skill 266,3,0;
+		// 	skill 267,3,0;
+		// 	skill 268,3,0;
+		// 	skill 269,2,0;
+		// 	skill 270,5,0;
+		// 	skill 271,5,0;
+		// 	skill 272,3,0;
+		// 	skill 273,3,0;
+		// 	skill 401,1,SKILL_PERM;
+		// 	skill 1015,1,SKILL_PERM;
+		// 	skill 1016,0,0;
+		// }
+
+		// if (Class == 4018) {//stalker
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+        //     skill 1,9,0;
+        //     skill 48,10,0;
+        //     skill 49,10,0;
+        //     skill 50,8,0;
+        //     skill 51,10,0;
+        //     skill 52,10,0;
+        //     skill 53,1,SKILL_PERM;
+        //     skill 142,1,SKILL_PERM;
+        //     skill 149,1,SKILL_PERM;
+        //     skill 150,1,SKILL_PERM;
+        //     skill 151,1,SKILL_PERM;
+        //     skill 152,1,SKILL_PERM;
+        //     skill 210,4,0;
+        //     skill 211,4,0;
+        //     skill 212,4,0;
+        //     skill 213,2,0;
+        //     skill 214,5,0;
+        //     skill 215,5,0;
+        //     skill 216,5,0;
+        //     skill 217,5,0;
+        //     skill 218,5,0;
+        //     skill 219,5,0;
+        //     skill 225,10,0;
+        //     skill 475,1,SKILL_PERM;
+        //     skill 476,4,0;
+        //     skill 1005,1,SKILL_PERM;
+		// 	}
+
+		// 	cutin "", 255;
+		// 	close;
+        
+        // ApplyBothDefault:
+
+		// if (Class == 4010) {//hw
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+        //     statusup2 bStr, 21;
+        //     statusup2 bVit, 54;
+        //     statusup2 bInt, 36;
+        //     statusup2 bDex, 98;
+        //     statusup2 bLuk, 2;
+
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+        //     skill 1,9,0;
+        //     skill 9,1,SKILL_PERM;
+        //     skill 10,1,SKILL_PERM;
+        //     skill 11,7,0;
+        //     skill 12,7,0;
+        //     skill 13,5,0;
+        //     skill 14,5,0;
+        //     skill 15,10,0;
+        //     skill 16,10,0;
+        //     skill 17,5,0;
+        //     skill 18,1,SKILL_PERM;
+        //     skill 19,4,0;
+        //     skill 20,1,SKILL_PERM;
+        //     skill 80,10,0;
+        //     skill 81,1,SKILL_PERM;
+        //     skill 84,3,0;
+        //     skill 86,5,0;
+        //     skill 87,1,SKILL_PERM;
+        //     skill 88,10,0;
+        //     skill 89,10,0;
+        //     skill 90,3,0;
+        //     skill 91,1,SKILL_PERM;
+        //     skill 92,5,0;
+        //     skill 93,1,SKILL_PERM;
+        //     skill 120,1,SKILL_PERM;
+        //     skill 142,1,SKILL_PERM;
+        //     skill 157,1,SKILL_PERM;
+        //     skill 483,1,SKILL_PERM;
+        //     skill 1006,1,SKILL_PERM;
+		// 	}
+
+		// if (Class == 4012) { //sniper
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+        //     statusup2 bAgi, 54;
+        //     statusup2 bVit, 54;
+        //     statusup2 bInt, 39;
+        //     statusup2 bDex, 80;
+
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+		// 	skill 1,9,0;
+		// 	skill 43,10,0;
+		// 	skill 44,10,0;
+		// 	skill 45,10,0;
+		// 	skill 46,9,0;
+		// 	skill 47,10,0;
+		// 	skill 115,1,SKILL_PERM;
+		// 	skill 116,1,SKILL_PERM;
+		// 	skill 117,3,0;
+		// 	skill 118,2,0;
+		// 	skill 119,1,SKILL_PERM;
+		// 	skill 120,1,SKILL_PERM;
+		// 	skill 121,5,0;
+		// 	skill 122,1,SKILL_PERM;
+		// 	skill 123,1,SKILL_PERM;
+		// 	skill 124,1,SKILL_PERM;
+		// 	skill 126,1,SKILL_PERM;
+		// 	skill 127,1,SKILL_PERM;
+		// 	skill 128,10,0;
+		// 	skill 129,5,0;
+		// 	skill 130,4,0;
+		// 	skill 131,5,0;
+		// 	skill 142,1,SKILL_PERM;
+		// 	skill 147,1,SKILL_PERM;
+		// 	skill 148,1,SKILL_PERM;
+		// 	skill 380,1,SKILL_PERM;
+		// 	skill 381,5,0;
+		// 	skill 383,10,0;
+		// 	skill 1009,1,SKILL_PERM;			
+		// 	}
+
+		// if (Class == 4009) {//hp
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+        //     statusup2 bVit, 70;
+        //     statusup2 bInt, 75;
+        //     statusup2 bDex, 60;
+        //     statusup2 bLuk, 8;
+
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+        //     skill 22,10,0;
+        //     skill 1,9,0;
+        //     skill 9,5,0;
+        //     skill 12,7,0;
+        //     skill 16,1,SKILL_PERM;
+        //     skill 22,5,0;
+        //     skill 24,1,SKILL_PERM;
+        //     skill 25,1,SKILL_PERM;
+        //     skill 26,2,0;
+        //     skill 27,4,0;
+        //     skill 28,10,0;
+        //     skill 29,10,0;
+        //     skill 30,2,0;
+        //     skill 31,1,SKILL_PERM;
+        //     skill 33,2,0;
+        //     skill 34,10,0;
+        //     skill 35,1,SKILL_PERM;
+        //     skill 66,5,0;
+        //     skill 67,3,0;
+        //     skill 68,4,0;
+        //     skill 70,7,0;
+        //     skill 72,1,SKILL_PERM;
+        //     skill 73,10,0;
+        //     skill 74,3,0;
+        //     skill 75,5,0;
+        //     skill 76,5,0;
+        //     skill 78,1,SKILL_PERM;
+        //     skill 142,1,SKILL_PERM;
+        //     skill 156,1,SKILL_PERM;
+        //     skill 363,3,0;
+        //     skill 1014,1,SKILL_PERM;
+		// 	}
+
+		// if (Class == 4015) {// paladin
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+        //     statusup2 bStr, 30;
+        //     statusup2 bVit, 77;
+        //     statusup2 bDex, 98;
+
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+        //     skill 1,9,0;
+        //     skill 2,10,0;
+        //     skill 4,10,0;
+        //     skill 5,5,0;
+        //     skill 6,10,0;
+        //     skill 7,4,0;
+        //     skill 8,10,0;
+        //     skill 63,1,SKILL_PERM;
+        //     skill 142,1,SKILL_PERM;
+        //     skill 144,1,SKILL_PERM;
+        //     skill 145,1,SKILL_PERM;
+        //     skill 146,1,SKILL_PERM;
+        //     skill 248,10,0;
+        //     skill 249,5,0;
+        //     skill 250,3,0;
+        //     skill 251,5,0;
+        //     skill 252,10,0;
+        //     skill 253,6,0;
+        //     skill 254,4,0;
+        //     skill 255,5,0;
+        //     skill 367,5,0;
+        //     skill 480,5,0;
+        //     skill 1002,1,SKILL_PERM;
+		// 	//montaria
+		// 		if (getskilllv("KN_RIDING")) {
+		// 		atcommand "@option 0 0 32";
+		// 		}
+		// 	}
+
+		// if (Class == 4017) {//scholar prof
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+        //     statusup2 bStr, 28;
+        //     statusup2 bVit, 78;
+        //     statusup2 bDex, 98;
+
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+        //     skill 1,9,0;
+        //     skill 9,2,0;
+        //     skill 10,1,SKILL_PERM;
+        //     skill 11,7,0;
+        //     skill 12,7,0;
+        //     skill 13,5,0;
+        //     skill 14,5,0;
+        //     skill 15,10,0;
+        //     skill 16,10,0;
+        //     skill 19,1,SKILL_PERM;
+        //     skill 20,1,SKILL_PERM;
+        //     skill 157,1,SKILL_PERM;
+        //     skill 274,9,0;
+        //     skill 284,4,0;
+        //     skill 405,1,SKILL_PERM;
+        //     skill 275,5,0;
+        //     skill 278,1,SKILL_PERM;
+        //     skill 276,3,0;
+        //     skill 277,3,0;
+        //     skill 289,5,0;
+        //     skill 402,5,0;
+        //     skill 280,3,0;
+        //     skill 281,3,0;
+        //     skill 282,3,0;
+        //     skill 285,3,0;
+        //     skill 286,3,0;
+        //     skill 287,3,0;
+        //     skill 404,1,SKILL_PERM;
+        //     skill 288,5,0;
+        //     skill 374,1,SKILL_PERM;
+        //     skill 373,1,SKILL_PERM;
+        //     skill 375,5,0;
+		// 	}
+
+		// if (Class == 4020) { // clown/gypsy
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+            
+		// 	if (Sex == SEX_MALE) {//clown
+		// 			//status
+		// 			set StatusPoint, 0;
+		// 			statusup2 bAgi, 3;
+		// 			statusup2 bVit, 57;
+		// 			statusup2 bInt, 98;
+		// 			statusup2 bDex, 57;
+
+		// 			//skills
+		// 			//reseta e dps zera
+		// 			resetskill;
+		// 			set SkillPoint, 0;
+		// 			skill 1,9,0;
+		// 			skill 43,10,0;
+		// 			skill 44,10,0;
+		// 			skill 45,10,0;
+		// 			skill 46,9,0;
+		// 			skill 47,10,0;
+		// 			skill 142,1,SKILL_PERM;
+		// 			skill 147,1,SKILL_PERM;
+		// 			skill 148,1,SKILL_PERM;
+		// 			skill 304,1,SKILL_PERM;
+		// 			skill 305,1,SKILL_PERM;
+		// 			skill 311,1,SKILL_PERM;
+		// 			skill 315,10,0;
+		// 			skill 316,1,SKILL_PERM;
+		// 			skill 317,3,0;
+		// 			skill 318,5,0;
+		// 			skill 320,10,0;
+		// 			skill 321,10,0;
+		// 			skill 322,5,0;
+		// 			skill 394,8,0;
+		// 			skill 396,1,SKILL_PERM;
+		// 			skill 487,1,SKILL_PERM;
+		// 			skill 489,2,0;
+		// 			skill 1010,1,SKILL_PERM;
+		// 	} else { 
+		// 	//gypsy
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+		// 	statusup2 bStr, 20;
+		// 	statusup2 bAgi, 38;
+		// 	statusup2 bVit, 70;
+		// 	statusup2 bInt, 11;
+		// 	statusup2 bDex, 93;
+		// 	statusup2 bLuk, 3;
+
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+		// 	skill 1,9,0;
+		// 	skill 43,10,0;
+		// 	skill 44,10,0;
+		// 	skill 45,10,0;
+		// 	skill 46,9,0;
+		// 	skill 47,10,0;
+		// 	skill 304,1,SKILL_PERM;
+		// 	skill 305,1,SKILL_PERM;
+		// 	skill 311,1,SKILL_PERM;
+		// 	skill 323,10,0;
+		// 	skill 324,1,SKILL_PERM;
+		// 	skill 325,3,0;
+		// 	skill 326,5,0;
+		// 	skill 328,10,0;
+		// 	skill 330,10,0;
+		// 	skill 394,10,0;
+		// 	skill 396,1,SKILL_PERM;
+		// 	skill 487,1,SKILL_PERM;
+		// 	skill 489,5,0;
+		// 	skill 1011,1,SKILL_PERM;
+		// 	}
+		// }
+
+		// if (Class == 4016) {//champ
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+		// 	statusup2 bStr, 62;
+		// 	statusup2 bVit, 64;
+		// 	statusup2 bInt, 30;
+		// 	statusup2 bDex, 69;
+		// 	statusup2 bLuk, 6;
+
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+		// 	skill 22,10,0;
+		// 	skill 23,10,0;
+		// 	skill 24,1,SKILL_PERM;
+		// 	skill 25,1,SKILL_PERM;
+		// 	skill 26,2,0;
+		// 	skill 27,4,0;
+		// 	skill 28,7,0;
+		// 	skill 29,5,0;
+		// 	skill 30,5,0;
+		// 	skill 34,10,0;
+		// 	skill 35,1,SKILL_PERM;
+		// 	skill 142,1,SKILL_PERM;
+		// 	skill 156,1,SKILL_PERM;
+		// 	skill 259,5,0;
+		// 	skill 260,2,0;
+		// 	skill 261,5,0;
+		// 	skill 262,1,SKILL_PERM;
+		// 	skill 263,5,0;
+		// 	skill 264,1,SKILL_PERM;
+		// 	skill 265,5,0;
+		// 	skill 266,3,0;
+		// 	skill 267,3,0;
+		// 	skill 268,3,0;
+		// 	skill 269,2,0;
+		// 	skill 270,5,0;
+		// 	skill 271,5,0;
+		// 	skill 272,3,0;
+		// 	skill 273,3,0;
+		// 	skill 401,1,SKILL_PERM;
+		// 	skill 1015,1,SKILL_PERM;
+		// 	skill 1016,0,0;
+		// }
+
+		// if (Class == 4018) {//stalker
+
+		// 	//primeiro reseta
+		// 	resetstatus;
+
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+        //     statusup2 bStr, 4;
+        //     statusup2 bVit, 67;
+        //     statusup2 bInt, 44;
+        //     statusup2 bDex, 98;
+        //     statusup2 bLuk, 3;
+
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+        //     skill 1,9,0;
+        //     skill 48,10,0;
+        //     skill 49,10,0;
+        //     skill 50,8,0;
+        //     skill 51,10,0;
+        //     skill 52,10,0;
+        //     skill 53,1,SKILL_PERM;
+        //     skill 142,1,SKILL_PERM;
+        //     skill 149,1,SKILL_PERM;
+        //     skill 150,1,SKILL_PERM;
+        //     skill 151,1,SKILL_PERM;
+        //     skill 152,1,SKILL_PERM;
+        //     skill 210,4,0;
+        //     skill 211,4,0;
+        //     skill 212,4,0;
+        //     skill 213,2,0;
+        //     skill 214,5,0;
+        //     skill 215,5,0;
+        //     skill 216,5,0;
+        //     skill 217,5,0;
+        //     skill 218,5,0;
+        //     skill 219,5,0;
+        //     skill 225,10,0;
+        //     skill 475,1,SKILL_PERM;
+        //     skill 476,4,0;
+        //     skill 1005,1,SKILL_PERM;
+		// 	}
+		mes "Ainda não existem builds decentes.";
+		next;
+		cutin "", 255;	
+		close;
+
+		// if (Class == ?) {
+		// 	//primeiro reseta
+		// 	resetstatus;
+		// 	//build stats
+		// 	set StatusPoint, 0;//tem que zerar os pontos antes de aplicar
+		// 	statusup2 bStr, 0;
+		// 	statusup2 bAgi, 0;
+		// 	statusup2 bVit, 0;
+		// 	statusup2 bInt, 0;
+		// 	statusup2 bDex, 0;
+		// 	statusup2 bLuk, 0;
+		// 	//build skills
+		// 	resetskill;//reseta e dps zera
+		// 	set SkillPoint, 0;
+		// 	}
+		// 	cutin "", 255;
+		// 	close;
+        
+            
+		
+/* 		ApplySkillsDefault
+			//a
+		
+		ApplyBothDefault
+			//a */
+		
+	ApplyBuild:
+		mes "[ Sakray ]";
+		.@cid = getcharid(0);
+		// Retrieve builds for this character
+		.@size = query_sql("SELECT `id`, `build_name`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `status_point` FROM `ero_buildmanager` WHERE `cid` = "+.@cid, .@id, .@build_name$, .@str, .@agi, .@vit, .@int, .@dex, .@luk, .@status_points);
+
+		if (.@size == 0) {
+			mes "Você não tem builds salvas.";
+			cutin "", 255;
+			close;
+		}
+
+		mes "Selecione qual build aplicar:";
+		next;
+
+		.@menu$ = "";
+		for (.@i = 0; .@i < .@size; .@i++) {
+			if (.@i > 0) .@menu$ = .@menu$ + ":";
+			.@menu$ = .@menu$ + .@build_name$[.@i];
+		}
+		.@selection = select(.@menu$) - 1;
+		callsub ApplyBuildSelection, .@id[.@selection], .@str[.@selection], .@agi[.@selection], .@vit[.@selection], .@int[.@selection], .@dex[.@selection], .@luk[.@selection], .@status_points[.@selection];
+		cutin "", 255;
+		close;
+
+	ShowBuilds:
+		mes "[ Sakray ]";
+		.@cid = getcharid(0);
+		// Retrieve builds for this character
+		.@size = query_sql("SELECT `build_name` FROM `ero_buildmanager` WHERE `cid` = "+.@cid, .@build_name$);
+
+		if (.@size == 0) {
+			mes "Você não tem builds salvas.";
+			cutin "", 255;
+			close;
+		}
+		for (.@i = 0; .@i < .@size; .@i++) {
+			mes "Build " + (.@i + 1) + ": " + .@build_name$[.@i];
+		}
+		cutin "", 255;
+		close;
+
+	DeleteBuild:
+		mes "[ Sakray ]";
+		.@cid = getcharid(0);
+		// Retrieve builds for this character
+		.@size = query_sql("SELECT `id`, `build_name` FROM `ero_buildmanager` WHERE `cid` = "+.@cid, .@id, .@build_name$);
+
+		if (.@size == 0) {
+			mes "Você não tem builds salvas.";
+			next;
+			cutin "", 255;
+			close;
+		}
+
+		mes "Selecione uma build para deletar";
+		next;
+
+		.@menu$ = "";
+		for (.@i = 0; .@i < .@size; .@i++) {
+			if (.@i > 0) .@menu$ = .@menu$ + ":";
+			.@menu$ = .@menu$ + .@build_name$[.@i];
+		}
+		.@selection = select(.@menu$) - 1;
+		query_sql("DELETE FROM `ero_buildmanager` WHERE `id` = "+.@id[.@selection]);
+
+		mes "[ Sakray ]";
+		mes "Build deletada.";
+		next;
+		mes "[ Sakray ]";
+		mes "Glória a Deus.";
+		cutin "", 255;
+			close;
+
+	ApplyBuildSelection:
+		.@id = getarg(0);
+		.@str = getarg(1);
+		.@agi = getarg(2);
+		.@vit = getarg(3);
+		.@int = getarg(4);
+		.@dex = getarg(5);
+		.@luk = getarg(6);
+		.@status_points = getarg(7);
+
+		resetstatus;
+		statusup2 bStr, .@str - readparam(bStr);
+		statusup2 bAgi, .@agi - readparam(bAgi);
+		statusup2 bVit, .@vit - readparam(bVit);
+		statusup2 bInt, .@int - readparam(bInt);
+		statusup2 bDex, .@dex - readparam(bDex);
+		statusup2 bLuk, .@luk - readparam(bLuk);
+		set StatusPoint, .@status_points;
+
+		mes "[ Sakray ]";
+		mes "A build foi aplicada.";
+		next;
+		mes "[ Sakray ]";
+		mes "É uma pena que você não consiga acumular derrotas tão rápido quanto você gostaria.";
+		next;
+		cutin "", 255;
+			close;
+
+	Cancel:
+		mes "[ Sakray ]";
+		mes "Eu sabia que você faria uma escolha ruim.";
+		cutin "", 255;
+			close;
+}
+
+
+quiz_02,241,351,3	duplicate(Build Master)	Build Master Blue#quiz_02_2	685
+quiz_02,258,351,6	duplicate(Build Master)	Build Master Red#quiz_02_2	685
+quiz_02,139,353,3	duplicate(Build Master)	Build Master Blue#iz	685
+quiz_02,156,353,6	duplicate(Build Master)	Build Master Red#iz	685

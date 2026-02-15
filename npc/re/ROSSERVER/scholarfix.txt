@@ -1,0 +1,14 @@
+// prontera,0,0,0	script	Scholar_Fix	-1,{
+//     end;
+
+// OnInit:
+//     // Encontra todos os chars que são Scholar
+//     query_sql("SELECT char_id FROM `char` WHERE `class` = 4017", .@char_id);
+    
+//     // Para cada Scholar encontrado
+//     for (.@i = 0; .@i < getarraysize(.@char_id); .@i++) {
+//         atcommand "@charskillreset " + .@char_id[.@i];
+//         query_sql("UPDATE `char` SET `skill_point` = 108 WHERE `char_id` = " + .@char_id[.@i]);
+//     }
+//     end;
+// }

@@ -1,0 +1,137 @@
+//===== rAthena Script =======================================
+//= Mapflag: Disable Warp Portal memory.
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 2.0
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: ========================================= 
+//= Prevents players from using /memo on a map.
+//= Also disables marriage warp skills.
+//===== Additional Comments: ================================= 
+//= 1.6a Added up to Hugel maps. [Lupus]
+//= 1.6b Added job_knt map. [Samuray22]
+//= 1.7 Added all novice maps. [L0ne_W0lf]
+//= 1.8 Added nameless_i location. [Lupus]
+//= 1.8a Removed duplicate gef_cas nomemo mapflags. [Yommy]
+//= 1.8b Removed duplicate arug_dun01 & schg_dun01 entries. [Gepard]
+//= 1.9 Updated. [L0ne_W0lf]
+//= 2.0 Renewal split. [Euphy]
+//============================================================
+
+// Towns  ====================
+ros2024	mapflag	notrade
+ros2025_1	mapflag	notrade
+ros2025_2	mapflag	notrade
+ros2025_3	mapflag	notrade
+ros2025_4	mapflag	notrade
+ros2025_5	mapflag	notrade
+ros2025_6	mapflag	notrade
+//	mapflag	nomemo
+lhz_dun03	mapflag	nomemo
+izlude	mapflag	nomemo
+2012rwc_01	mapflag	nomemo
+2012rwc_02	mapflag	nomemo
+2012rwc_03	mapflag	nomemo
+2012rwc_04	mapflag	nomemo
+guild_vs1	mapflag	nomemo
+arug_cas02	mapflag	nomemo
+arena1	mapflag	nomemo
+arena2	mapflag	nomemo
+arena3	mapflag	nomemo
+arena4	mapflag	nomemo
+arena5	mapflag	nomemo
+arena6	mapflag	nomemo
+arena7	mapflag	nomemo
+arena8	mapflag	nomemo
+arena9	mapflag	nomemo
+arena10	mapflag	nomemo
+arena11	mapflag	nomemo
+arena12	mapflag	nomemo
+arena13	mapflag	nomemo
+arena14	mapflag	nomemo
+arena15	mapflag	nomemo
+arena16	mapflag	nomemo
+arena17	mapflag	nomemo
+arena18	mapflag	nomemo
+arena19	mapflag	nomemo
+arena20	mapflag	nomemo
+arena21	mapflag	nomemo
+arena22	mapflag	nomemo
+arena23	mapflag	nomemo
+arena24	mapflag	nomemo
+arena25	mapflag	nomemo
+arena26	mapflag	nomemo
+arena27	mapflag	nomemo
+arena28	mapflag	nomemo
+arena29	mapflag	nomemo
+arena30	mapflag	nomemo
+arena31	mapflag	nomemo
+arena32	mapflag	nomemo
+arena33	mapflag	nomemo
+arena34	mapflag	nomemo
+arena35	mapflag	nomemo
+arena36	mapflag	nomemo
+arena37	mapflag	nomemo
+arena38	mapflag	nomemo
+arena39	mapflag	nomemo
+arena40	mapflag	nomemo
+arena41	mapflag	nomemo
+arena42	mapflag	nomemo
+guild_vs2	mapflag	nomemo
+guild_vs3	mapflag	nomemo
+guild_vs4	mapflag	nomemo
+guild_vs5	mapflag	nomemo
+2009rwc_01	mapflag	nomemo
+2009rwc_02	mapflag	nomemo
+2009rwc_03	mapflag	nomemo
+2009rwc_04	mapflag	nomemo
+quiz_02	mapflag	nomemo
+rwc01	mapflag	nomemo
+rwc02	mapflag	nomemo
+rwc03	mapflag	nomemo
+2008rwc_01	mapflag	nomemo
+2008rwc_02	mapflag	nomemo
+2008rwc_03	mapflag	nomemo
+2008rwc_04	mapflag	nomemo
+kvm	mapflag	nomemo
+flavius	mapflag	nomemo
+bio4	mapflag	nomemo
+1@lab	mapflag	nomemo
+1@dth3	mapflag	nomemo
+1@tnm1	mapflag	nomemo
+1@pump	mapflag	nomemo
+2@pump	mapflag	nomemo
+job_prist	mapflag	nomemo
+ecl_tdun02	mapflag	nomemo
+evt_bomb	mapflag	nomemo
+aldeg_cas01	mapflag	nomemo
+aldeg_cas02	mapflag	nomemo
+aldeg_cas03	mapflag	nomemo
+aldeg_cas04	mapflag	nomemo
+aldeg_cas05	mapflag	nomemo
+prtg_cas01	mapflag	nomemo
+prtg_cas02	mapflag	nomemo
+prtg_cas03	mapflag	nomemo
+prtg_cas04	mapflag	nomemo
+prtg_cas05	mapflag	nomemo
+arug_cas01	mapflag	nomemo
+arug_cas03	mapflag	nomemo
+arug_cas04	mapflag	nomemo
+arug_cas05	mapflag	nomemo
+payg_cas01	mapflag	nomemo
+payg_cas02	mapflag	nomemo
+payg_cas03	mapflag	nomemo
+payg_cas04	mapflag	nomemo
+payg_cas05	mapflag	nomemo
+gefg_cas03	mapflag	nomemo
+gefg_cas04	mapflag	nomemo
+gefg_cas02	mapflag	nomemo
+gefg_cas01	mapflag	nomemo
+gefg_cas05	mapflag	nomemo
+schg_cas01	mapflag	nomemo
+schg_cas02	mapflag	nomemo
+schg_cas03	mapflag	nomemo
+schg_cas04	mapflag	nomemo
+schg_cas05	mapflag	nomemo

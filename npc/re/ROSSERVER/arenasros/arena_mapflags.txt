@@ -1,0 +1,528 @@
+//===== rAthena Script =======================================
+//= Arena Mapflags
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: ===================================== 
+//= rAthena SVN
+//===== Description: ========================================
+//= Mapflags for RWC Arena maps
+//===== Additional Comments: =================================
+//= 1.0 First version. [Admin]
+//============================================================
+
+// Mapflags for all RWC Arenas
+// Based on guild_vs1-5 mapflags
+
+// GvG Settings
+guild_vs1	mapflag	gvg
+guild_vs2	mapflag	gvg
+guild_vs3	mapflag	gvg
+guild_vs4	mapflag	gvg
+guild_vs5	mapflag	gvg
+2009rwc_01	mapflag	gvg
+2009rwc_02	mapflag	gvg
+2009rwc_03	mapflag	gvg
+2009rwc_04	mapflag	gvg
+2012rwc_01	mapflag	gvg
+2012rwc_02	mapflag	gvg
+2012rwc_03	mapflag	gvg
+2012rwc_04	mapflag	gvg
+rwc01	mapflag	gvg
+rwc03	mapflag	gvg
+2008rwc_01	mapflag	gvg
+2008rwc_02	mapflag	gvg
+2008rwc_03	mapflag	gvg
+2008rwc_04	mapflag	gvg
+1@dth3	mapflag	gvg
+1@lab	mapflag	gvg
+1@tnm1	mapflag	gvg
+1@pump	mapflag	gvg
+2@pump	mapflag	gvg
+kvm	mapflag	gvg
+job_prist	mapflag	gvg
+flavius	mapflag	gvg
+bio4	mapflag	gvg
+ecl_tdun02	mapflag	gvg
+evt_bomb	mapflag	gvg
+
+// Guild Restrictions
+guild_vs1	mapflag	guildlock
+guild_vs2	mapflag	guildlock
+guild_vs3	mapflag	guildlock
+guild_vs4	mapflag	guildlock
+guild_vs5	mapflag	guildlock
+2009rwc_01	mapflag	guildlock
+2009rwc_02	mapflag	guildlock
+2009rwc_03	mapflag	guildlock
+2009rwc_04	mapflag	guildlock
+2012rwc_01	mapflag	guildlock
+2012rwc_02	mapflag	guildlock
+2012rwc_03	mapflag	guildlock
+2012rwc_04	mapflag	guildlock
+rwc01	mapflag	guildlock
+rwc03	mapflag	guildlock
+2008rwc_01	mapflag	guildlock
+2008rwc_02	mapflag	guildlock
+2008rwc_03	mapflag	guildlock
+2008rwc_04	mapflag	guildlock
+1@dth3	mapflag	guildlock
+1@lab	mapflag	guildlock
+1@tnm1	mapflag	guildlock
+1@pump	mapflag	guildlock
+2@pump	mapflag	guildlock
+kvm	mapflag	guildlock
+job_prist	mapflag	guildlock
+flavius	mapflag	guildlock
+bio4	mapflag	guildlock
+ecl_tdun02	mapflag	guildlock
+evt_bomb	mapflag	guildlock
+
+// Event Loading
+guild_vs1	mapflag	loadevent
+guild_vs2	mapflag	loadevent
+guild_vs3	mapflag	loadevent
+guild_vs4	mapflag	loadevent
+guild_vs5	mapflag	loadevent
+2009rwc_01	mapflag	loadevent
+2009rwc_02	mapflag	loadevent
+2009rwc_03	mapflag	loadevent
+2009rwc_04	mapflag	loadevent
+2012rwc_01	mapflag	loadevent
+2012rwc_02	mapflag	loadevent
+2012rwc_03	mapflag	loadevent
+2012rwc_04	mapflag	loadevent
+rwc01	mapflag	loadevent
+rwc03	mapflag	loadevent
+2008rwc_01	mapflag	loadevent
+2008rwc_02	mapflag	loadevent
+2008rwc_03	mapflag	loadevent
+2008rwc_04	mapflag	loadevent
+1@dth3	mapflag	loadevent
+1@lab	mapflag	loadevent
+1@tnm1	mapflag	loadevent
+1@pump	mapflag	loadevent
+2@pump	mapflag	loadevent
+kvm	mapflag	loadevent
+job_prist	mapflag	loadevent
+flavius	mapflag	loadevent
+bio4	mapflag	loadevent
+ecl_tdun02	mapflag	loadevent
+evt_bomb	mapflag	loadevent
+
+// Basic Restrictions
+guild_vs1	mapflag	nocostume
+guild_vs2	mapflag	nocostume
+guild_vs3	mapflag	nocostume
+guild_vs4	mapflag	nocostume
+guild_vs5	mapflag	nocostume
+2009rwc_01	mapflag	nocostume
+2009rwc_02	mapflag	nocostume
+2009rwc_03	mapflag	nocostume
+2009rwc_04	mapflag	nocostume
+2012rwc_01	mapflag	nocostume
+2012rwc_02	mapflag	nocostume
+2012rwc_03	mapflag	nocostume
+2012rwc_04	mapflag	nocostume
+rwc01	mapflag	nocostume
+rwc03	mapflag	nocostume
+2008rwc_01	mapflag	nocostume
+2008rwc_02	mapflag	nocostume
+2008rwc_03	mapflag	nocostume
+2008rwc_04	mapflag	nocostume
+1@dth3	mapflag	nocostume
+1@lab	mapflag	nocostume
+1@tnm1	mapflag	nocostume
+1@pump	mapflag	nocostume
+2@pump	mapflag	nocostume
+kvm	mapflag	nocostume
+job_prist	mapflag	nocostume
+flavius	mapflag	nocostume
+bio4	mapflag	nocostume
+ecl_tdun02	mapflag	nocostume
+evt_bomb	mapflag	nocostume
+
+// Movement Restrictions
+guild_vs1	mapflag	nobranch
+guild_vs2	mapflag	nobranch
+guild_vs3	mapflag	nobranch
+guild_vs4	mapflag	nobranch
+guild_vs5	mapflag	nobranch
+2009rwc_01	mapflag	nobranch
+2009rwc_02	mapflag	nobranch
+2009rwc_03	mapflag	nobranch
+2009rwc_04	mapflag	nobranch
+2012rwc_01	mapflag	nobranch
+2012rwc_02	mapflag	nobranch
+2012rwc_03	mapflag	nobranch
+2012rwc_04	mapflag	nobranch
+rwc01	mapflag	nobranch
+rwc03	mapflag	nobranch
+2008rwc_01	mapflag	nobranch
+2008rwc_02	mapflag	nobranch
+2008rwc_03	mapflag	nobranch
+2008rwc_04	mapflag	nobranch
+1@dth3	mapflag	nobranch
+1@lab	mapflag	nobranch
+1@tnm1	mapflag	nobranch
+1@pump	mapflag	nobranch
+2@pump	mapflag	nobranch
+kvm	mapflag	nobranch
+job_prist	mapflag	nobranch
+flavius	mapflag	nobranch
+bio4	mapflag	nobranch
+ecl_tdun02	mapflag	nobranch
+evt_bomb	mapflag	nobranch
+
+// Item Restrictions
+guild_vs1	mapflag	nodrop
+guild_vs2	mapflag	nodrop
+guild_vs3	mapflag	nodrop
+guild_vs4	mapflag	nodrop
+guild_vs5	mapflag	nodrop
+2009rwc_01	mapflag	nodrop
+2009rwc_02	mapflag	nodrop
+2009rwc_03	mapflag	nodrop
+2009rwc_04	mapflag	nodrop
+2012rwc_01	mapflag	nodrop
+2012rwc_02	mapflag	nodrop
+2012rwc_03	mapflag	nodrop
+2012rwc_04	mapflag	nodrop
+rwc01	mapflag	nodrop
+rwc03	mapflag	nodrop
+2008rwc_01	mapflag	nodrop
+2008rwc_02	mapflag	nodrop
+2008rwc_03	mapflag	nodrop
+2008rwc_04	mapflag	nodrop
+1@dth3	mapflag	nodrop
+1@lab	mapflag	nodrop
+1@tnm1	mapflag	nodrop
+1@pump	mapflag	nodrop
+2@pump	mapflag	nodrop
+kvm	mapflag	nodrop
+job_prist	mapflag	nodrop
+flavius	mapflag	nodrop
+bio4	mapflag	nodrop
+ecl_tdun02	mapflag	nodrop
+evt_bomb	mapflag	nodrop
+
+// PvP Settings
+guild_vs1	mapflag	pvp	off
+guild_vs2	mapflag	pvp	off
+guild_vs3	mapflag	pvp	off
+guild_vs4	mapflag	pvp	off
+guild_vs5	mapflag	pvp	off
+2009rwc_01	mapflag	pvp	off
+2009rwc_02	mapflag	pvp	off
+2009rwc_03	mapflag	pvp	off
+2009rwc_04	mapflag	pvp	off
+2012rwc_01	mapflag	pvp	off
+2012rwc_02	mapflag	pvp	off
+2012rwc_03	mapflag	pvp	off
+2012rwc_04	mapflag	pvp	off
+rwc01	mapflag	pvp	off
+rwc03	mapflag	pvp	off
+2008rwc_01	mapflag	pvp	off
+2008rwc_02	mapflag	pvp	off
+2008rwc_03	mapflag	pvp	off
+2008rwc_04	mapflag	pvp	off
+1@dth3	mapflag	pvp	off
+1@lab	mapflag	pvp	off
+1@tnm1	mapflag	pvp	off
+1@pump	mapflag	pvp	off
+2@pump	mapflag	pvp	off
+kvm	mapflag	pvp	off
+job_prist	mapflag	pvp	off
+flavius	mapflag	pvp	off
+bio4	mapflag	pvp	off
+ecl_tdun02	mapflag	pvp	off
+evt_bomb	mapflag	pvp	off
+
+// Save Point Restrictions
+guild_vs1	mapflag	nosave	SavePoint
+guild_vs2	mapflag	nosave	SavePoint
+guild_vs3	mapflag	nosave	SavePoint
+guild_vs4	mapflag	nosave	SavePoint
+guild_vs5	mapflag	nosave	SavePoint
+2009rwc_01	mapflag	nosave	SavePoint
+2009rwc_02	mapflag	nosave	SavePoint
+2009rwc_03	mapflag	nosave	SavePoint
+2009rwc_04	mapflag	nosave	SavePoint
+2012rwc_01	mapflag	nosave	SavePoint
+2012rwc_02	mapflag	nosave	SavePoint
+2012rwc_03	mapflag	nosave	SavePoint
+2012rwc_04	mapflag	nosave	SavePoint
+rwc01	mapflag	nosave	SavePoint
+rwc03	mapflag	nosave	SavePoint
+2008rwc_01	mapflag	nosave	SavePoint
+2008rwc_02	mapflag	nosave	SavePoint
+2008rwc_03	mapflag	nosave	SavePoint
+2008rwc_04	mapflag	nosave	SavePoint
+1@dth3	mapflag	nosave	SavePoint
+1@lab	mapflag	nosave	SavePoint
+1@tnm1	mapflag	nosave	SavePoint
+1@pump	mapflag	nosave	SavePoint
+2@pump	mapflag	nosave	SavePoint
+kvm	mapflag	nosave	SavePoint
+job_prist	mapflag	nosave	SavePoint
+flavius	mapflag	nosave	SavePoint
+bio4	mapflag	nosave	SavePoint
+ecl_tdun02	mapflag	nosave	SavePoint
+evt_bomb	mapflag	nosave	SavePoint
+
+// Memory Restrictions
+guild_vs1	mapflag	nomemo
+guild_vs2	mapflag	nomemo
+guild_vs3	mapflag	nomemo
+guild_vs4	mapflag	nomemo
+guild_vs5	mapflag	nomemo
+2009rwc_01	mapflag	nomemo
+2009rwc_02	mapflag	nomemo
+2009rwc_03	mapflag	nomemo
+2009rwc_04	mapflag	nomemo
+2012rwc_01	mapflag	nomemo
+2012rwc_02	mapflag	nomemo
+2012rwc_03	mapflag	nomemo
+2012rwc_04	mapflag	nomemo
+rwc01	mapflag	nomemo
+rwc03	mapflag	nomemo
+2008rwc_01	mapflag	nomemo
+2008rwc_02	mapflag	nomemo
+2008rwc_03	mapflag	nomemo
+2008rwc_04	mapflag	nomemo
+1@dth3	mapflag	nomemo
+1@lab	mapflag	nomemo
+1@tnm1	mapflag	nomemo
+1@pump	mapflag	nomemo
+2@pump	mapflag	nomemo
+kvm	mapflag	nomemo
+job_prist	mapflag	nomemo
+flavius	mapflag	nomemo
+bio4	mapflag	nomemo
+ecl_tdun02	mapflag	nomemo
+evt_bomb	mapflag	nomemo
+
+// Return Restrictions
+guild_vs1	mapflag	noreturn
+guild_vs2	mapflag	noreturn
+guild_vs3	mapflag	noreturn
+guild_vs4	mapflag	noreturn
+guild_vs5	mapflag	noreturn
+2009rwc_01	mapflag	noreturn
+2009rwc_02	mapflag	noreturn
+2009rwc_03	mapflag	noreturn
+2009rwc_04	mapflag	noreturn
+2012rwc_01	mapflag	noreturn
+2012rwc_02	mapflag	noreturn
+2012rwc_03	mapflag	noreturn
+2012rwc_04	mapflag	noreturn
+rwc01	mapflag	noreturn
+rwc03	mapflag	noreturn
+2008rwc_01	mapflag	noreturn
+2008rwc_02	mapflag	noreturn
+2008rwc_03	mapflag	noreturn
+2008rwc_04	mapflag	noreturn
+1@dth3	mapflag	noreturn
+1@lab	mapflag	noreturn
+1@tnm1	mapflag	noreturn
+1@pump	mapflag	noreturn
+2@pump	mapflag	noreturn
+kvm	mapflag	noreturn
+job_prist	mapflag	noreturn
+flavius	mapflag	noreturn
+bio4	mapflag	noreturn
+ecl_tdun02	mapflag	noreturn
+evt_bomb	mapflag	noreturn
+
+// Trade Restrictions
+guild_vs1	mapflag	notrade
+guild_vs2	mapflag	notrade
+guild_vs3	mapflag	notrade
+guild_vs4	mapflag	notrade
+guild_vs5	mapflag	notrade
+2009rwc_01	mapflag	notrade
+2009rwc_02	mapflag	notrade
+2009rwc_03	mapflag	notrade
+2009rwc_04	mapflag	notrade
+2012rwc_01	mapflag	notrade
+2012rwc_02	mapflag	notrade
+2012rwc_03	mapflag	notrade
+2012rwc_04	mapflag	notrade
+rwc01	mapflag	notrade
+rwc03	mapflag	notrade
+2008rwc_01	mapflag	notrade
+2008rwc_02	mapflag	notrade
+2008rwc_03	mapflag	notrade
+2008rwc_04	mapflag	notrade
+1@dth3	mapflag	notrade
+1@lab	mapflag	notrade
+1@tnm1	mapflag	notrade
+1@pump	mapflag	notrade
+2@pump	mapflag	notrade
+kvm	mapflag	notrade
+job_prist	mapflag	notrade
+flavius	mapflag	notrade
+bio4	mapflag	notrade
+ecl_tdun02	mapflag	notrade
+evt_bomb	mapflag	notrade
+
+// Death Penalty
+guild_vs1	mapflag	nopenalty
+guild_vs2	mapflag	nopenalty
+guild_vs3	mapflag	nopenalty
+guild_vs4	mapflag	nopenalty
+guild_vs5	mapflag	nopenalty
+2009rwc_01	mapflag	nopenalty
+2009rwc_02	mapflag	nopenalty
+2009rwc_03	mapflag	nopenalty
+2009rwc_04	mapflag	nopenalty
+2012rwc_01	mapflag	nopenalty
+2012rwc_02	mapflag	nopenalty
+2012rwc_03	mapflag	nopenalty
+2012rwc_04	mapflag	nopenalty
+rwc01	mapflag	nopenalty
+rwc03	mapflag	nopenalty
+2008rwc_01	mapflag	nopenalty
+2008rwc_02	mapflag	nopenalty
+2008rwc_03	mapflag	nopenalty
+2008rwc_04	mapflag	nopenalty
+1@dth3	mapflag	nopenalty
+1@lab	mapflag	nopenalty
+1@tnm1	mapflag	nopenalty
+1@pump	mapflag	nopenalty
+2@pump	mapflag	nopenalty
+kvm	mapflag	nopenalty
+job_prist	mapflag	nopenalty
+flavius	mapflag	nopenalty
+bio4	mapflag	nopenalty
+ecl_tdun02	mapflag	nopenalty
+evt_bomb	mapflag	nopenalty
+
+// Warp Restrictions
+guild_vs1	mapflag	nowarp
+guild_vs2	mapflag	nowarp
+guild_vs3	mapflag	nowarp
+guild_vs4	mapflag	nowarp
+guild_vs5	mapflag	nowarp
+2009rwc_01	mapflag	nowarp
+2009rwc_02	mapflag	nowarp
+2009rwc_03	mapflag	nowarp
+2009rwc_04	mapflag	nowarp
+2012rwc_01	mapflag	nowarp
+2012rwc_02	mapflag	nowarp
+2012rwc_03	mapflag	nowarp
+2012rwc_04	mapflag	nowarp
+rwc01	mapflag	nowarp
+rwc03	mapflag	nowarp
+2008rwc_01	mapflag	nowarp
+2008rwc_02	mapflag	nowarp
+2008rwc_03	mapflag	nowarp
+2008rwc_04	mapflag	nowarp
+1@dth3	mapflag	nowarp
+1@lab	mapflag	nowarp
+1@tnm1	mapflag	nowarp
+1@pump	mapflag	nowarp
+2@pump	mapflag	nowarp
+kvm	mapflag	nowarp
+job_prist	mapflag	nowarp
+flavius	mapflag	nowarp
+bio4	mapflag	nowarp
+ecl_tdun02	mapflag	nowarp
+evt_bomb	mapflag	nowarp
+
+// Party Restrictions
+guild_vs1	mapflag	partylock
+guild_vs2	mapflag	partylock
+guild_vs3	mapflag	partylock
+guild_vs4	mapflag	partylock
+guild_vs5	mapflag	partylock
+2009rwc_01	mapflag	partylock
+2009rwc_02	mapflag	partylock
+2009rwc_03	mapflag	partylock
+2009rwc_04	mapflag	partylock
+2012rwc_01	mapflag	partylock
+2012rwc_02	mapflag	partylock
+2012rwc_03	mapflag	partylock
+2012rwc_04	mapflag	partylock
+rwc01	mapflag	partylock
+rwc03	mapflag	partylock
+2008rwc_01	mapflag	partylock
+2008rwc_02	mapflag	partylock
+2008rwc_03	mapflag	partylock
+2008rwc_04	mapflag	partylock
+1@dth3	mapflag	partylock
+1@lab	mapflag	partylock
+1@tnm1	mapflag	partylock
+1@pump	mapflag	partylock
+2@pump	mapflag	partylock
+kvm	mapflag	partylock
+job_prist	mapflag	partylock
+flavius	mapflag	partylock
+bio4	mapflag	partylock
+ecl_tdun02	mapflag	partylock
+evt_bomb	mapflag	partylock
+
+// Teleport Restrictions
+guild_vs1	mapflag	noteleport
+guild_vs2	mapflag	noteleport
+guild_vs3	mapflag	noteleport
+guild_vs4	mapflag	noteleport
+guild_vs5	mapflag	noteleport
+2009rwc_01	mapflag	noteleport
+2009rwc_02	mapflag	noteleport
+2009rwc_03	mapflag	noteleport
+2009rwc_04	mapflag	noteleport
+2012rwc_01	mapflag	noteleport
+2012rwc_02	mapflag	noteleport
+2012rwc_03	mapflag	noteleport
+2012rwc_04	mapflag	noteleport
+rwc01	mapflag	noteleport
+rwc03	mapflag	noteleport
+2008rwc_01	mapflag	noteleport
+2008rwc_02	mapflag	noteleport
+2008rwc_03	mapflag	noteleport
+2008rwc_04	mapflag	noteleport
+1@dth3	mapflag	noteleport
+1@lab	mapflag	noteleport
+1@tnm1	mapflag	noteleport
+1@pump	mapflag	noteleport
+2@pump	mapflag	noteleport
+kvm	mapflag	noteleport
+job_prist	mapflag	noteleport
+flavius	mapflag	noteleport
+bio4	mapflag	noteleport
+ecl_tdun02	mapflag	noteleport
+evt_bomb	mapflag	noteleport
+
+// Ice Wall Restrictions
+guild_vs1	mapflag	noicewall
+guild_vs2	mapflag	noicewall
+guild_vs3	mapflag	noicewall
+guild_vs4	mapflag	noicewall
+guild_vs5	mapflag	noicewall
+2009rwc_01	mapflag	noicewall
+2009rwc_02	mapflag	noicewall
+2009rwc_03	mapflag	noicewall
+2009rwc_04	mapflag	noicewall
+2012rwc_01	mapflag	noicewall
+2012rwc_02	mapflag	noicewall
+2012rwc_03	mapflag	noicewall
+2012rwc_04	mapflag	noicewall
+rwc01	mapflag	noicewall
+rwc03	mapflag	noicewall
+2008rwc_01	mapflag	noicewall
+2008rwc_02	mapflag	noicewall
+2008rwc_03	mapflag	noicewall
+2008rwc_04	mapflag	noicewall
+1@dth3	mapflag	noicewall
+1@lab	mapflag	noicewall
+1@tnm1	mapflag	noicewall
+1@pump	mapflag	noicewall
+2@pump	mapflag	noicewall
+kvm	mapflag	noicewall
+job_prist	mapflag	noicewall
+flavius	mapflag	noicewall
+bio4	mapflag	noicewall
+ecl_tdun02	mapflag	noicewall
+evt_bomb	mapflag	noicewall

@@ -1,0 +1,60 @@
+//versao 20 ago 2024
+//precisa ser otimizado para checar se o usuario tem capacidade de receber os itens antes de dar os itens
+//se nao tiver capacidade, precisa mandar mensagem, pro player nao ficar achando que recebeu o que deveria ter recebido
+//
+//esse script tem maos de illegit, baray e uniatrix
+izlude,131,148,6	script	Restock	666,{
+	cutin "h_iris01",2;
+	mes "^DB6446[ Iris ]^000000";
+	// Confirmation message
+	mes "Para que seu score de derrotas se expanda mais r�pido que o universo, eu vou agilizar sua restockagem de stuffs. Voc� quer salvar seus stuffs atuais?";
+	if (select("N�o:Sim") == 1) {
+		cutin "", 255;
+		close;
+	}
+	cutin "", 255;
+	// Array of item IDs
+	setarray .@item_ids[0], 547, 505, 715, 716, 717, 1025, 645, 656, 657, 525, 506, 1752, 1750, 1751, 1758, 1768, 1769, 1763, 1761, 1759, 1760, 1065, 7049;
+
+	// Array of variables to store item quantities
+	setarray .@quantities[0], qtdcompbranca, qtdpotazul, qtdyellowgem, qtdredgem, qtdbluegem, qtdteia, qtdptconcentra, qtdptdesper, qtdpotfur, qtdpana, qtdpotverde, qtdflechfog, qtdarrow, qtdsilverarrow, qtdstunarrow, qtdsleeparrow, qtdmutearrow, qtdpoisonarrow, qtdcursedarrow, qtdfrozenarrow, qtdflasharrow, qtdtrap, qtdpedra;
+
+	// Loop through each item and save the quantity in inventory
+	for (.@i = 0; .@i < getarraysize(.@item_ids); .@i++) {
+		set .@quantities[.@i], countitem(.@item_ids[.@i]);
+	}
+
+	// Assign the quantities back to their respective variables
+	set qtdcompbranca, .@quantities[0];
+	set qtdpotazul, .@quantities[1];
+	set qtdyellowgem, .@quantities[2];
+	set qtdredgem, .@quantities[3];
+	set qtdbluegem, .@quantities[4];
+	set qtdteia, .@quantities[5];
+	set qtdptconcentra, .@quantities[6];
+	set qtdptdesper, .@quantities[7];
+	set qtdpotfur, .@quantities[8];
+	set qtdpana, .@quantities[9];
+	set qtdpotverde, .@quantities[10];
+	set qtdflechfog, .@quantities[11];
+	set qtdarrow, .@quantities[12];
+	set qtdsilverarrow, .@quantities[13];
+	set qtdstunarrow, .@quantities[14];
+	set qtdsleeparrow, .@quantities[15];
+	set qtdmutearrow, .@quantities[16];
+	set qtdpoisonarrow, .@quantities[17];
+	set qtdcursedarrow, .@quantities[18];
+	set qtdfrozenarrow, .@quantities[19];
+	set qtdflasharrow, .@quantities[20];
+	set qtdtrap, .@quantities[21];
+	set qtdpedra, .@quantities[22];
+
+	// Display a message in the user's chat
+	dispbottom "Seus stuffs foram salvos. V�, fa�a o que um newbha faz de melhor!";
+	close;
+}
+
+quiz_02,245,354,4	duplicate(Restock)	Restock Blue#quiz_02_2	666
+quiz_02,254,354,6	duplicate(Restock)	Restock Red#quiz_02_2	666
+quiz_02,143,356,4	duplicate(Restock)	Restock Blue#quiz_02	666
+quiz_02,152,356,6	duplicate(Restock)	Restock Red#quiz_02	666

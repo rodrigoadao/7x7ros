@@ -1,0 +1,146 @@
+//===== rAthena Script =======================================
+//= Mapflag: Guild versus Guild mode.
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 1.3
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: ========================================= 
+//= Players can attack other guilds, and will have their guild
+//= icons shown. WoE damage reductions will also take place.
+//= gvg: Turns on GvG mode.
+//= gvg_castle: Describes castle maps for WoE.
+//= gvg_dungeon: Describes dungeon maps for WoE.
+//= gvg_te: Turns on GvG mode for WoE:TE.
+//= gvg_te_castle: Describes castle maps for WoE:TE.
+//===== Additional Comments: ================================= 
+//= 1.1 Added Novice Guild Castles.
+//= 1.2 Updated with new meanings of gvg and gvg_castle.
+//= 1.3 Renewal split. [Euphy]
+//============================================================
+// // RWC Maps ===============
+// ros2025_1	mapflag	gvg
+// ros2025_2	mapflag	gvg
+// ros2025_3	mapflag	gvg
+// ros2025_4	mapflag	gvg
+// ros2025_5	mapflag	gvg
+// ros2025_6	mapflag	gvg
+// ros2024	mapflag	gvg
+// 2012rwc_01	mapflag	gvg
+// 2012rwc_02	mapflag	gvg
+// 2012rwc_03	mapflag	gvg
+// 2012rwc_04	mapflag	gvg
+// guild_vs1	mapflag	gvg
+// arug_cas02	mapflag	gvg
+
+// guild_vs2	mapflag	gvg
+// guild_vs3	mapflag	gvg
+// guild_vs4	mapflag	gvg
+// guild_vs5	mapflag	gvg
+// 2009rwc_01	mapflag	gvg
+// 2009rwc_02	mapflag	gvg
+// 2009rwc_03	mapflag	gvg
+// 2009rwc_04	mapflag	gvg
+// rwc01	mapflag	gvg
+// rwc02	mapflag	gvg
+// rwc03	mapflag	gvg
+// 2008rwc_01	mapflag	gvg
+// 2008rwc_02	mapflag	gvg
+// 2008rwc_03	mapflag	gvg
+// 2008rwc_04	mapflag	gvg
+// kvm	mapflag	gvg
+// flavius	mapflag	gvg
+// bio4	mapflag	gvg
+// 1@lab	mapflag	gvg
+// 1@dth3	mapflag	gvg
+// 1@tnm1	mapflag	gvg
+// 1@pump	mapflag	gvg
+// 2@pump	mapflag	gvg
+// job_prist	mapflag	gvg
+// ecl_tdun02	mapflag	gvg
+// evt_bomb	mapflag	gvg
+// // PVP Arenas ===============
+// pvp_y_1-1	mapflag	gvg
+// arug_cas01	mapflag	gvg
+// arug_cas03	mapflag	gvg
+// arug_cas04	mapflag	gvg
+// arug_cas05	mapflag	gvg
+// payg_cas01	mapflag	gvg
+// payg_cas02	mapflag	gvg
+// payg_cas03	mapflag	gvg
+// payg_cas04	mapflag	gvg
+// payg_cas05	mapflag	gvg
+// gefg_cas03	mapflag	gvg
+// gefg_cas04	mapflag	gvg
+// gefg_cas02	mapflag	gvg
+// gefg_cas01	mapflag	gvg
+// gefg_cas05	mapflag	gvg
+// schg_cas01	mapflag	gvg
+// schg_cas02	mapflag	gvg
+// schg_cas03	mapflag	gvg
+// schg_cas04	mapflag	gvg
+// schg_cas05	mapflag	gvg
+// aldeg_cas01	mapflag	gvg
+// aldeg_cas02	mapflag	gvg
+// aldeg_cas03	mapflag	gvg
+// aldeg_cas04	mapflag	gvg
+// aldeg_cas05	mapflag	gvg
+// prtg_cas01	mapflag	gvg
+// prtg_cas02	mapflag	gvg
+// prtg_cas03	mapflag	gvg
+// prtg_cas04	mapflag	gvg
+// prtg_cas05	mapflag	gvg
+
+//
+
+arena1	mapflag	gvg
+arena2	mapflag	gvg
+arena3	mapflag	gvg
+arena4	mapflag	gvg
+arena5	mapflag	gvg
+arena6	mapflag	gvg
+arena7	mapflag	gvg
+arena8	mapflag	gvg
+arena9	mapflag	gvg
+arena10	mapflag	gvg
+arena11	mapflag	gvg
+arena12	mapflag	gvg
+arena13	mapflag	gvg
+arena14	mapflag	gvg
+arena15	mapflag	gvg
+arena16	mapflag	gvg
+arena17	mapflag	gvg
+arena18	mapflag	gvg
+arena19	mapflag	gvg
+arena20	mapflag	gvg
+arena21	mapflag	gvg
+arena22	mapflag	gvg
+arena23	mapflag	gvg
+arena24	mapflag	gvg
+arena25	mapflag	gvg
+arena26	mapflag	gvg
+arena27	mapflag	gvg
+arena28	mapflag	gvg
+arena29	mapflag	gvg
+arena30	mapflag	gvg
+arena31	mapflag	gvg
+arena32	mapflag	gvg
+arena33	mapflag	gvg
+arena34	mapflag	gvg
+arena35	mapflag	gvg
+arena36	mapflag	gvg
+arena37	mapflag	gvg
+arena38	mapflag	gvg
+arena39	mapflag	gvg
+arena40	mapflag	gvg
+arena41	mapflag	gvg
+arena42	mapflag	gvg
+//
+v4arena1	mapflag	gvg
+v4arena2	mapflag	gvg
+v4arena3	mapflag	gvg
+v4arena4	mapflag	gvg
+v4arena5	mapflag	gvg
+v4arena6	mapflag	gvg
+v4arena7	mapflag	gvg

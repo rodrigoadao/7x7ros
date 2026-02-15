@@ -1,0 +1,265 @@
+// ==============================================================================
+// Arenas 7vs7 modificada por rodrigo aka narutekz
+// ==============================================================================
+
+// Registration NPC's
+// *********************************************************************
+
+quiz_02,144,358,5	script	Waiting Room::KvM22R_Guillaume	418,{
+	end;
+
+OnInit:
+	waitingroom "Arena RWC 04 - Blue Team",1,"KvM22_BG::OnGuillaumeJoin",1;
+	end;
+	
+OnEnterBG:
+	set $@KvM22BG_id1, waitingroom2bg("izlude",92,104,"KvM22_BG::OnGuillaumeQuit","KvM22_BG::OnGuillaumeDie");
+	end;
+}
+
+quiz_02,373,356,4	script	Waiting Room::KvM22R_Croix	414,{
+	end;
+
+OnInit:
+	waitingroom "Arena RWC 04 - Red Team",1,"KvM22_BG::OnCroixJoin",1;
+	end;
+
+OnEnterBG:
+	set $@KvM22BG_id2, waitingroom2bg("izlude",92,104,"KvM22_BG::OnCroixQuit","KvM22_BG::OnCroixDie");
+	end;
+}
+
+// Battleground Engine
+// *********************************************************************
+
+-	script	KvM22_BG	-1,{
+	end;
+
+OnGuillaumeJoin:
+OnCroixJoin:
+	donpcevent "KvM22_BG::OnReadyCheck";
+	end;
+
+OnGuillaumeQuit:
+	set BG_Delay_Tick, gettimetick(2) + 2000;
+OnGuillaumeDie:
+	if( $@KvM22BG == 2 )
+	{
+		set .Guillaume_Count, .Guillaume_Count - 1;
+		set .Croix_Score, .Croix_Score + 1;
+		bg_updatescore "2012rwc_04",.Guillaume_Score,.Croix_Score;
+		if( .Guillaume_Count < 1 ) donpcevent "KvM22_BG::OnCroixWin";
+	}
+	end;
+
+OnCroixQuit:
+	set BG_Delay_Tick, gettimetick(2) + 2000;
+OnCroixDie:
+	if( $@KvM22BG == 2 )
+	{
+		set .Croix_Count, .Croix_Count - 1;
+		set .Guillaume_Score, .Guillaume_Score + 1;
+		bg_updatescore "2012rwc_04",.Guillaume_Score,.Croix_Score;
+		if( .Croix_Count < 1 ) donpcevent "KvM22_BG::OnGuillaumeWin";
+	}
+	end;
+
+OnReadyCheck:
+	if( $@KvM22BG )
+		end;
+	set .@Guillaume, getwaitingroomstate(0,"KvM22R_Guillaume");
+	set .@Croix, getwaitingroomstate(0,"KvM22R_Croix");
+
+	if( .@Guillaume < 1 || .@Croix < 1 )
+	{
+		if( .@Guillaume > 3 && .@Croix > 3 && !agitcheck() && $@KvM_Flood < gettimetick(2) )
+		{
+			announce "Arena RWC 04 | Blue Team: " + .@Guillaume + "/1, Red Team: " + .@Croix + "/1",0,0x00FF7F;
+			set $@KvM_Flood, gettimetick(2) + 15;
+		}
+		else
+			mapannounce "quiz_02","Arena RWC 04 | Blue Team: " + .@Guillaume + "/1, Red Team: " + .@Croix + "/1",1,0x00FF7F;
+		end;
+	}
+
+	set $@KvM22BG, 1; // Starting
+	donpcevent "KvM22R_Croix::OnEnterBG";
+	donpcevent "KvM22R_Guillaume::OnEnterBG";
+	donpcevent "KvM22_BG::OnStart";
+	end;
+
+OnStart:
+	mapannounce "quiz_02","- The Two partys have entered the [ Arena RWC 04 ]. -", bc_yellow;
+	set $@KvM22BG_Victory, 0;
+	// Warp Teams
+	bg_warp $@KvM22BG_id1,"2012rwc_04",63,91;
+	bg_warp $@KvM22BG_id2,"2012rwc_04",196,91;
+//	monster "2012rwc_04",72,95,"Barricada",1905,1;
+//	monster "2012rwc_04",72,94,"Barricada",1905,1;
+//	monster "2012rwc_04",72,93,"Barricada",1905,1;
+//	monster "2012rwc_04",72,92,"Barricada",1905,1;
+//	monster "2012rwc_04",72,91,"Barricada",1905,1;
+//	monster "2012rwc_04",72,90,"Barricada",1905,1;
+//	monster "2012rwc_04",72,89,"Barricada",1905,1;
+//	monster "2012rwc_04",72,88,"Barricada",1905,1;
+//	monster "2012rwc_04",187,95,"Barricada",1905,1;
+//	monster "2012rwc_04",187,94,"Barricada",1905,1;
+//	monster "2012rwc_04",187,93,"Barricada",1905,1;
+//	monster "2012rwc_04",187,92,"Barricada",1905,1;
+//	monster "2012rwc_04",187,91,"Barricada",1905,1;
+//	monster "2012rwc_04",187,90,"Barricada",1905,1;
+//	monster "2012rwc_04",187,89,"Barricada",1905,1;
+//	monster "2012rwc_04",187,88,"Barricada",1905,1;
+	setwall "2012rwc_04",72,95,8,4,0,"batc22wall_a";
+	setwall "2012rwc_04",73,95,8,4,0,"batc22wall_b";
+	setwall "2012rwc_04",187,95,8,4,0,"batc22wall_c";
+	setwall "2012rwc_04",186,95,8,4,0,"batc22wall_d";
+
+	sleep 100;
+	// ScoreBoard
+	set .Guillaume_Score, 0;
+	set .Croix_Score, 0;
+	initnpctimer;
+	end;
+
+OnTimer4000:
+	mapannounce "2012rwc_04","- The match will begin in 20 seconds! -", bc_yellow;
+	end;
+
+OnTimer20000:
+	mapannounce "2012rwc_04","- The match will begin in 5 seconds! -", bc_yellow;
+	end;
+
+OnTimer21000:
+	mapannounce "2012rwc_04","- The match will begin in 4 seconds! -", bc_yellow;
+	end;
+
+OnTimer22000:
+	mapannounce "2012rwc_04","- The match will begin in 3 seconds! -", bc_yellow;
+	end;
+
+OnTimer23000:
+	mapannounce "2012rwc_04","- The match will begin in 2 seconds! -", bc_yellow;
+	end;
+	
+OnTimer24000:
+	mapannounce "2012rwc_04","- The match will begin in 1 second! -", bc_yellow;
+	end;
+
+OnTimer25000:
+	// Team Members
+	set .Guillaume_Count, bg_get_data($@KvM22BG_id1, 0);
+	set .Croix_Count, bg_get_data($@KvM22BG_id2, 0);
+	if( .Guillaume_Count < 1 || .Croix_Count < 1 )
+	{
+		set $@KvM22BG_Victory, 3;
+		set $@KvM22BG, 3;
+		mapannounce "2012rwc_04","- There are not enough players to start the match. -", bc_yellow;
+		stopnpctimer;
+		sleep 2000;
+		donpcevent "KvM22_BG::OnStop";
+		end;
+	}
+
+	set $@KvM22BG, 2; // Playing
+//	areapercentheal "bat_c01",50,123,58,131,100,100;
+//	bg_warp $@KvM22BG_id1,"2012rwc_04",62,119;
+//	areapercentheal "bat_c01",141,52,149,60,100,100;
+//	bg_warp $@KvM22BG_id2,"2012rwc_04",137,64;
+delwall "batc22wall_a";
+delwall "batc22wall_b";
+delwall "batc22wall_c";
+delwall "batc22wall_d";
+	end;
+
+OnTimer25001:
+	mapannounce "2012rwc_04","- The match started! Good luck to all. -", bc_yellow;
+killmonsterall "2012rwc_04";
+	end;
+
+OnTimer420000:
+	mapannounce "2012rwc_04","- The match will end in 30 seconds! -", bc_yellow;
+	end;
+
+OnTimer450000:
+	if( .Croix_Count > .Guillaume_Count )
+		donpcevent "KvM22_BG::OnCroixWin";
+	else if( .Croix_Count < .Guillaume_Count )
+		donpcevent "KvM22_BG::OnGuillaumeWin";
+	else
+	{ // Draw Game
+		set $@KvM22BG, 3;
+		set $@KvM22BG_Victory, 3;
+
+		stopnpctimer;
+		sleep 2000;
+		mapannounce "2012rwc_04","- The match has ended in a draw! -", bc_yellow;
+		donpcevent "KvM22_BG::OnStop";
+	}
+	end;
+
+OnGuillaumeWin:
+	set $@KvM22BG, 3;
+	set $@KvM22BG_Victory, 1;
+
+	stopnpctimer;
+	sleep 1000;	
+	mapannounce "2012rwc_04","- Blue Team is victorious! -",bc_map,0x00bfff;
+	sleep 3000;
+	donpcevent "KvM22_BG::OnStop";
+	end;
+
+OnCroixWin:
+	set $@KvM22BG, 3;
+	set $@KvM22BG_Victory, 2;
+
+	stopnpctimer;
+	sleep 1000;
+	mapannounce "2012rwc_04","- Red Team is victorious! -",bc_map,0xff6347;
+	sleep 3000;
+	donpcevent "KvM22_BG::OnStop";
+	end;
+
+OnStop:
+	// Warp Teams
+//	bg_warp $@KvM22BG_id1,"new_4-2",28,173;
+//	bg_warp $@KvM22BG_id2,"new_4-2",28,173;
+	mapwarp "2012rwc_04","izlude",128,103;
+	donpcevent "KvM22_BG_Out::OnBegin";
+	end;
+
+OnReset:
+	stopnpctimer;
+	stopnpctimer "KvM22_BG_Out";
+	set .Croix_Count, 0;
+	set .Guillaume_Count, 0;
+	set .Croix_Score, 0;
+	set .Guillaume_Score, 0;
+	set $@KvM22BG_Victory, 0;
+	if( $@KvM22BG_id1 ) { bg_destroy $@KvM22BG_id1; set $@KvM22BG_id1, 0; }
+	if( $@KvM22BG_id2 ) { bg_destroy $@KvM22BG_id2; set $@KvM22BG_id2, 0; }
+	sleep 2000;
+	mapwarp "2012rwc_04","izlude",128,103;
+	sleep 2000;
+	maprespawnguildid "2012rwc_04",0,3; // Just in case someone else
+	bg_updatescore "2012rwc_04",0,0;
+	sleep 2000;
+	set $@KvM22BG, 0;
+	donpcevent "KvM22_BG::OnReadyCheck"; // Maybe a game is ready to start
+	end;
+}
+
+-	script	KvM22_BG_Out	-1,{
+	end;
+
+OnBegin:
+	initnpctimer;
+	end;
+
+OnTimer50000:
+	mapannounce "2012rwc_04","- The match will end in 10 seconds! -",1,0x696969;
+	end;
+OnTimer3000:
+	donpcevent "KvM22_BG::OnReset";
+	end;
+}

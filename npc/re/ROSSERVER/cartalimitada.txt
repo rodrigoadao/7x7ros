@@ -1,0 +1,263 @@
+izlude,60,167,4	script	Gestão de cartas	651,{
+	//  if (checkweight(1201,1) == 0) {
+	//  	mes "^3355FFgordo^000000";
+	//  	close;
+	//  }
+
+	//inicio do npc
+	switch(select("Comprar cartas de MVP:Remover cartas:Devolver cartas de MvP:Resetar zenys")) {
+	//case de comprar cartas de mvp
+	case 1:
+		mes "Os tokens intransferíveis que vêm na criação do seu personagem podem ser trocados por cartas MvPs. Escolha cautelosamente, pois você não receberá novos tokens no seu personagem.";
+		switch(select("Bijou, 10 Totens:Cutie, 1 Toten:Immortal Cursed Knight, 1 Toten:Immortal Wind Ghost, 1 Toten:Beelzebub, 5 Totens:TGK, 10 Totens:Eremes, 10 Totens:Maya Purple, 10 Totens:Kiel, 5 Totens")) {
+		case 1:
+			delitem 7831,10;
+			getitem 4636,1;
+			break;
+		case 2:
+			delitem 7831,1;
+			getitem 27152,1;
+			break;
+		case 3:
+			delitem 7831,1;
+			getitem 31024,1;
+			break;
+		case 4:
+			delitem 7831,1;
+			getitem 31025,1;
+			break;
+		case 5:
+			delitem 7831,5;
+			getitem 4145,1;
+			break;
+		case 6:
+			delitem 7831,10;
+			getitem 4302,1;
+			break;
+		case 7:
+			delitem 7831,10;
+			getitem 4359,1;
+			break;
+		case 8:
+			delitem 7831,10;
+			getitem 4198,1;
+			break;
+		case 9:
+			delitem 7831,5;
+			getitem 4403,1;
+			break;
+	}
+	next;
+	mes "Faça o favor de jogar direito. Busque o teto da performance.";
+	close;
+	end;
+
+	//case de remover cartas
+	case 2:
+		set .zenycost,200000; // Set base cost in zeny of the card remover services
+		set .percardcost,25000; // set cost per card of the card remover services
+		set .faildestroy,0; // Should the card remover have a chance of failure that destroys items? 1 = Yes, 0 = No.
+
+		mes "[Removedor de Cartas]";
+
+		//switch(select("Cancelar:Remover cartas")) {
+			
+		// 	case 1:
+		// 	close;
+
+		// 	case 2:
+			// mes "[Wise Old Woman]";
+			// mes "Very well. Which item shall I examine for you?";
+			// next;
+
+			setarray .@position$[1], "Head","Body","Left hand","Right hand","Robe","Shoes","Accessory 1","Accessory 2","Head 2","Head 3";
+			set .@menu$,"";
+			for( set .@i,1; .@i <= 10; set .@i,.@i+1 )
+			{
+				if( getequipisequiped(.@i) )
+				set .@menu$, .@menu$ + .@position$[.@i] + "-" + "[" + getequipname(.@i) + "]";
+
+				set .@menu$, .@menu$ + ":";
+			}
+			set .@part,select(.@menu$);
+
+			if(!getequipisequiped(.@part)) {
+				// mes "[Wise Old Woman]";
+				// mes "Young one... Your not wearing anything there that I can remove cards from.";
+				close;
+			}
+
+			if(getequipcardcnt(.@part) == 0) {
+				// mes "[Wise Old Woman]";
+				// mes "Young one... There are no cards compounded on this item. I can do nothing with it, I'm afraid.";
+				close;
+			}
+
+			set .@cardcount,getequipcardcnt(.@part);
+		
+			if (!checkweight(1202,(.@cardcount+1))) { 
+				mes "^3355FFcalmaÊ!";
+				mes "vc é gordo d+";
+				mes "kKkkKKkK";
+				mes "faça um défict calórico meu filho";
+				close;
+			}
+
+			// mes "[Wise Old Woman]";
+			//mes "This item has " + .@cardcount + " cards compounded on it. To perform my magic, I will need " + (.zenycost+(.@cardcount * .percardcost)) + " zeny, a ^0000FFStar Crumb^000000, and a ^0000FFYellow Gemstone^000000.";
+			next;
+				
+			// if(select("Very well. Do it.:Nevermind.") == 2) {
+			// 	mes "[Wise Old Woman]";
+			// 	mes "Very well. Return at once if you seek my services.";
+			// 	close;
+			// }
+
+			// if((zeny < (.zenycost+(.@cardcount * .percardcost))) || (countitem(1000) < 1) || (countitem(715) < 1)) {
+			// 	mes "[Wise Old Woman]";
+			// 	mes "You do not have all the items I require to work my magic, child. Come again when you do.";
+			// 	close;
+			// }
+
+			// mes "[Wise Old Woman]";
+			// mes "Before I begin, I must warn you--I may fail. If I do, I may destroy the cards, the item, or both. I do not give refunds. That being said, which is more important to you: The cards, or the item?";
+			// next;
+
+			// switch(select("Cancelar:Remover")) {
+			// case 1:
+			// 	mes "[Wise Old Woman]";
+			// 	mes "Very well. Return at once if you seek my services.";
+			// 	close;
+			// case 2:
+			// 	set .@failtype,2;
+			// }
+
+			// mes "[Wise Old Woman]";
+			// mes "Very well. I shall begin.";
+			set zeny,zeny - (.zenycost+(.@cardcount * .percardcost));
+			// delitem 1000,1;
+			// delitem 715,1;
+			
+			// Replace the constants in the next 3 lines with failure chance values defined in refine_db.txt
+			// First value = Total failure chance (item and cards destroyed)
+			// Second value = Partial failure chance (one or the other is destroyed, player decides which one is safe)
+			// Third value = Harmless failure chance (all that's lost is your investment)
+
+			set .@failchance,rand(100);
+			if (.faildestroy==1) {
+				if(.@failchance < 2) {
+					next;
+					failedremovecards .@part,0;
+					// mes "[Wise Old Woman]";
+					// mes "The process was a total failure. I am afraid the item and the cards were destroyed.";
+					close;
+				}
+
+				if(.@failchance < 8) {
+					if (.@failtype == 1) {
+						next;
+						failedremovecards .@part,1;
+						// mes "[Wise Old Woman]";
+						// mes "While I have managed to remove the cards from the item, they were destroyed in the process. The item, however, is okay.";
+						close;
+					}
+
+					if (.@failtype == 2) {
+						next;
+						failedremovecards .@part,2;
+						// mes "[Wise Old Woman]";
+						// mes "Most unfortunate. I succeeded at removing the cards, but the item itself was destroyed in the process.";
+						close;
+					}
+				}
+			}
+
+			if(.@failchance < 10) {
+				next;
+				failedremovecards .@part,3;
+				// mes "[Wise Old Woman]";
+				// mes "I have failed to remove the cards. Luckily, however, both the item and the cards are still okay.";
+				close;
+			}
+			next;
+			successremovecards .@part;
+			// mes "[Wise Old Woman]";
+			// mes "The process was a success. Here are your cards and your item. Farewell.";
+			break;
+		//}
+			next;
+		mes "Faça o favor de jogar direito. Busque o teto da performance.";
+		close;
+		end;
+
+
+		//inicio do case devolver cartas mvp
+		case 3:
+			
+			switch(select("Fechar:Devolver cartas de MvP")) {
+				
+				case 1:
+					close;
+
+				case 2:
+					mes "Qual carta MvP você quer devolver?";
+					switch(select("Bijou, 10 Totens:Cutie, 1 Toten:Immortal Cursed Knight, 1 Toten:Immortal Wind Ghost, 1 Toten:Beelzebub, 5 Totens:TGK, 10 Totens:Eremes, 10 Totens:Maya Purple, 10 Totens:Kiel, 5 Totens")) {
+					case 1:
+						delitem 4636,1;
+						getitem 7831,10;
+						break;
+					case 2:
+						delitem 27152,1;
+						getitem 7831,1;
+						break;
+					case 3:
+						delitem 31024,1;
+						getitem 7831,1;
+						break;
+					case 4:
+						delitem 31025,1;
+						getitem 7831,1;
+						break;
+					case 5:
+						delitem 4145,1;
+						getitem 7831,5;
+						break;
+					case 6:
+						delitem 4302,1;
+						getitem 7831,10;
+						break;
+					case 7:
+						delitem 4359,1;
+						getitem 7831,10;
+						break;
+					case 8:
+						delitem 4198,1;
+						getitem 7831,10;
+						break;
+					case 9:
+						delitem 4403,1;
+						getitem 7831,5;
+						break;
+				}
+				break;
+			}
+		next;
+		mes "Faça o favor de jogar direito. Busque o teto da performance.";
+		close;
+		end;
+
+		case 4:
+			set Zeny, 20000000;
+			break;
+		
+			next;
+		}
+		next;
+		mes "Faça o favor de jogar direito. Busque o teto da performance.";
+		close;
+		end;
+
+	next;
+	mes "Faça o favor de jogar direito. Busque o teto da performance.";
+	close;
+}

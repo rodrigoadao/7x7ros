@@ -1,0 +1,178 @@
+// ==============================================================================
+// edited by Moskaum Y (2024)
+// ==============================================================================
+izlude,128,223,4	script	Job Master	650,{
+if(Class > 4007) {
+	mes	"[ ^0000FFJob Master^000000 ]";
+	mes	"You already Transcendent Class";
+close;z
+end;
+}
+
+if (Class == 4001){
+mes	"[ ^0000FFJob Master^000000 ]";
+mes	"wWelcome ^ff0000"+strcharinfo(0)+"^000000. Please select the job you wish to change into!";
+switch(select("High Swordman:High Mage:High Archer:High Acolyte:High Merchant:High Thief")) {
+
+case 1:
+set .job,4002;
+goto JobUp;
+
+case 2:
+set .job,4003;
+goto JobUp;
+
+case 3:
+set .job,4004;
+goto JobUp;
+
+case 4:
+set .job,4005;
+goto JobUp;
+
+case 5:
+set .job,4006;
+goto JobUp;
+
+case 6:
+set .job,4007;
+goto JobUp;
+
+JobUp:
+jobchange 0; 
+resetlvl(1);
+jobchange .job;
+set JobLevel, 50;
+set SkillPoint, 49;
+goto PLAT_SKILLSJOB1;
+
+PLAT_SKILLSJOB1:
+savepoint "izlude", 128, 105;
+skill 1,9,0;
+	switch(BaseClass) {
+		case 0: if (Class !=23) skill 143,1,0; break;
+		case 1: skill 144,1,0; skill 145,1,0; skill 146,1,0; break;
+		case 2: skill 157,1,0; break;
+		case 3: skill 147,1,0; skill 148,1,0; break;
+		case 4: skill 156,1,0; break;
+		case 5: skill 153,1,0; skill 154,1,0; skill 155,1,0; break;
+		case 6: skill 149,1,0; skill 150,1,0; skill 151,1,0; skill 152,1,0; break;
+		default: break;
+	}
+
+next;
+mes "[ ^0000FFJob Master^000000 ]";
+mes "Congratulations, you just turn one ^ff0000[ "+jobname(Class)+" ]^000000.";
+close;
+end;
+}
+}
+
+if ((Class > 4001) && (Class < 4008)){
+
+	if (SkillPoint != 0){
+	mes	"[ ^0000FFJob Master^000000 ]";
+	mes	"Please use all your skill points to proceed.";
+	close;
+	end;
+	}
+	
+mes	"[ ^0000FFJob Master^000000 ]";
+mes	"Welcome ^ff0000"+strcharinfo(0)+"^000000. Please select the job you wish to change into!";
+switch(BaseClass) {
+
+case 0: break;
+
+case 1:{
+	switch(select("Lord Knight:Paladin")){
+		case 1: jobchange 4008;
+		case 2: jobchange 4015;
+	goto JobUpTrans;
+	}
+}
+
+case 2:{
+	switch(select("High Wizard:Professor")){
+		case 1: jobchange 4010; goto JobUpTransNERF;
+		case 2: jobchange 4017; goto JobUpTrans;
+	}
+}
+	
+case 3:{
+	switch(select("Sniper:Clown/Gypsy")){
+		case 1: jobchange 40012; goto JobUpTransNERF;
+		case 2: jobchange 4020; goto JobUpTrans;
+	goto JobUpTrans;
+	}
+}	
+
+case 4:{
+	switch(select("High Priest:Champion")){
+		case 1: jobchange 4009;
+// edição minha a seguir, tentando fazer ganhar item ao virar champ
+// case 2: jobchange 4016;
+		case 2: jobchange 4016;
+	goto JobUpTransNERF;
+	}
+}	z
+
+case 5:{
+	switch(select("Whitesmith:Creator")){
+		case 1: jobchange 4011;
+		case 2: jobchange 4019;
+	goto JobUpTrans;
+		}
+}
+
+case 6:{
+	switch(select("Assassin Cross:Stalker")){
+		case 1: jobchange 4013;
+		case 2: jobchange 4018;
+	goto JobUpTrans;
+	}
+}
+}
+
+JobUpTrans:
+set BaseLevel, 90;
+set JobLevel, 60;
+resetstatus;
+set SkillPoint, 59;
+set StatusPoint, 1132;
+goto PLAT_SKILLSTRANS;
+
+JobUpTransNERF:
+set BaseLevel, 85;
+set JobLevel, 60;
+resetstatus;
+set SkillPoint, 59;
+set StatusPoint, 1032;
+goto PLAT_SKILLSTRANS;
+
+PLAT_SKILLSTRANS:
+	switch(BaseJob) {
+		case 7: skill 1001,1,0; break;
+		case 8: skill 1014,1,0; break;
+		case 9: skill 1006,1,0; break;
+		case 10: skill 1012,1,0; skill 1013,1,0; break;
+		case 11: skill 1009,1,0; break;
+		case 12: skill 1003,1,0; skill 1004,1,0; break;
+		case 14: skill 1002,1,0; break;
+		case 15: skill 1015,1,0; skill 1016,1,0; break;
+		case 16: skill 1007,1,0; skill 1008,1,0; skill 1017,1,0; skill 1018,1,0; skill 1019,1,0; break;
+		case 17: skill 1005,1,0; break;
+		case 19: skill 1010,1,0; break;
+		case 20: skill 1011,1,0; break;
+		default: break;
+	}
+	
+next;
+mes "[ ^0000FFJob Master^000000 ]";
+mes "Congratulations, you just turn one ^ff0000[ "+jobname(Class)+" ]^000000.";
+next;
+warp "izlude",128,105;
+close;
+
+}
+end;
+}

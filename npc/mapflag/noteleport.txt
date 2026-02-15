@@ -1,0 +1,66 @@
+// // //===== rAthena Script =======================================
+// // //= Mapflag: Disable teleportation.
+// // //===== By: ==================================================
+// // //= rAthena Dev Team
+// // //===== Current Version: =====================================
+// // //= 1.8
+// // //===== Compatible With: =====================================
+// // //= rAthena Project
+// // //===== Description: ========================================= 
+// // //= Disables all means of teleportation within a map.
+// // //= Script commands 'warp', 'areawarp', 'warpchar',
+// // //=   'warpparty', 'warpguild', 'warpwaitingpc' will not
+// // //=   work with "Random" destination.
+// // //= Disables skills AL_TELEPORT and TK_HIGHJUMP.
+// // //= Disables the following items:
+// // //=   Fly Wing (601), Giant Fly Wing (12212)
+// // //===== Additional Comments: ================================= 
+// // //= 1.6a Updated. [Lupus]
+// // //= 1.7 Updated. [L0ne_W0lf]
+// // //= 1.8 Renewal split. [Euphy]
+// // //============================================================
+
+// // // RWC Maps ===============
+// izlude	mapflag	noteleport
+// 2012rwc_01	mapflag	noteleport
+// 2012rwc_02	mapflag	noteleport
+// 2012rwc_03	mapflag	noteleport
+// 2012rwc_04	mapflag	noteleport
+// guild_vs1	mapflag	noteleport
+// guild_vs2	mapflag	noteleport
+// guild_vs3	mapflag	noteleport
+// guild_vs4	mapflag	noteleport
+// guild_vs5	mapflag	noteleport
+// 2009rwc_01	mapflag	noteleport
+// 2009rwc_02	mapflag	noteleport
+// 2009rwc_03	mapflag	noteleport
+// 2009rwc_04	mapflag	noteleport
+// quiz_02	mapflag	noteleport
+// rwc01	mapflag	noteleport
+// rwc03	mapflag	noteleport
+// 2008rwc_01	mapflag	noteleport
+// 2008rwc_02	mapflag	noteleport
+// 2008rwc_03	mapflag	noteleport
+// 2008rwc_04	mapflag	noteleport
+// kvm	mapflag	noteleport
+// flavius	mapflag	noteleport
+// bio4	mapflag	noteleport
+// 1@lab	mapflag	noteleport
+// 1@dth3	mapflag	noteleport
+// 1@tnm1	mapflag	noteleport
+// 1@pump	mapflag	noteleport
+// 2@pump	mapflag	noteleport
+// job_prist	mapflag	noteleport
+// ecl_tdun02	mapflag	noteleport
+// evt_bomb	mapflag	noteleport
+// arena32	mapflag	noteleport
+// arena33	mapflag	noteleport
+// arena34	mapflag	noteleport
+// arena35	mapflag	noteleport
+// arena36	mapflag	noteleport
+// arena37	mapflag	noteleport
+// arena38	mapflag	noteleport
+// arena39	mapflag	noteleport
+// arena40	mapflag	noteleport
+// arena41	mapflag	noteleport
+// arena42	mapflag	noteleport

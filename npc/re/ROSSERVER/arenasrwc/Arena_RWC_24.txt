@@ -1,0 +1,281 @@
+// ==============================================================================
+// Arenas 7vs7 modificada inicialmente por rodrigo aka narutekz (2014) e Fissuris (2017) 
+// e intensamente aprimorada por Moskaum Y (2024 e 2025)
+// ==============================================================================
+quiz_02,132,342,5	script	Waiting Room::kvm54R_Guillaume	418,{
+	cutin "arena24",4;
+	mes "Se você tem se divertido no servidor, demonstre sua apreciação ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que você sente ser proporcional ao entretenimento que você está tendo:";
+	mes "^33940CCHAVE PIX 7x7rwc@gmail.com^000000";
+	next;
+	cutin "", 255;
+	end;
+	
+OnInit:
+	while (1){
+		sleep 2000;
+		if (getwaitingroomstate (1) != $@jogadoresbluechat){
+			delwaitingroom;
+			waitingroom "Arena 24 - guild_vs2",$@jogadoresbluechat,"kvm54_BG::OnGuillaumeJoin",1;
+			}
+	}
+	end;
+	
+OnEnterBG:
+	set $@kvm54BG_id1, waitingroom2bg("izlude",128,105,"kvm54_BG::OnGuillaumeQuit","kvm54_BG::OnGuillaumeDie");
+	end;
+}
+
+quiz_02,163,342,4	script	Waiting Room::kvm54R_Croix	414,{
+	cutin "arena24",4;
+	mes "Se você tem se divertido no servidor, demonstre sua apreciação ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que você sente ser proporcional ao entretenimento que você está tendo:";
+	mes "^33940CCHAVE PIX 7x7rwc@gmail.com^000000";
+	next;
+	cutin "", 255;
+	end;
+
+OnInit:
+	while (1){
+		sleep 2000;
+		if (getwaitingroomstate (1) != $@jogadoresredchat){
+			delwaitingroom;
+			waitingroom "Arena 24 - guild_vs2",$@jogadoresredchat,"kvm54_BG::OnCroixJoin",1;
+			}
+	}
+	end;
+
+OnEnterBG:
+	set $@kvm54BG_id2, waitingroom2bg("izlude",128,105,"kvm54_BG::OnCroixQuit","kvm54_BG::OnCroixDie");
+	end;
+}
+
+// Battleground Engine
+// *********************************************************************
+
+-	script	kvm54_BG	-1,{
+	end;
+
+OnGuillaumeJoin:
+OnCroixJoin:
+	donpcevent "kvm54_BG::OnReadyCheck";
+	end;
+
+OnGuillaumeQuit:
+	set BG_Delay_Tick, gettimetick(2) + 2000;
+OnGuillaumeDie:
+	if( $@kvm54BG == 2 )
+	{
+		set .Guillaume_Count, .Guillaume_Count - 1;
+		set .Croix_Score, .Croix_Score + 1;
+		bg_updatescore "guild_vs2",.Guillaume_Score,.Croix_Score;
+		if( .Guillaume_Count < 1 ){
+			donpcevent "kvm54_BG::OnCroixWin";
+		}
+	}
+	end;
+
+OnCroixQuit:
+	set BG_Delay_Tick, gettimetick(2) + 2000;
+OnCroixDie:
+	if( $@kvm54BG == 2 )
+	{
+		set .Croix_Count, .Croix_Count - 1;
+		set .Guillaume_Score, .Guillaume_Score + 1;
+		bg_updatescore "guild_vs2",.Guillaume_Score,.Croix_Score;
+		if( .Croix_Count < 1 ){
+			donpcevent "kvm54_BG::OnGuillaumeWin";
+		}
+	}
+	end;
+
+OnReadyCheck:
+	if( $@kvm54BG )
+		end;
+	set .@Guillaume, getwaitingroomstate(0,"kvm54R_Guillaume");
+	set .@Croix, getwaitingroomstate(0,"kvm54R_Croix");
+
+	if((.@Guillaume < $@jogadoresblue) || (.@Croix < $@jogadoresred))
+	{
+		if( .@Guillaume > 1 && .@Croix > 1 && !agitcheck() && $@KvM_Flood < gettimetick(2) )
+		{
+			announce "Arena 24 - guild_vs2 | Blue Team: " + .@Guillaume + "/"+$@jogadoresblue+", Red Team: " + .@Croix + "/"+$@jogadoresred+"",0,0x00bfff;
+			set $@KvM_Flood, gettimetick(2) + 15;
+		}
+		else
+			mapannounce "quiz_02","Arena 24 - guild_vs2 | Blue Team: " + .@Guillaume + "/"+$@jogadoresblue+", Red Team: " + .@Croix + "/"+$@jogadoresred+"",1,0x00bfff;
+		end;
+	}
+
+	if ((.@Guillaume == 0) || (.@Croix == 0)) {
+		end;
+	}
+	
+	set $@kvm54BG, 1; // Starting
+	donpcevent "kvm54R_Croix::OnEnterBG";
+	donpcevent "kvm54R_Guillaume::OnEnterBG";
+	donpcevent "kvm54_BG::OnStart";
+	end;
+
+OnStart:
+	announce "- Duas equipes entraram na [ Arena 24 - guild_vs2 ]. -", bc_yellow;
+	set $@kvm54BG_Victory, 0;
+	// Warp Teams
+	bg_warp $@kvm54BG_id1,"guild_vs2",10,50;
+	bg_warp $@kvm54BG_id2,"guild_vs2",89,50;
+
+	if ($@guildsInArena2 > 0) {
+        $@guildsInArena2--;
+    }
+	if ($@guildsInArena2 > 0) {
+        $@guildsInArena2--;
+    }
+
+	setwall "guild_vs2",18,53,10,4,0,"batc20wall_a";
+	setwall "guild_vs2",81,53,8,4,0,"batc20wall_b";
+
+	sleep 100;
+	// ScoreBoard
+	
+	set .Guillaume_Score, 0;
+	set .Croix_Score, 0;
+	initnpctimer;
+	end;
+
+OnTimer3000:
+	mapannounce "guild_vs2","- The match will begin in 15 seconds! -", bc_yellow;
+	end;
+
+OnTimer15000:
+	mapannounce "guild_vs2","- The match will begin in 5 seconds! -", bc_yellow;
+	end;
+
+OnTimer16000:
+	mapannounce "guild_vs2","- The match will begin in 4 seconds! -", bc_yellow;
+	end;
+
+OnTimer17000:
+	mapannounce "guild_vs2","- The match will begin in 3 seconds! -", bc_yellow;
+	end;
+
+OnTimer18000:
+	mapannounce "guild_vs2","- The match will begin in 2 seconds! -", bc_yellow;
+	end;
+	
+OnTimer19000:
+	mapannounce "guild_vs2","- The match will begin in 1 second! -", bc_yellow;
+	end;
+
+OnTimer20000:
+	// Team Members
+	set .Guillaume_Count, bg_get_data($@kvm54BG_id1, 0);
+	set .Croix_Count, bg_get_data($@kvm54BG_id2, 0);
+	if( (.Guillaume_Count < $@jogadoresblue) || (.Croix_Count < $@jogadoresred) )
+	{
+		set $@kvm54BG_Victory, 3;
+		set $@kvm54BG, 3;
+		mapannounce "guild_vs2","- There are not enough players to start the match. -", bc_yellow;
+		stopnpctimer;
+		sleep 2000;
+		donpcevent "kvm54_BG::OnStop";
+		end;
+	}
+
+	set $@kvm54BG, 2; // Playing
+	delwall "batc20wall_a";
+	delwall "batc20wall_b";
+	end;
+
+OnTimer25001:
+	mapannounce "guild_vs2","- The match started! Good luck to all. -", bc_yellow;
+killmonsterall "guild_vs2";
+	end;
+
+OnTimer420000:
+	mapannounce "guild_vs2","- The match will end in 30 seconds! -", bc_yellow;
+	end;
+
+OnTimer450000:
+	if( .Croix_Count > .Guillaume_Count )
+		donpcevent "kvm54_BG::OnCroixWin";
+	else if( .Croix_Count < .Guillaume_Count )
+		donpcevent "kvm54_BG::OnGuillaumeWin";
+	else
+	{ // Draw Game
+		set $@kvm54BG, 3;
+		set $@kvm54BG_Victory, 3;
+
+		stopnpctimer;
+		sleep 2000;
+		announce "- As duas equipes empataram! -", bc_yellow;
+		donpcevent "kvm54_BG::OnStop";
+	}
+	end;
+
+OnGuillaumeWin:
+	set $@kvm54BG, 3;
+	set $@kvm54BG_Victory, 1;
+
+	stopnpctimer;
+	sleep 1000;	
+	announce "- Blue Team VENCEU! -",bc_all,0x00bfff;
+	sleep 3000;
+	donpcevent "kvm54_BG::OnStop";
+	end;
+
+OnCroixWin:
+	set $@kvm54BG, 3;
+	set $@kvm54BG_Victory, 2;
+
+	stopnpctimer;
+	sleep 1000;
+	announce "- Red Team VENCEU! -",bc_all,0xff6347;
+	sleep 3000;
+	donpcevent "kvm54_BG::OnStop";
+	end;
+
+OnStop:
+	if ($spectator_count10 > 0) {
+       set $spectator_count10, $spectator_count10 - 1;
+    }
+	if ($spectator_count10 > 0) {
+       set $spectator_count10, $spectator_count10 - 1;
+    }
+	// Warp Teams
+	mapwarp "guild_vs2","izlude",128,105;
+	donpcevent "kvm54_BG_Out::OnBegin";
+	end;
+
+OnReset:
+	stopnpctimer;
+	stopnpctimer "kvm54_BG_Out";
+	set .Croix_Count, 0;
+	set .Guillaume_Count, 0;
+	set .Croix_Score, 0;
+	set .Guillaume_Score, 0;
+	set $@kvm54BG_Victory, 0;
+	if( $@kvm54BG_id1 ) { bg_destroy $@kvm54BG_id1; set $@kvm54BG_id1, 0; }
+	if( $@kvm54BG_id2 ) { bg_destroy $@kvm54BG_id2; set $@kvm54BG_id2, 0; }
+	sleep 2000;
+	mapwarp "guild_vs2","izlude",128,105;
+	sleep 2000;
+	maprespawnguildid "guild_vs2",0,3; // Just in case someone else
+	bg_updatescore "guild_vs2",0,0;
+	sleep 2000;
+	set $@kvm54BG, 0;
+	donpcevent "kvm54_BG::OnReadyCheck"; // Maybe a game is ready to start
+	end;
+}
+
+-	script	kvm54_BG_Out	-1,{
+	end;
+
+OnBegin:
+	initnpctimer;
+	end;
+
+OnTimer50000:
+	mapannounce "guild_vs2","- The match will end in 10 seconds! -",1,0x696969;
+	end;
+OnTimer3000:
+	donpcevent "kvm54_BG::OnReset";
+	end;
+}

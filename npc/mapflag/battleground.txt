@@ -1,0 +1,179 @@
+// //===== rAthena Script =======================================
+// //= Mapflag: Battleground map setting.
+// //===== By: ==================================================
+// //= Epoque
+// //===== Current Version: =====================================
+// //= 1.0a
+// //===== Compatible With: =====================================
+// //= rAthena Project
+// //===== Description: ========================================= 
+// //= Defines a Battleground map.
+// //= Additional parameter '2' shows scoreboard.
+// //===== Additional Comments: ================================= 
+// //= 1.0 Initial script.
+// //============================================================
+
+// ros2024	mapflag	battleground	2
+//
+bat_c01	mapflag	battleground	2
+bat_c02	mapflag	battleground	2
+bat_c03	mapflag	battleground	2
+bat_b01	mapflag	battleground	2
+bat_b02	mapflag	battleground
+bat_a01	mapflag	battleground
+bat_a02	mapflag	battleground
+
+
+
+
+// RWC Maps ===============
+ros2025_1	mapflag	battleground
+ros2025_2	mapflag	battleground
+ros2025_3	mapflag	battleground
+ros2025_4	mapflag	battleground
+ros2025_5	mapflag	battleground
+ros2025_6	mapflag	battleground
+ros2024	mapflag	battleground
+2012rwc_01	mapflag	battleground
+2012rwc_02	mapflag	battleground
+2012rwc_03	mapflag	battleground
+2012rwc_04	mapflag	battleground
+guild_vs1	mapflag	battleground
+arug_cas02	mapflag	battleground
+
+guild_vs2	mapflag	battleground
+guild_vs3	mapflag	battleground
+guild_vs4	mapflag	battleground
+guild_vs5	mapflag	battleground
+2009rwc_01	mapflag	battleground
+2009rwc_02	mapflag	battleground
+2009rwc_03	mapflag	battleground
+2009rwc_04	mapflag	battleground
+rwc01	mapflag	battleground
+rwc02	mapflag	battleground
+rwc03	mapflag	battleground
+2008rwc_01	mapflag	battleground
+2008rwc_02	mapflag	battleground
+2008rwc_03	mapflag	battleground
+2008rwc_04	mapflag	battleground
+kvm	mapflag	battleground
+flavius	mapflag	battleground
+bio4	mapflag	battleground
+1@lab	mapflag	battleground
+1@dth3	mapflag	battleground
+1@tnm1	mapflag	battleground
+1@pump	mapflag	battleground
+2@pump	mapflag	battleground
+job_prist	mapflag	battleground
+ecl_tdun02	mapflag	battleground
+evt_bomb	mapflag	battleground
+// PVP Arenas ===============
+pvp_y_1-1	mapflag	battleground
+arug_cas01	mapflag	battleground
+arug_cas03	mapflag	battleground
+arug_cas04	mapflag	battleground
+arug_cas05	mapflag	battleground
+payg_cas01	mapflag	battleground
+payg_cas02	mapflag	battleground
+payg_cas03	mapflag	battleground
+payg_cas04	mapflag	battleground
+payg_cas05	mapflag	battleground
+gefg_cas03	mapflag	battleground
+gefg_cas04	mapflag	battleground
+gefg_cas02	mapflag	battleground
+gefg_cas01	mapflag	battleground
+gefg_cas05	mapflag	battleground
+schg_cas01	mapflag	battleground
+schg_cas02	mapflag	battleground
+schg_cas03	mapflag	battleground
+schg_cas04	mapflag	battleground
+schg_cas05	mapflag	battleground
+aldeg_cas01	mapflag	battleground
+aldeg_cas02	mapflag	battleground
+aldeg_cas03	mapflag	battleground
+aldeg_cas04	mapflag	battleground
+aldeg_cas05	mapflag	battleground
+prtg_cas01	mapflag	battleground
+prtg_cas02	mapflag	battleground
+prtg_cas03	mapflag	battleground
+prtg_cas04	mapflag	battleground
+prtg_cas05	mapflag	battleground
+
+
+
+
+
+// // 2012rwc_01	mapflag	battleground	2
+// 2012rwc_02	mapflag	battleground	2
+// 2012rwc_03	mapflag	battleground	2
+// 2012rwc_04	mapflag	battleground	2
+// guild_vs1	mapflag	battleground	2
+// arug_cas02	mapflag	battleground	2
+// arena1	mapflag	battleground	2
+// arena2	mapflag	battleground	2
+// arena3	mapflag	battleground	2
+// arena4	mapflag	battleground	2
+// arena5	mapflag	battleground	2
+// arena6	mapflag	battleground	2
+// arena7	mapflag	battleground	2
+// arena8	mapflag	battleground	2
+// arena9	mapflag	battleground	2
+// arena10	mapflag	battleground	2
+// arena11	mapflag	battleground	2
+// arena12	mapflag	battleground	2
+// arena13	mapflag	battleground	2
+// arena14	mapflag	battleground	2
+// arena15	mapflag	battleground	2
+// arena16	mapflag	battleground	2
+// arena17	mapflag	battleground	2
+// arena18	mapflag	battleground	2
+// arena19	mapflag	battleground	2
+// arena20	mapflag	battleground	2
+// arena21	mapflag	battleground	2
+// arena22	mapflag	battleground	2
+// arena23	mapflag	battleground	2
+// arena24	mapflag	battleground	2
+// arena25	mapflag	battleground	2
+// arena26	mapflag	battleground	2
+// arena27	mapflag	battleground	2
+// arena28	mapflag	battleground	2
+// arena29	mapflag	battleground	2
+// arena30	mapflag	battleground	2
+// arena31	mapflag	battleground	2
+// arena32	mapflag	battleground	2
+// arena33	mapflag	battleground	2
+// arena34	mapflag	battleground	2
+// arena35	mapflag	battleground	2
+// arena36	mapflag	battleground	2
+// arena37	mapflag	battleground	2
+// arena38	mapflag	battleground	2
+// arena39	mapflag	battleground	2
+// arena40	mapflag	battleground	2
+// arena41	mapflag	battleground	2
+// arena42	mapflag	battleground	2
+// guild_vs2	mapflag	battleground	2
+// guild_vs3	mapflag	battleground	2
+// guild_vs4	mapflag	battleground	2
+// guild_vs5	mapflag	battleground	2
+// 2009rwc_01	mapflag	battleground	2
+// 2009rwc_02	mapflag	battleground	2
+// 2009rwc_03	mapflag	battleground	2
+// 2009rwc_04	mapflag	battleground	2
+// rwc01	mapflag	battleground	2
+// rwc02	mapflag	battleground	2
+// rwc03	mapflag	battleground	2
+// 2008rwc_01	mapflag	battleground	2
+// 2008rwc_02	mapflag	battleground	2
+// 2008rwc_03	mapflag	battleground	2
+// 2008rwc_04	mapflag	battleground	2
+// kvm	mapflag	battleground	2
+// flavius	mapflag	battleground	2
+// bio4	mapflag	battleground	2
+// 1@lab	mapflag	battleground	2
+// 1@dth3	mapflag	battleground	2
+// 1@tnm1	mapflag	battleground	2
+// 1@pump	mapflag	battleground	2
+// 2@pump	mapflag	battleground	2
+// job_prist	mapflag	battleground	2
+// ecl_tdun02	mapflag	battleground	2
+// evt_bomb	mapflag	battleground	2 

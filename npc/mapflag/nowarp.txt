@@ -1,0 +1,64 @@
+// //===== rAthena Script =======================================
+// //= Mapflag: Disable warping.
+// //===== By: ==================================================
+// //= rAthena Dev Team
+// //===== Current Version: =====================================
+// //= 1.3
+// //===== Compatible With: =====================================
+// //= rAthena Project
+// //===== Description: ========================================= 
+// //= Disables warping from a map.
+// //= Script commands 'warpparty' and 'warpguild' will not warp
+// //=   players.
+// //= Atcommands @warp, @go, @load, @jump, @partyrecall,
+// //=   @guildrecall, and @recallall will not warp players.
+// //= GD_EMERGENCYCALL and UNT_CALLFAMILY will not warp players.
+// //===== Additional Comments: ================================= 
+// //= 1.3 Added WoE SE maps.
+// //============================================================
+
+// // Special Quests Places =====
+// lhz_dun03	mapflag	nowarp
+// izlude	mapflag	nowarp
+// 2012rwc_01	mapflag	nowarp
+// 2012rwc_02	mapflag	nowarp
+// 2012rwc_03	mapflag	nowarp
+// 2012rwc_04	mapflag	nowarp
+// guild_vs1	mapflag	nowarp
+// guild_vs2	mapflag	nowarp
+// guild_vs3	mapflag	nowarp
+// guild_vs4	mapflag	nowarp
+// guild_vs5	mapflag	nowarp
+// 2009rwc_01	mapflag	nowarp
+// 2009rwc_02	mapflag	nowarp
+// 2009rwc_03	mapflag	nowarp
+// 2009rwc_04	mapflag	nowarp
+// quiz_02	mapflag	nowarp
+// rwc01	mapflag	nowarp
+// rwc03	mapflag	nowarp
+// 2008rwc_01	mapflag	nowarp
+// 2008rwc_02	mapflag	nowarp
+// 2008rwc_03	mapflag	nowarp
+// 2008rwc_04	mapflag	nowarp
+// kvm	mapflag	nowarp
+// flavius	mapflag	nowarp
+// bio4	mapflag	nowarp
+// 1@lab	mapflag	nowarp
+// 1@dth3	mapflag	nowarp
+// 1@tnm1	mapflag	nowarp
+// 1@pump	mapflag	nowarp
+// 2@pump	mapflag	nowarp
+// job_prist	mapflag	nowarp
+// ecl_tdun02	mapflag	nowarp
+// evt_bomb	mapflag	nowarp
+// arena32	mapflag	nowarp
+// arena33	mapflag	nowarp
+// arena34	mapflag	nowarp
+// arena35	mapflag	nowarp
+// arena36	mapflag	nowarp
+// arena37	mapflag	nowarp
+// arena38	mapflag	nowarp
+// arena39	mapflag	nowarp
+// arena40	mapflag	nowarp
+// arena41	mapflag	nowarp
+// arena42	mapflag	nowarp

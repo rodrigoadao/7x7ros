@@ -1,0 +1,126 @@
+//===== rAthena Script =======================================
+//= Mapflag: Guild lock.
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 1.2
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: ========================================= 
+//= Blocks all guild modifications on a map:
+//=   /organize, /leave, /invite, @changeleader
+//===== Additional Comments: ================================= 
+//= 1.0 Initial script.
+//= 1.1 Updated. [L0ne_W0lf]
+//= 1.2 Renewal split. [Euphy]
+//============================================================
+
+// RWC Maps ===============
+ros2024	mapflag	notrade
+ros2025_1	mapflag	notrade
+ros2025_2	mapflag	notrade
+ros2025_3	mapflag	notrade
+ros2025_4	mapflag	notrade
+ros2025_5	mapflag	notrade
+ros2025_6	mapflag	notrade
+2009rwc_01	mapflag	guildlock
+2012rwc_01	mapflag	guildlock
+2012rwc_02	mapflag	guildlock
+2012rwc_03	mapflag	guildlock
+2012rwc_04	mapflag	guildlock
+guild_vs1	mapflag	guildlock
+arug_cas02	mapflag	guildlock
+arena1	mapflag	guildlock
+arena2	mapflag	guildlock
+arena3	mapflag	guildlock
+arena4	mapflag	guildlock
+arena5	mapflag	guildlock
+arena6	mapflag	guildlock
+arena7	mapflag	guildlock
+arena8	mapflag	guildlock
+arena9	mapflag	guildlock
+arena10	mapflag	guildlock
+arena11	mapflag	guildlock
+arena12	mapflag	guildlock
+arena13	mapflag	guildlock
+arena14	mapflag	guildlock
+arena15	mapflag	guildlock
+arena16	mapflag	guildlock
+arena17	mapflag	guildlock
+arena18	mapflag	guildlock
+arena19	mapflag	guildlock
+arena20	mapflag	guildlock
+arena21	mapflag	guildlock
+arena22	mapflag	guildlock
+arena23	mapflag	guildlock
+arena24	mapflag	guildlock
+arena25	mapflag	guildlock
+arena26	mapflag	guildlock
+arena27	mapflag	guildlock
+arena28	mapflag	guildlock
+arena29	mapflag	guildlock
+arena30	mapflag	guildlock
+arena31	mapflag	guildlock
+arena32	mapflag	guildlock
+arena33	mapflag	guildlock
+arena34	mapflag	guildlock
+arena35	mapflag	guildlock
+arena36	mapflag	guildlock
+arena37	mapflag	guildlock
+arena38	mapflag	guildlock
+arena39	mapflag	guildlock
+arena40	mapflag	guildlock
+arena41	mapflag	guildlock
+arena42	mapflag	guildlock
+2009rwc_01	mapflag	guildlock
+2009rwc_02	mapflag	guildlock
+2009rwc_03	mapflag	guildlock
+2009rwc_04	mapflag	guildlock
+quiz_02	mapflag	guildlock
+rwc01	mapflag	guildlock
+rwc02	mapflag	guildlock
+rwc03	mapflag	guildlock
+2008rwc_01	mapflag	guildlock
+2008rwc_02	mapflag	guildlock
+2008rwc_03	mapflag	guildlock
+2008rwc_04	mapflag	guildlock
+kvm	mapflag	guildlock
+flavius	mapflag	guildlock
+bio4	mapflag	guildlock
+1@lab	mapflag	guildlock
+1@dth3	mapflag	guildlock
+1@tnm1	mapflag	guildlock
+1@pump	mapflag	guildlock
+2@pump	mapflag	guildlock
+job_prist	mapflag	guildlock
+ecl_tdun02	mapflag	guildlock
+evt_bomb	mapflag	guildlock
+arug_cas01	mapflag	guildlock
+arug_cas03	mapflag	guildlock
+arug_cas04	mapflag	guildlock
+arug_cas05	mapflag	guildlock
+payg_cas01	mapflag	guildlock
+payg_cas02	mapflag	guildlock
+payg_cas03	mapflag	guildlock
+payg_cas04	mapflag	guildlock
+payg_cas05	mapflag	guildlock
+gefg_cas03	mapflag	guildlock
+gefg_cas04	mapflag	guildlock
+gefg_cas02	mapflag	guildlock
+gefg_cas01	mapflag	guildlock
+gefg_cas05	mapflag	guildlock
+schg_cas01	mapflag	guildlock
+schg_cas02	mapflag	guildlock
+schg_cas03	mapflag	guildlock
+schg_cas04	mapflag	guildlock
+schg_cas05	mapflag	guildlock
+aldeg_cas01	mapflag	guildlock
+aldeg_cas02	mapflag	guildlock
+aldeg_cas03	mapflag	guildlock
+aldeg_cas04	mapflag	guildlock
+aldeg_cas05	mapflag	guildlock
+prtg_cas01	mapflag	guildlock
+prtg_cas02	mapflag	guildlock
+prtg_cas03	mapflag	guildlock
+prtg_cas04	mapflag	guildlock
+prtg_cas05	mapflag	guildlock

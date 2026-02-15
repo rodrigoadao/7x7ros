@@ -1,0 +1,314 @@
+// ==============================================================================
+// Arena 7x7 - Funções Compartilhadas OTIMIZADAS (SEM LAG)
+// ==============================================================================
+
+// ============================================================================
+// Funcao OTIMIZADA para enviar estatisticas da partida
+// ============================================================================
+function	script	F_SendMatchStats	{
+	set .@match_id, getarg(0);
+	set .@winner_team, getarg(1);  // 0=empate, 1=blue, 2=red
+	
+	// =====================================================================
+	// OTIMIZAÇÃO 1: UMA ÚNICA QUERY COM TODOS OS DADOS (incluindo duração)
+	// =====================================================================
+	query_sql(
+		"SELECT " +
+			"mp.char_id, mp.char_name, mp.team, mp.job_class, " +
+			"COALESCE(ms.kills, 0) as kills, " +
+			"COALESCE(ms.deaths, 0) as deaths, " +
+			"COALESCE(ms.assists, 0) as assists, " +
+			"COALESCE(ms.damage_done, 0) as dmg_done, " +
+			"COALESCE(ms.damage_received, 0) as dmg_recv, " +
+			"COALESCE(ms.skills_used + ms.items_used, 0) as actions, " +
+			"c.guild_id, " +
+			"m.map_name, " +
+			"UNIX_TIMESTAMP(m.end_time) - UNIX_TIMESTAMP(m.start_time) as duration " +
+		"FROM arena7x7_match_players mp " +
+		"LEFT JOIN arena7x7_match_stats ms ON mp.match_id = ms.match_id AND mp.char_id = ms.char_id " +
+		"LEFT JOIN `char` c ON mp.char_id = c.char_id " +
+		"LEFT JOIN arena7x7_matches m ON mp.match_id = m.match_id " +
+		"WHERE mp.match_id = " + .@match_id + " " +
+		"ORDER BY mp.team, ms.kills DESC",
+		.@char_ids, .@names$, .@teams, .@job_classes,
+		.@kills, .@deaths, .@assists, .@dmg_done, .@dmg_recv, .@actions,
+		.@guild_ids, .@map_name$, .@durations
+	);
+	
+	if (getarraysize(.@char_ids) == 0) return; // Sem dados
+	
+	// Pegar valores únicos
+	set .@duration, .@durations[0];
+	set .@map$, .@map_name$[0];
+	if (.@map$ == "") set .@map$, "ros2024";
+	
+	// =====================================================================
+	// OTIMIZAÇÃO 2: IDENTIFICAR GUILDS SEM QUERIES EXTRAS
+	// =====================================================================
+	set .@blue_guild_id, 0;
+	set .@red_guild_id, 0;
+	set .@blue_guild$, "";
+	set .@red_guild$, "";
+	
+	for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+		if (.@teams[.@i] == 1 && .@blue_guild_id == 0) {
+			set .@blue_guild_id, .@guild_ids[.@i];
+			if (.@blue_guild_id > 0) {
+				set .@blue_guild$, getguildname(.@blue_guild_id);
+			}
+		}
+		if (.@teams[.@i] == 2 && .@red_guild_id == 0) {
+			set .@red_guild_id, .@guild_ids[.@i];
+			if (.@red_guild_id > 0) {
+				set .@red_guild$, getguildname(.@red_guild_id);
+			}
+		}
+		if (.@blue_guild_id > 0 && .@red_guild_id > 0) break;
+	}
+	
+	// Fallback para nomes padrão
+	if (.@blue_guild$ == "") set .@blue_guild$, "BLUE TEAM";
+	if (.@red_guild$ == "") set .@red_guild$, "RED TEAM";
+	
+	// =====================================================================
+	// OTIMIZAÇÃO 3: CALCULAR APM EM MEMÓRIA (sem queries)
+	// =====================================================================
+	set .@blue_total_apm, 0;
+	set .@blue_count, 0;
+	set .@red_total_apm, 0;
+	set .@red_count, 0;
+	
+	// Criar array de APM individual
+	setarray .@player_apm[0], 0;
+	
+	for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+		if (.@duration > 0 && .@actions[.@i] > 0) {
+			set .@player_apm[.@i], (.@actions[.@i] * 600) / .@duration;
+		} else {
+			set .@player_apm[.@i], 0;
+		}
+		
+		if (.@teams[.@i] == 1) {
+			set .@blue_total_apm, .@blue_total_apm + .@player_apm[.@i];
+			set .@blue_count, .@blue_count + 1;
+		} else if (.@teams[.@i] == 2) {
+			set .@red_total_apm, .@red_total_apm + .@player_apm[.@i];
+			set .@red_count, .@red_count + 1;
+		}
+	}
+	
+	// APM médio dos times
+	if (.@blue_count > 0) {
+		set .@blue_apm, .@blue_total_apm / .@blue_count;
+	}
+	if (.@red_count > 0) {
+		set .@red_apm, .@red_total_apm / .@red_count;
+	}
+	
+	// =====================================================================
+	// ENVIAR PARA GUILD CHAT (sem sleeps)
+	// =====================================================================
+	
+	// Mensagens de resultado
+	if (.@winner_team == 1) {
+		set .@blue_result$, "[VITORIA] Partida " + .@match_id + " encerrada!";
+		set .@red_result$, "[DERROTA] Partida " + .@match_id + " encerrada!";
+	} else if (.@winner_team == 2) {
+		set .@blue_result$, "[DERROTA] Partida " + .@match_id + " encerrada!";
+		set .@red_result$, "[VITORIA] Partida " + .@match_id + " encerrada!";
+	} else {
+		set .@blue_result$, "[EMPATE] Partida " + .@match_id + " encerrada!";
+		set .@red_result$, "[EMPATE] Partida " + .@match_id + " encerrada!";
+	}
+	
+	// BLUE GUILD
+	if (.@blue_guild_id > 0) {
+		guildmes(.@blue_guild_id, "========================================");
+		guildmes(.@blue_guild_id, .@blue_result$);
+		guildmes(.@blue_guild_id, "---- NOSSO TIME (BLUE) ----");
+		
+		for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+			if (.@teams[.@i] == 1) {
+				set .@class$, callfunc("F_GetClassName", .@job_classes[.@i]);
+				guildmes(.@blue_guild_id, .@names$[.@i] + " (" + .@class$ + "): " + 
+					.@kills[.@i] + "K/" + .@deaths[.@i] + "D/" + .@assists[.@i] + "A | " +
+					"DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i]);
+			}
+		}
+		
+		guildmes(.@blue_guild_id, "---- TIME ADVERSARIO (RED) ----");
+		
+		for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+			if (.@teams[.@i] == 2) {
+				set .@class$, callfunc("F_GetClassName", .@job_classes[.@i]);
+				guildmes(.@blue_guild_id, .@names$[.@i] + " (" + .@class$ + "): " + 
+					.@kills[.@i] + "K/" + .@deaths[.@i] + "D/" + .@assists[.@i] + "A | " +
+					"DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i]);
+			}
+		}
+		
+		guildmes(.@blue_guild_id, "========================================");
+	}
+	
+	// RED GUILD
+	if (.@red_guild_id > 0) {
+		guildmes(.@red_guild_id, "========================================");
+		guildmes(.@red_guild_id, .@red_result$);
+		guildmes(.@red_guild_id, "---- NOSSO TIME (RED) ----");
+		
+		for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+			if (.@teams[.@i] == 2) {
+				set .@class$, callfunc("F_GetClassName", .@job_classes[.@i]);
+				guildmes(.@red_guild_id, .@names$[.@i] + " (" + .@class$ + "): " + 
+					.@kills[.@i] + "K/" + .@deaths[.@i] + "D/" + .@assists[.@i] + "A | " +
+					"DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i]);
+			}
+		}
+		
+		guildmes(.@red_guild_id, "---- TIME ADVERSARIO (BLUE) ----");
+		
+		for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+			if (.@teams[.@i] == 1) {
+				set .@class$, callfunc("F_GetClassName", .@job_classes[.@i]);
+				guildmes(.@red_guild_id, .@names$[.@i] + " (" + .@class$ + "): " + 
+					.@kills[.@i] + "K/" + .@deaths[.@i] + "D/" + .@assists[.@i] + "A | " +
+					"DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i]);
+			}
+		}
+		
+		guildmes(.@red_guild_id, "========================================");
+	}
+	
+	// =====================================================================
+	// ANUNCIAR NO MAPA (sem sleeps, formatação otimizada)
+	// =====================================================================
+	
+	// Formatar APM do time azul
+	set .@blue_apm_int, .@blue_apm / 10;
+	set .@blue_apm_dec, .@blue_apm % 10;
+	
+	mapannounce .@map$, "Estatísticas da " + .@blue_guild$ + 
+		" (" + .@blue_apm_int + "." + .@blue_apm_dec + " APM):", bc_map, 0x00BFFF;
+	
+	// Estatísticas individuais do time azul
+	for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+		if (.@teams[.@i] == 1) {
+			set .@class$, callfunc("F_GetClassName", .@job_classes[.@i]);
+			set .@apm_int, .@player_apm[.@i] / 10;
+			set .@apm_dec, .@player_apm[.@i] % 10;
+			
+			mapannounce .@map$, .@names$[.@i] + " (" + .@class$ + "): " + 
+				.@apm_int + "." + .@apm_dec + " APM, " + 
+				.@kills[.@i] + " Kills, " + .@deaths[.@i] + " Death | " +
+				"DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i], bc_map, 0x00BFFF;
+		}
+	}
+	
+	// Formatar APM do time vermelho
+	set .@red_apm_int, .@red_apm / 10;
+	set .@red_apm_dec, .@red_apm % 10;
+	
+	mapannounce .@map$, "Estatísticas da " + .@red_guild$ + 
+		" (" + .@red_apm_int + "." + .@red_apm_dec + " APM):", bc_map, 0xFF6347;
+	
+	// Estatísticas individuais do time vermelho
+	for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+		if (.@teams[.@i] == 2) {
+			set .@class$, callfunc("F_GetClassName", .@job_classes[.@i]);
+			set .@apm_int, .@player_apm[.@i] / 10;
+			set .@apm_dec, .@player_apm[.@i] % 10;
+			
+			mapannounce .@map$, .@names$[.@i] + " (" + .@class$ + "): " + 
+				.@apm_int + "." + .@apm_dec + " APM, " + 
+				.@kills[.@i] + " Kills, " + .@deaths[.@i] + " Death | " +
+				"DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i], bc_map, 0xFF6347;
+		}
+	}
+	
+	return;
+}
+
+// ============================================================================
+// Funcao para converter job_class em nome abreviado da classe
+// ============================================================================
+function	script	F_GetClassName	{
+	set .@job, getarg(0);
+	
+	// 3rd Classes Trans
+	if (.@job == 4060) return "RK";
+	if (.@job == 4061) return "WL";
+	if (.@job == 4062) return "Ranger";
+	if (.@job == 4063) return "AB";
+	if (.@job == 4064) return "Mecha";
+	if (.@job == 4065) return "GX";
+	if (.@job == 4066) return "RG";
+	if (.@job == 4067) return "Sorc";
+	if (.@job == 4068) return "Trova";
+	if (.@job == 4069) return "Musa";
+	if (.@job == 4070) return "Shura";
+	if (.@job == 4071) return "Genetic";
+	if (.@job == 4072) return "SC";
+	
+	// 3rd Classes Base
+	if (.@job == 4054) return "RK";
+	if (.@job == 4055) return "WL";
+	if (.@job == 4056) return "Ranger";
+	if (.@job == 4057) return "AB";
+	if (.@job == 4058) return "Mecha";
+	if (.@job == 4059) return "GC";
+	if (.@job == 4073) return "RG";
+	if (.@job == 4074) return "Sorc";
+	if (.@job == 4075) return "Mins";
+	if (.@job == 4076) return "Wand";
+	if (.@job == 4077) return "Sura";
+	if (.@job == 4078) return "Gene";
+	if (.@job == 4079) return "SC";
+	
+	// Trans 2nd Classes
+	if (.@job == 4008) return "LK";
+	if (.@job == 4009) return "HW";
+	if (.@job == 4010) return "Sniper";
+	if (.@job == 4011) return "HP";
+	if (.@job == 4012) return "WS";
+	if (.@job == 4013) return "SinX";
+	if (.@job == 4015) return "Pala";
+	if (.@job == 4016) return "Prof";
+	if (.@job == 4017) return "Clown";
+	if (.@job == 4018) return "Gypsy";
+	if (.@job == 4019) return "Champ";
+	if (.@job == 4020) return "Creat";
+	if (.@job == 4021) return "Stalker";
+	
+	// 2nd Classes
+	if (.@job == 7) return "Knight";
+	if (.@job == 9) return "Wizard";
+	if (.@job == 11) return "Hunter";
+	if (.@job == 8) return "Priest";
+	if (.@job == 10) return "BS";
+	if (.@job == 12) return "Assassin";
+	if (.@job == 14) return "Crusader";
+	if (.@job == 16) return "Sage";
+	if (.@job == 19) return "Bard";
+	if (.@job == 20) return "Dancer";
+	if (.@job == 15) return "Monk";
+	if (.@job == 18) return "Alche";
+	if (.@job == 17) return "Rogue";
+	
+	// 1st Classes
+	if (.@job == 1) return "Swordman";
+	if (.@job == 2) return "Mage";
+	if (.@job == 3) return "Archer";
+	if (.@job == 4) return "Acolyte";
+	if (.@job == 5) return "Merchant";
+	if (.@job == 6) return "Thief";
+	
+	// Special
+	if (.@job == 23) return "SN";
+	if (.@job == 24) return "Gunner";
+	if (.@job == 25) return "Ninja";
+	if (.@job == 4046) return "Taekwon";
+	if (.@job == 4047) return "SL";
+	if (.@job == 4049) return "SoulL";
+	
+	return "???";
+}

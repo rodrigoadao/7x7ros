@@ -1,0 +1,704 @@
+//versao 19 04 2025
+//script remendado
+//tem aqui maos de fissuris, baray, uniatrix, illegit
+//e de forma mais exaustiva, moskaum
+//o que ha de atipico neste script e dar e equipar itens quando escolhe-se a classe
+//e tambem de dar status e skills
+//ainda ha itens para serem adicionados
+//existe um ponto importante a ser melhorado: o segundo acessorio nao esta sendo equipado
+
+izlude,129,152,4	script	Job Master	650,{
+    if(Class >= 1) {
+        close;
+    }
+    cutin "gl_himel2",2;
+    mes	"[ Himmelmez ]";
+    mes	"Welcome ^ff0000"+strcharinfo(0)+"^000000. Please select the job you wish to change into!";
+    //switch(select("Cancel:Lord Knight:High Wizard:Sniper:High Priest:Assassin Cross:Paladin:Scholar:Clown/Gypsy:Champion:Creator:Stalker")) {
+//4060 Rune Knight, 4061 Warlock, 4062 Ranger, 4063 Arch Bishop
+//4058 Mechanic 4059 Gullotine Cross 4066 Royal Guard 4067 Sorcerer
+//4068 minstrel 4069 wanderer 4070 sura 4071 genetic 4072 shadow chaser
+    switch(select("Cancel:Rune Knight:Warlock:Ranger:Arch Bishop:Mechanic:Gullotine Cross:Royal Guard:Sorcerer:Minstrel/Wanderer:Sura:Genetic:Shadow Chaser")) {
+
+        case 1:
+		goto finalization;
+
+        case 2:// RK
+            jobchange 0; 
+            resetlvl(1);
+            jobchange .job;
+
+            set .job,4001;// novice H
+            jobchange .job;
+            set JobLevel, 10;
+
+            set .job,4002;// swordman H
+            jobchange .job;
+            set JobLevel, 50;
+
+            set .job,4008;// lk
+            jobchange .job;
+            set BaseLevel, 99;
+            set JobLevel, 70;
+
+            set .job,4060;// RK
+            jobchange .job;
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            getitem 12725,3;
+		    getitem 12726,3;
+		    getitem 12727,3;
+		    getitem 12728,3;
+		    getitem 12729,3;
+		    getitem 12730,3;
+		    getitem 12731,3;
+		    getitem 12732,3;
+		    getitem 12733,3;
+		    getitem 22540,2;
+            //skill platina
+            skill 144,1,SKILL_PERM;
+            skill 145,1,SKILL_PERM;
+            skill 146,1,SKILL_PERM;
+            skill 1001,1,SKILL_PERM;
+            break;
+
+        case 3:// WL
+            jobchange 0; 
+            resetlvl(1);
+            jobchange .job;
+
+            set .job,4001;// novice H
+            jobchange .job;
+            set JobLevel, 10;
+
+            set .job,4003;// mage H
+            jobchange .job;
+            set JobLevel, 50;
+
+            set .job,4010;// hw
+            jobchange .job;
+            set BaseLevel, 99;
+            set JobLevel, 70;
+
+            set .job,4061;// WL
+            jobchange .job;
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            skill 157,1,SKILL_PERM;
+            skill 1006,1,SKILL_PERM;
+            getitem 7831,5;
+            break;
+
+        case 4://ranger
+            jobchange 0; 
+            resetlvl(1);
+            jobchange .job;
+
+            set .job,4001;// novice H
+            jobchange .job;
+            set JobLevel, 10;
+
+            set .job,4004;// archer H
+            jobchange .job;
+            set JobLevel, 50;
+
+            set .job,4012;// sniper
+            jobchange .job;
+            set BaseLevel, 99;
+            set JobLevel, 70;
+
+            set .job,4062;// ranger
+            jobchange .job;
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            getitem 6124,1;
+            skill 148,1,SKILL_PERM;
+            getitem 7831,5;
+            break;
+
+        case 5:// AB
+            jobchange 0; 
+            resetlvl(1);
+            jobchange .job;
+
+            set .job,4001;// novice H
+            jobchange .job;
+            set JobLevel, 10;
+
+            set .job,4005;// aco H
+            jobchange .job;
+            set JobLevel, 50;
+
+            set .job,4009;// hp
+            jobchange .job;
+            set BaseLevel, 99;
+            set JobLevel, 70;
+
+            set .job,4063;// AB
+            jobchange .job;
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            skill 156,1,SKILL_PERM;
+            break;
+
+        case 6:// meca
+            jobchange 0; 
+            resetlvl(1);
+            jobchange .job;
+
+            set .job,4001;// novice H
+            jobchange .job;
+            set JobLevel, 10;
+
+            set .job,4006;// merch H
+            jobchange .job;
+            set JobLevel, 50;
+
+            set .job,4011;// ws
+            jobchange .job;
+            set BaseLevel, 99;
+            set JobLevel, 70;
+
+            set .job,4064;// meca
+            jobchange .job;
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            skill 155,1,SKILL_PERM;
+            skill 153,1,SKILL_PERM;
+            getitem 7831,10;
+            break;
+
+        case 7:// GX
+
+            jobchange 0; 
+            resetlvl(1);
+            jobchange .job;
+
+            set .job,4001;// novice T
+            jobchange .job;
+            set JobLevel, 10;
+
+            set .job,4007;// thief H
+            jobchange .job;
+            set JobLevel, 50;
+
+            set .job,4013;// sinx
+            jobchange .job;
+            set BaseLevel, 99;
+            set JobLevel, 70;
+
+            set .job,4065;// GX
+            jobchange .job;
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            getitem 678,3;
+            skill 149,1,SKILL_PERM;
+            skill 150,1,SKILL_PERM;
+            skill 151,1,SKILL_PERM;
+            skill 152,1,SKILL_PERM;
+            skill 1004,1,SKILL_PERM;
+            skill 1003,1,SKILL_PERM;
+            break;
+
+        case 8:// RG
+
+            jobchange 0; 
+            resetlvl(1);
+            jobchange .job;
+
+            set .job,4001;// novice T
+            jobchange .job;
+            set JobLevel, 10;
+
+            set .job,4002;// swordman H
+            jobchange .job;
+            set JobLevel, 50;
+
+            set .job,4015;// pala
+            jobchange .job;
+            set BaseLevel, 99;
+            set JobLevel, 70;
+
+            set .job,4073;// RG
+            jobchange .job;
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            skill 1002,1,SKILL_PERM;
+            skill 145,1,SKILL_PERM;
+            skill 144,1,SKILL_PERM;
+            skill 146,1,SKILL_PERM;
+            //itens
+            // Deletar todos os itens do invent√°rio
+            getinventorylist;
+            for (.@i = 0; .@i < @inventorylist_count; .@i++) {
+                delitem2 @inventorylist_id[.@i], @inventorylist_amount[.@i], 
+                        @inventorylist_identify[.@i], @inventorylist_refine[.@i], 
+                        @inventorylist_attribute[.@i], @inventorylist_card1[.@i], 
+                        @inventorylist_card2[.@i], @inventorylist_card3[.@i], 
+                        @inventorylist_card4[.@i];
+            }
+            getitem2 18959, 1, 1, 0, 0, 4412, 0, 0, 0; // dighi-titica isila
+            equip 18959;
+            getitem 18894,1;
+            equip 18894;
+            getitem 18670,1;
+            equip 18670;
+            getitem2 15046, 1, 1, 4, 0, 4302, 0, 0, 0; // placa cerco tgk
+            equip 15046;
+            getitem2 1415, 1, 1, 4, 0, 0, 0, 0, 0; // broca
+            getitem2 1228, 1, 1, 4, 0, 0, 0, 0, 0; // ck
+            equip 1228;
+            getitem2 2123, 1, 1, 4, 0, 4058, 0, 0, 0; // travessa orleans thara
+            equip 2123;
+            getitem2 2115, 1, 1, 4, 0, 4058, 0, 0, 0; // vshield thara
+            getitem2 2586, 1, 1, 4, 0, 4334, 0, 0, 0; // manteau cerco noxious
+            equip 2586;
+            getitem2 2483, 1, 1, 4, 0, 4381, 0, 0, 0; // grevas cerco gferus
+            equip 2483;
+            getitem2 22008, 1, 1, 4, 0, 4381, 0, 0, 0; // temporal dex gferus
+            getitem2 2701, 1, 1, 0, 0, 4044, 0, 0, 0; // luva orleans smokie
+            equip 2701;
+            getitem2 2701, 1, 1, 0, 0, 4064, 0, 0, 0; // luva orleans zerom
+            getitem2 2701, 1, 1, 0, 0, 4044, 0, 0, 0; // luva orleans smokie
+            //
+            //build stats
+            set StatusPoint, 0;
+            statusup2 bStr, 45;
+            statusup2 bAgi, 19;
+            statusup2 bVit, 124;
+            statusup2 bInt, 99;
+            statusup2 bDex, 119;
+            statusup2 bLuk, 1;
+            //stuffs
+            getitem 11548,140;//gde branca
+            getitem 12427,65;//gsp
+            getitem 12424,2;//ghp
+            getitem 12436,2;//vitata500
+            getitem 12437,4;//celular
+            getitem 657,4;//aspd berserk
+            getitem 523,11;//·gua benta holy water
+            getitem 506,11;//poÁ„o verde green pot
+            getitem 12114,5;//perga fogo
+            getitem 12118,2;//anti elementais
+            getitem 12119,2;
+            getitem 12120,2;
+            getitem 12121,2;
+            getitem 12429,1;//food str+20
+            getitem 12430,1;//food int+20
+            getitem 12431,1;//food vit+20
+            getitem 12432,1;//food dex+20
+            getitem 12433,1;//food agi+20
+            getitem 12434,1;//food luk+20
+            goto restockagemdajobchanger;
+            break;
+
+        case 9:// SORC
+
+            jobchange 0; 
+            resetlvl(1);
+            jobchange .job;
+
+            set .job,4001;// novice T
+            jobchange .job;
+            set JobLevel, 10;
+
+            set .job,4003;// mage H
+            jobchange .job;
+            set JobLevel, 50;
+
+            set .job,4017;// prof
+            jobchange .job;
+            set BaseLevel, 99;
+            set JobLevel, 70;
+
+            set .job,4074;// SORC
+            jobchange .job;
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            skill 157,1,SKILL_PERM;
+            getitem 7831,2;
+            break;
+
+        case 10:// minstrel 4069 wanderer 4070
+            jobchange 0; 
+            resetlvl(1);
+            jobchange .job;
+
+            set .job,4001;// novice T
+            jobchange .job;
+            set JobLevel, 10;
+
+            set .job,4004;// archer H
+            jobchange .job;
+            set JobLevel, 50;
+
+            set .job,4020;// clown
+            jobchange .job;
+            set BaseLevel, 99;
+            set JobLevel, 70;
+
+            if (Sex == SEX_MALE) {
+            set .job,4075;// minstrel trova
+            jobchange .job;
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            getitem 6144,100;
+            getitem 11513,100;
+            skill 148,1,SKILL_PERM;
+            skill 1010,1,SKILL_PERM;
+            getitem 7831,5;
+            break;
+            } else 
+            set .job,4076;// musa
+            jobchange .job;//
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            getitem 6144,100;
+            getitem 11513,100;
+            skill 148,1,SKILL_PERM;
+            skill 1011,1,SKILL_PERM;//piscadela
+            getitem 7831,5;
+            break;
+
+        case 11:// sura shura
+            jobchange 0; 
+            resetlvl(1);
+            jobchange .job;
+
+            set .job,4001;// novice T
+            jobchange .job;
+            set JobLevel, 10;
+
+            set .job,4005;// acho H
+            jobchange .job;
+            set JobLevel, 50;
+
+            set .job,4016;// champ
+            jobchange .job;
+            set BaseLevel, 99;
+            set JobLevel, 70;
+
+            set .job,4077;// sura
+            jobchange .job;
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            skill 156,1,SKILL_PERM;
+            break;
+
+        case 12: //genetic 4072 shadow chaser
+            jobchange 0; 
+            resetlvl(1);
+            jobchange .job;
+
+            set .job,4001;// novice T
+            jobchange .job;
+            set JobLevel, 10;
+
+            set .job,4006;// merch H
+            jobchange .job;
+            set JobLevel, 50;
+
+            set .job,4019;// creator
+            jobchange .job;
+            set BaseLevel, 99;
+            set JobLevel, 70;
+
+            set .job,4078;// genetic
+            jobchange .job;
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            skill 155,1,SKILL_PERM;
+            skill 153,1,SKILL_PERM;
+            getitem 7831,10;
+            break;
+
+        case 13: // shadow chaser sc
+            jobchange 0; 
+            resetlvl(1);
+            jobchange .job;
+
+            set .job,4001;// novice T
+            jobchange .job;
+            set JobLevel, 10;
+
+            set .job,4007;// thief H
+            jobchange .job;
+            set JobLevel, 50;
+
+            set .job,4018;// stalker
+            jobchange .job;
+            set BaseLevel, 99;
+            set JobLevel, 70;
+
+            set .job,4079;// shadow chaser sc
+            jobchange .job;
+            set BaseLevel, 170;
+            set JobLevel, 60;
+            getitem 6122,1;
+		    getitem 6121,1;
+            skill 149,1,SKILL_PERM;
+            skill 150,1,SKILL_PERM;
+            skill 151,1,SKILL_PERM;
+            skill 152,1,SKILL_PERM;
+            skill 1005,1,SKILL_PERM;
+            getitem 7831,5;
+            break;
+
+        L_RWCROClass:
+            set BaseLevel, 90;
+            set JobLevel, 60;
+            set StatusPoint, 1132;
+            goto PLAT_SKILLS;
+
+        L_RWCROClassNERF:
+            set BaseLevel, 85;
+            set JobLevel, 60;
+            set StatusPoint, 1032;
+            goto PLAT_SKILLS;
+
+        restockagemdajobchanger:
+            // Array of item IDs
+            //setarray .@item_ids[0], 501, 502, 503, 504, 505, 506, 545, 546, 547, 522, 645, 656, 657, 11547, 11548, 11549, 12392, 12393, 12394, 12427, 12424, 12436, 12437, 12429, 12430, 12431, 12432, 12433, 12434, 12114, 12115, 12116, 12117, 12118, 12119, 12120, 12121, 523, 715, 716, 717, 12004, 12005, 12006, 12007, 12008, 12009, 12010, 12011, 12012, 12013, 12014, 12015, 1065, 7940, 6144, 11513, 18000, 18001, 18002, 18003, 18004, 6145, 12383, 6146, 6147, 970, 6210, 6211, 6212, 6213, 6214, 6215, 6216, 6217, 7137, 7138, 13265, 13266, 13267, 13268, 13277, 13280, 13281, 13282, 13283, 6128, 12717, 12718, 12719, 12720, 12721, 12722, 12723, 12724, 6120, 6123, 1025, 990, 991, 992, 993, 994, 995, 996, 997, 6360, 6361, 6362, 6363, 714, 1010, 1011, 984, 985, 612, 7054, 1002, 521, 999, 757, 615, 100065, 100066, 100067, 100068, 100069, 100070, 100071, 100072;
+            setarray .@item_ids[0], 501, 502, 503, 504, 505, 506, 545, 546, 547, 522, 645, 656, 657, 11547, 11548, 11549, 12392, 12393, 12394, 12427, 12424, 12436, 12437, 12429, 12430, 12431, 12432, 12433, 12434, 12114, 12115, 12116, 12117, 12118, 12119, 12120, 12121, 523, 715, 716, 717, 12004, 12005, 12006, 12007, 12008, 12009, 12010, 12011, 12012, 12013, 12014, 12015, 1065, 7940, 6144, 11513, 18000, 18001, 18002, 18003, 18004, 6145, 12383, 6146, 6147, 970, 6210, 6211, 6212, 6213, 6214, 6215, 6216, 6217, 7137, 7138, 13265, 13266, 13267, 13268, 13277, 13280, 13281, 13282, 13283, 6128, 12717, 12718, 12719, 12720, 12721, 12722, 12723, 12724, 6120, 6123, 1025, 990, 991, 992, 993, 994, 995, 996, 997, 6360, 6361, 6362, 6363, 714, 1010, 1011, 984, 985, 612, 7054, 1002, 521, 999, 757, 615, 100065, 100066, 100067, 100068, 100069, 100070, 100071, 100072, 1750, 1751, 1752, 1753, 1754, 1755, 1756, 1757, 1762, 1765, 1767, 1770, 7049;
+            // Array of variables to store item quantities
+            //setarray .@quantities[0], qtd501, qtd502, qtd503, qtd504, qtd505, qtd506, qtd545, qtd546, qtd547, qtd522, qtd645, qtd656, qtd657, qtd11547, qtd11548, qtd11549, qtd12392, qtd12393, qtd12394, qtd12427, qtd12424, qtd12436, qtd12437, qtd12429, qtd12430, qtd12431, qtd12432, qtd12433, qtd12434, qtd12114, qtd12115, qtd12116, qtd12117, qtd12118, qtd12119, qtd12120, qtd12121, qtd523, qtd715, qtd716, qtd717, qtd12004, qtd12005, qtd12006, qtd12007, qtd12008, qtd12009, qtd12010, qtd12011, qtd12012, qtd12013, qtd12014, qtd12015, qtd1065, qtd7940, qtd6144, qtd11513, qtd18000, qtd18001, qtd18002, qtd18003, qtd18004, qtd6145, qtd12383, qtd6146, qtd6147, qtd970, qtd6210, qtd6211, qtd6212, qtd6213, qtd6214, qtd6215, qtd6216, qtd6217, qtd7137, qtd7138, qtd13265, qtd13266, qtd13267, qtd13268, qtd13277, qtd13280, qtd13281, qtd13282, qtd13283, qtd6128, qtd12717, qtd12718, qtd12719, qtd12720, qtd12721, qtd12722, qtd12723, qtd12724, qtd6120, qtd6123, qtd1025, qtd990, qtd991, qtd992, qtd993, qtd994, qtd995, qtd996, qtd997, qtd6360, qtd6361, qtd6362, qtd6363, qtd714, qtd1010, qtd1011, qtd984, qtd985, qtd612, qtd7054, qtd1002, qtd521, qtd999, qtd757, qtd615, qtd100065, qtd100066, qtd100067, qtd100068, qtd100069, qtd100070, qtd100071, qtd100072;
+            setarray .@quantities[0], qtd501, qtd502, qtd503, qtd504, qtd505, qtd506, qtd545, qtd546, qtd547, qtd522, qtd645, qtd656, qtd657, qtd11547, qtd11548, qtd11549, qtd12392, qtd12393, qtd12394, qtd12427, qtd12424, qtd12436, qtd12437, qtd12429, qtd12430, qtd12431, qtd12432, qtd12433, qtd12434, qtd12114, qtd12115, qtd12116, qtd12117, qtd12118, qtd12119, qtd12120, qtd12121, qtd523, qtd715, qtd716, qtd717, qtd12004, qtd12005, qtd12006, qtd12007, qtd12008, qtd12009, qtd12010, qtd12011, qtd12012, qtd12013, qtd12014, qtd12015, qtd1065, qtd7940, qtd6144, qtd11513, qtd18000, qtd18001, qtd18002, qtd18003, qtd18004, qtd6145, qtd12383, qtd6146, qtd6147, qtd970, qtd6210, qtd6211, qtd6212, qtd6213, qtd6214, qtd6215, qtd6216, qtd6217, qtd7137, qtd7138, qtd13265, qtd13266, qtd13267, qtd13268, qtd13277, qtd13280, qtd13281, qtd13282, qtd13283, qtd6128, qtd12717, qtd12718, qtd12719, qtd12720, qtd12721, qtd12722, qtd12723, qtd12724, qtd6120, qtd6123, qtd1025, qtd990, qtd991, qtd992, qtd993, qtd994, qtd995, qtd996, qtd997, qtd6360, qtd6361, qtd6362, qtd6363, qtd714, qtd1010, qtd1011, qtd984, qtd985, qtd612, qtd7054, qtd1002, qtd521, qtd999, qtd757, qtd615, qtd100065, qtd100066, qtd100067, qtd100068, qtd100069, qtd100070, qtd100071, qtd100072, qtd1750, qtd1751, qtd1752, qtd1753, qtd1754, qtd1755, qtd1756, qtd1757, qtd1762, qtd1765, qtd1767, qtd1770, qtd7049;
+            // Loop through each item and save the quantity in inventory
+            for (.@i = 0; .@i < getarraysize(.@item_ids); .@i++) {
+                set .@quantities[.@i], countitem(.@item_ids[.@i]);
+            }
+
+
+            // Assign the quantities back to their respective variables
+            set qtd501, .@quantities[0];
+            set qtd502, .@quantities[1];
+            set qtd503, .@quantities[2];
+            set qtd504, .@quantities[3];
+            set qtd505, .@quantities[4];
+            set qtd506, .@quantities[5];
+            set qtd545, .@quantities[6];
+            set qtd546, .@quantities[7];
+            set qtd547, .@quantities[8];
+            set qtd522, .@quantities[9];
+            set qtd645, .@quantities[10];
+            set qtd656, .@quantities[11];
+            set qtd657, .@quantities[12];
+            set qtd11547, .@quantities[13];
+            set qtd11548, .@quantities[14];
+            set qtd11549, .@quantities[15];
+            set qtd12392, .@quantities[16];
+            set qtd12393, .@quantities[17];
+            set qtd12394, .@quantities[18];
+            set qtd12427, .@quantities[19];
+            set qtd12424, .@quantities[20];
+            set qtd12436, .@quantities[21];
+            set qtd12437, .@quantities[22];
+            set qtd12429, .@quantities[23];
+            set qtd12430, .@quantities[24];
+            set qtd12431, .@quantities[25];
+            set qtd12432, .@quantities[26];
+            set qtd12433, .@quantities[27];
+            set qtd12434, .@quantities[28];
+            set qtd12114, .@quantities[29];
+            set qtd12115, .@quantities[30];
+            set qtd12116, .@quantities[31];
+            set qtd12117, .@quantities[32];
+            set qtd12118, .@quantities[33];
+            set qtd12119, .@quantities[34];
+            set qtd12120, .@quantities[35];
+            set qtd12121, .@quantities[36];
+            set qtd523, .@quantities[37];
+            set qtd715, .@quantities[38];
+            set qtd716, .@quantities[39];
+            set qtd717, .@quantities[40];
+            set qtd12004, .@quantities[41];
+            set qtd12005, .@quantities[42];
+            set qtd12006, .@quantities[43];
+            set qtd12007, .@quantities[44];
+            set qtd12008, .@quantities[45];
+            set qtd12009, .@quantities[46];
+            set qtd12010, .@quantities[47];
+            set qtd12011, .@quantities[48];
+            set qtd12012, .@quantities[49];
+            set qtd12013, .@quantities[50];
+            set qtd12014, .@quantities[51];
+            set qtd12015, .@quantities[52];
+            set qtd1065, .@quantities[53];
+            set qtd7940, .@quantities[54];
+            set qtd6144, .@quantities[55];
+            set qtd11513, .@quantities[56];
+            set qtd18000, .@quantities[57];
+            set qtd18001, .@quantities[58];
+            set qtd18002, .@quantities[59];
+            set qtd18003, .@quantities[60];
+            set qtd18004, .@quantities[61];
+            set qtd6145, .@quantities[62];
+            set qtd12383, .@quantities[63];
+            set qtd6146, .@quantities[64];
+            set qtd6147, .@quantities[65];
+            set qtd970, .@quantities[66];
+            set qtd6210, .@quantities[67];
+            set qtd6211, .@quantities[68];
+            set qtd6212, .@quantities[69];
+            set qtd6213, .@quantities[70];
+            set qtd6214, .@quantities[71];
+            set qtd6215, .@quantities[72];
+            set qtd6216, .@quantities[73];
+            set qtd6217, .@quantities[74];
+            set qtd7137, .@quantities[75];
+            set qtd7138, .@quantities[76];
+            set qtd13265, .@quantities[77];
+            set qtd13266, .@quantities[78];
+            set qtd13267, .@quantities[79];
+            set qtd13268, .@quantities[80];
+            set qtd13277, .@quantities[81];
+            set qtd13280, .@quantities[82];
+            set qtd13281, .@quantities[83];
+            set qtd13282, .@quantities[84];
+            set qtd13283, .@quantities[85];
+            set qtd6128, .@quantities[86];
+            set qtd12717, .@quantities[87];
+            set qtd12718, .@quantities[88];
+            set qtd12719, .@quantities[89];
+            set qtd12720, .@quantities[90];
+            set qtd12721, .@quantities[91];
+            set qtd12722, .@quantities[92];
+            set qtd12723, .@quantities[93];
+            set qtd12724, .@quantities[94];
+            set qtd6120, .@quantities[95];
+            set qtd6123, .@quantities[96];
+            set qtd1025, .@quantities[97];
+            set qtd990, .@quantities[98];
+            set qtd991, .@quantities[99];
+            set qtd992, .@quantities[100];
+            set qtd993, .@quantities[101];
+            set qtd994, .@quantities[102];
+            set qtd995, .@quantities[103];
+            set qtd996, .@quantities[104];
+            set qtd997, .@quantities[105];
+            set qtd6360, .@quantities[106];
+            set qtd6361, .@quantities[107];
+            set qtd6362, .@quantities[108];
+            set qtd6363, .@quantities[109];
+            set qtd714, .@quantities[110];
+            set qtd1010, .@quantities[111];
+            set qtd1011, .@quantities[112];
+            set qtd984, .@quantities[113];
+            set qtd985, .@quantities[114];
+            set qtd612, .@quantities[115];
+            set qtd7054, .@quantities[116];
+            set qtd1002, .@quantities[117];
+            set qtd521, .@quantities[118];
+            set qtd999, .@quantities[119];
+            set qtd757, .@quantities[120];
+            set qtd615, .@quantities[121];
+            set qtd100065, .@quantities[122];
+            set qtd100066, .@quantities[123];
+            set qtd100067, .@quantities[124];
+            set qtd100068, .@quantities[125];
+            set qtd100069, .@quantities[126];
+            set qtd100070, .@quantities[127];
+            set qtd100071, .@quantities[128];
+            set qtd100072, .@quantities[129];
+            set qtd1750, .@quantities[130];
+            set qtd1751, .@quantities[131];
+            set qtd1752, .@quantities[132];
+            set qtd1753, .@quantities[133];
+            set qtd1754, .@quantities[134];
+            set qtd1755, .@quantities[135];
+            set qtd1756, .@quantities[136];
+            set qtd1757, .@quantities[137];
+            set qtd1762, .@quantities[138];
+            set qtd1765, .@quantities[139];
+            set qtd1767, .@quantities[140];
+            set qtd1770, .@quantities[141];
+            set qtd7049, .@quantities[142];
+            dispbottom "Seus stuffs foram salvos. V·, faÁa o que um newbha faz de melhor!";
+            break;
+        
+        PLAT_SKILLS:
+            savepoint "izlude", 128, 105;
+            //inicio do restock
+
+            // Array of item IDs
+            setarray .@item_ids[0], 547, 505, 715, 716, 717, 1025, 645, 656, 657, 525, 506, 1752, 1750, 1751, 1758, 1768, 1769, 1763, 1761, 1759, 1760, 1065;
+            
+            // Array of variables to store item quantities
+            setarray .@quantities[0], qtdcompbranca, qtdpotazul, qtdyellowgem, qtdredgem, qtdbluegem, qtdteia, qtdptconcentra, qtdptdesper, qtdpotfur, qtdpana, qtdpotverde, qtdflechfog, qtdarrow, qtdsilverarrow, qtdstunarrow, qtdsleeparrow, qtdmutearrow, qtdpoisonarrow, qtdcursedarrow, qtdfrozenarrow, qtdflasharrow, qtdtrap;
+
+            // Loop through each item and save the quantity in inventory
+            for (.@i = 0; .@i < getarraysize(.@item_ids); .@i++) {
+                set .@quantities[.@i], countitem(.@item_ids[.@i]);
+            }
+
+            // Assign the quantities back to their respective variables
+            set qtdcompbranca, .@quantities[0];
+            set qtdpotazul, .@quantities[1];
+            set qtdyellowgem, .@quantities[2];
+            set qtdredgem, .@quantities[3];
+            set qtdbluegem, .@quantities[4];
+            set qtdteia, .@quantities[5];
+            set qtdptconcentra, .@quantities[6];
+            set qtdptdesper, .@quantities[7];
+            set qtdpotfur, .@quantities[8];
+            set qtdpana, .@quantities[9];
+            set qtdpotverde, .@quantities[10];
+            set qtdflechfog, .@quantities[11];
+            set qtdarrow, .@quantities[12];
+            set qtdsilverarrow, .@quantities[13];
+            set qtdstunarrow, .@quantities[14];
+            set qtdsleeparrow, .@quantities[15];
+            set qtdmutearrow, .@quantities[16];
+            set qtdpoisonarrow, .@quantities[17];
+            set qtdcursedarrow, .@quantities[18];
+            set qtdfrozenarrow, .@quantities[19];
+            set qtdflasharrow, .@quantities[20];
+            set qtdtrap, .@quantities[21];
+
+	        // Display a message in the user's chat
+	        dispbottom "Your item quantities have been saved successfully.";
+            skill 1,9,0;
+            skill 142,1,SKILL_PERM;
+            switch(BaseClass) {
+                case 0: if (Class !=23) skill 143,1,SKILL_PERM; break;
+                case 1: skill 144,1,SKILL_PERM; skill 145,1,SKILL_PERM; skill 146,1,SKILL_PERM; break;
+                case 2: skill 157,1,SKILL_PERM; break;
+                case 3: skill 147,1,SKILL_PERM; skill 148,1,SKILL_PERM; break;
+                case 4: skill 156,1,SKILL_PERM; break;
+                case 5: skill 153,1,SKILL_PERM; skill 154,1,SKILL_PERM; skill 155,1,SKILL_PERM; break;
+                case 6: skill 149,1,SKILL_PERM; skill 150,1,SKILL_PERM; skill 151,1,SKILL_PERM; skill 152,1,SKILL_PERM; break;
+                default: break;
+            }
+            switch(BaseJob) {
+                case 7: skill 1001,1,SKILL_PERM; break;
+                case 8: skill 1014,1,SKILL_PERM; break;
+                case 9: skill 1006,1,SKILL_PERM; break;
+                case 10: skill 1012,1,SKILL_PERM; skill 1013,1,SKILL_PERM; break;
+                case 11: skill 1009,1,SKILL_PERM; break;
+                case 12: skill 1003,1,SKILL_PERM; skill 1004,1,SKILL_PERM; break;
+                case 14: skill 1002,1,SKILL_PERM; break;
+                case 15: skill 1015,1,SKILL_PERM; skill 1016,1,SKILL_PERM; break;
+                case 16: skill 1007,1,SKILL_PERM; skill 1008,1,SKILL_PERM; skill 1017,1,SKILL_PERM; skill 1018,1,SKILL_PERM; skill 1019,1,SKILL_PERM; break;
+                case 17: skill 1005,1,SKILL_PERM; break;
+                case 19: skill 1010,1,SKILL_PERM; break;
+                case 20: skill 1011,1,SKILL_PERM; break;
+                default: break;
+            }
+        set classe,1;
+        next;
+        mes "[ Himmelmez ]";
+        mes "Congratulations, you just turn one ^ff0000[ "+jobname(Class)+" ]^000000.";
+        next;
+        mes "[ ^cead00Owner^000000 ]";
+        mes "[ ^FF0000Disclaimer to avoid little bitch whining^000000 ]";
+        mes "You received useful gears to save you some time. Make sure to visit the market if you want any different equipaments.";
+	    break;
+    }
+    next;
+finalization:
+    sc_start SC_BLESSING,300000,10; // Cast Blessing level 10 for 600 seconds
+    sc_start SC_INCREASEAGI,300000,10; // Cast Increase Agility level 10 for 600 seconds
+    percentheal 100,100;//obviamente isso precisa ser depois da bless pra nego n ter q falar 2x
+cutin "", 255;
+close;
+}

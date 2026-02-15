@@ -1,0 +1,89 @@
+//===== rAthena Script =======================================
+//= Mapflag: Load Event
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: ========================================= 
+//= Loads events on the map when players enter.
+//===== Additional Comments: ================================= 
+//= 1.0 Initial script.
+//============================================================
+
+// RWC Maps ===============
+2012rwc_01	mapflag	loadevent
+2012rwc_02	mapflag	loadevent
+2012rwc_03	mapflag	loadevent
+2012rwc_04	mapflag	loadevent
+guild_vs1	mapflag	loadevent
+arug_cas02	mapflag	loadevent
+arena1	mapflag	loadevent
+arena2	mapflag	loadevent
+arena3	mapflag	loadevent
+arena4	mapflag	loadevent
+arena5	mapflag	loadevent
+arena6	mapflag	loadevent
+arena7	mapflag	loadevent
+arena8	mapflag	loadevent
+arena9	mapflag	loadevent
+arena10	mapflag	loadevent
+arena11	mapflag	loadevent
+arena12	mapflag	loadevent
+arena13	mapflag	loadevent
+arena14	mapflag	loadevent
+arena15	mapflag	loadevent
+arena16	mapflag	loadevent
+arena17	mapflag	loadevent
+arena18	mapflag	loadevent
+arena19	mapflag	loadevent
+arena20	mapflag	loadevent
+arena21	mapflag	loadevent
+arena22	mapflag	loadevent
+arena23	mapflag	loadevent
+arena24	mapflag	loadevent
+arena25	mapflag	loadevent
+arena26	mapflag	loadevent
+arena27	mapflag	loadevent
+arena28	mapflag	loadevent
+arena29	mapflag	loadevent
+arena30	mapflag	loadevent
+arena31	mapflag	loadevent
+arena32	mapflag	loadevent
+arena33	mapflag	loadevent
+arena34	mapflag	loadevent
+arena35	mapflag	loadevent
+arena36	mapflag	loadevent
+arena37	mapflag	loadevent
+arena38	mapflag	loadevent
+arena39	mapflag	loadevent
+arena40	mapflag	loadevent
+arena41	mapflag	loadevent
+arena42	mapflag	loadevent
+guild_vs2	mapflag	loadevent
+guild_vs3	mapflag	loadevent
+guild_vs4	mapflag	loadevent
+guild_vs5	mapflag	loadevent
+2009rwc_01	mapflag	loadevent
+2009rwc_02	mapflag	loadevent
+2009rwc_03	mapflag	loadevent
+2009rwc_04	mapflag	loadevent
+rwc01	mapflag	loadevent
+rwc02	mapflag	loadevent
+rwc03	mapflag	loadevent
+2008rwc_01	mapflag	loadevent
+2008rwc_02	mapflag	loadevent
+2008rwc_03	mapflag	loadevent
+2008rwc_04	mapflag	loadevent
+kvm	mapflag	loadevent
+flavius	mapflag	loadevent
+bio4	mapflag	loadevent
+1@lab	mapflag	loadevent
+1@dth3	mapflag	loadevent
+1@tnm1	mapflag	loadevent
+1@pump	mapflag	loadevent
+2@pump	mapflag	loadevent
+job_prist	mapflag	loadevent
+ecl_tdun02	mapflag	loadevent
+evt_bomb	mapflag	loadevent 

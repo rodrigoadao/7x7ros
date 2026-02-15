@@ -1,0 +1,43 @@
+//===== Hercules Script ======================================
+//= Stylist
+//===== By: ==================================================
+//= Euphy
+//===== Current Version: =====================================
+//= 1.1
+//===== Description: =========================================
+//= Changes your hair style and hair color.
+//===== Additional Comments: =================================
+//= 1.1 Switched to 'getbattleflag', credits to Saithis. [Euphy]
+//============================================================
+
+izlude,125,148,3	script	Stylist#custom_stylist	503,{ //TAVA 170 180
+
+	setarray .@styles[1],getbattleflag("max_hair_style"),getbattleflag("max_hair_color");
+	setarray .@Look[1],1,6;
+	set .@s, select(" ~ Exit: ~ Hairstyle: ~ Hair color");
+	
+	// Se escolher Exit (opção 1), encerra o diálogo
+	if (.@s == 1) {
+		close;
+	}
+	
+	// Ajusta o índice para compensar a opção Exit
+	set .@s, .@s - 1;
+	
+	set .@Revert, getlook(.@Look[.@s]);
+	set .@style,1;
+	while(1) {
+		setlook .@Look[.@s], .@style;
+		message strcharinfo(0),"This is style #"+.@style+".";
+		set .@menu$, " ~ Next (^0055FF"+((.@style!=.@styles[.@s])?.@style+1:1)+"^000000): ~ Previous (^0055FF"+((.@style!=1)?.@style-1:.@styles[.@s])+"^000000): ~ Jump to...: ~ Revert to original (^0055FF"+.@Revert+"^000000)";
+		switch(select(.@menu$)) {
+			case 1: set .@style, ((.@style!=.@styles[.@s])?.@style+1:1); break;
+			case 2: set .@style, ((.@style!=1)?.@style-1:.@styles[.@s]); break;
+			case 3: message strcharinfo(0),"Choose a style between 1 - "+.@styles[.@s]+".";
+				input .@style,0,.@styles[.@s];
+				if (!.@style) set .@style, rand(1,.@styles[.@s]);
+				break;
+			case 4: set .@style, .@Revert; setlook .@Look[.@s], .@Revert; break;
+		}
+	}
+}

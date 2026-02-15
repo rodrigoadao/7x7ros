@@ -1,0 +1,201 @@
+izlude,120,115,4	script	Job Master	650,{
+if(Class >= 1) {
+close;
+}
+mes	"[ ^0000FFJob Master^000000 ]";
+mes	"wWelcome ^ff0000"+strcharinfo(0)+"^000000. Please select the job you wish to change into!";
+switch(select("Lord Knight:High Wizard:Sniper:High Priest:Whitesmith:Assassin Cross:Paladin:Scholar:Clown/Gypsy:Champion:Creator:Stalker")) {
+
+case 1:
+set .job,4008; // lk
+goto L_RWCROClass;
+break;
+
+case 2:
+set .job,4010; // hw
+getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 feather beret
+getitem2 2285, 1, 1, 4, 0, 0, 0, 0, 0; // +4 aoa
+getitem2 5362, 1, 1, 0, 0, 0, 0, 0, 0; // ninja scroll
+getitem2 5379, 1, 1, 4, 0, 4412, 0, 0, 0; // +4 ballon isilla
+getitem2 2372, 1, 1, 4, 0, 4003, 0, 0, 0; // +4 mage coat pupa
+getitem2 1208, 1, 1, 7, 0, 4004, 4004, 4004, 4004; // +7 mg 4drops
+getitem2 2131, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 magic bible thara 
+getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 undershirt raydric
+getitem2 2422, 1, 1, 4, 0, 4381, 0, 0, 0; // +4 high fashion sandls gferus
+getitem2 2607, 2, 1, 0, 0, 4064, 0, 0, 0; // 2x clip zerom
+goto L_RWCROClassNERF;
+break;
+
+case 3:
+set .job,4012; // sniper
+goto L_RWCROClassNERF;
+break;
+
+case 4:
+set .job,4009; // hp
+getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 feather beret
+getitem2 5311, 1, 1, 4, 0, 4127, 0, 0, 0; // +4 // gigant hibiscus nightmare
+getitem2 2326, 1, 1, 4, 0, 4054, 0, 0, 0; // +4 saint robe angeling
+getitem2 1602, 1, 1, 7, 0, 4006, 4006, 4006, 4006; // +7 rod 4lunatic
+getitem2 2104, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 buckler thara
+getitem2 2102, 1, 1, 4, 0, 4414, 0, 0, 0; // +4 guard seeker
+getitem2 2422, 1, 1, 4, 0, 4381, 0, 0, 0; // +4 high fashion sandls gferus
+getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 undershirt raydric
+getitem2 2608, 2, 1, 0, 0, 0, 0, 0, 0; // unsloted rosary
+goto L_RWCROClassNERF;
+break;
+
+case 5:
+//set .job,4011; // ws
+//goto L_RWCROClass;
+break;
+
+case 6:
+set .job,4013; // sinx
+goto L_RWCROClass;
+break;
+
+case 7:
+set .job,4015; // paladin
+getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 feather beret
+getitem2 2285, 1, 1, 4, 0, 0, 0, 0, 0; // +4 aoa
+getitem2 5314, 1, 1, 0, 0, 0, 0, 0, 0; // hockey mask
+getitem2 1108, 1, 1, 7, 0, 4035, 4035, 4092, 4092; // +7 blade 2hydra 2sw
+getitem2 13405, 1, 1, 4, 0, 4004, 4004, 0, 0; // +4 curved sword 2drops
+getitem2 1208, 1, 1, 7, 0, 4002, 4002, 4002, 4002; // +7 mg 4fabre
+getitem2 2320, 1, 1, 4, 0, 4031, 0, 0, 0; // +4 formal suit pecopeco
+getitem2 2130, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 cross shield thara
+getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 undershirt raydric
+getitem2 2404, 1, 1, 4, 0, 4381, 0, 0, 0; // +4 shoes green ferus
+getitem2 2607, 2, 1, 0, 0, 4064, 0, 0, 0; // 2x clip zerom
+goto L_RWCROClass;
+break;
+
+case 8:
+set .job,4017; // prof scholar
+getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 feather beret
+getitem2 2285, 1, 1, 4, 0, 0, 0, 0, 0; // +4 aoa
+getitem2 2372, 1, 1, 4, 0, 4031, 0, 0, 0; // +4 mage coat pecopeco
+getitem2 1208, 1, 1, 7, 0, 4004, 4004, 4004, 4004; // +7 mg 4drops
+getitem2 2131, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 magic bible thara
+getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 undershirt raydric
+getitem2 2422, 1, 1, 4, 0, 4381, 0, 0, 0; // +4 high fashion sandls gferus
+getitem2 2607, 2, 1, 0, 0, 4064, 0, 0, 0; // 2x clip zerom
+goto L_RWCROClass;
+break;
+
+case 9:
+set .job,4020; // clown
+getitem2 5364, 1, 1, 4, 0, 4412, 0, 0, 0; // +4 evil snake lord isilla
+getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 feather beret
+getitem2 2296, 1, 1, 0, 0, 0, 0, 0, 0; // binoculars
+getitem2 2331, 1, 1, 4, 0, 4023, 0, 0, 0; // +4 tights baby desert wolf
+getitem2 1902, 1, 1, 4, 0, 4004, 4004, 4004, 4004; // +4 violin 4drops
+getitem2 1208, 1, 1, 7, 0, 4002, 4002, 4002, 4002; // +7 mg 4fabre
+getitem2 2104, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 buckler thara
+getitem2 2102, 1, 1, 4, 0, 4414, 0, 0, 0; // +4 guard seeker
+getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 undershirt raydric
+getitem2 2404, 1, 1, 4, 0, 4381, 0, 0, 0; // +4 shoes green ferus
+getitem2 2602, 2, 1, 0, 0, 0, 0, 0, 0; // 2x unsloted earring
+goto L_RWCROClass;
+break;
+
+case 10:
+set .job,4016; // champ
+getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 feather beret
+getitem2 5081, 1, 1, 4, 0, 0, 0, 0, 0; // +4 mistress crown
+getitem2 5311, 1, 1, 4, 0, 4379, 0, 0, 0; // +4 gigant hibiscus blue acidus
+getitem2 2285, 1, 1, 4, 0, 0, 0, 0, 0; // +4 aoa
+getitem2 5314, 1, 1, 0, 0, 0, 0, 0, 0; // hockey mask
+getitem2 2326, 1, 1, 4, 0, 4014, 0, 0, 0; // +4 saint robe roda frog
+getitem2 1521, 1, 1, 6, 0, 4035, 4035, 4092, 0; // +6 mp 2hydra 1sw
+getitem2 2104, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 buckler thara
+getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 undershirt raydric
+getitem2 2422, 1, 1, 4, 0, 4100, 0, 0, 0; // +4 high fashion sandls sohee
+getitem2 2607, 2, 1, 0, 0, 4079, 0, 0, 0; // 2x clip mantis
+goto L_RWCROClassNERF;
+break;
+
+case 11:
+set .job,4019; // chem
+goto L_RWCROClass;
+break;
+
+case 12:
+set .job,4018; // stalker
+getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 feather beret
+getitem2 5379, 1, 1, 4, 0, 4412, 0, 0, 0; // +4 ballon isilla
+getitem2 5362, 1, 1, 0, 0, 0, 0, 0, 0; // ninja scroll
+getitem2 2336, 1, 1, 4, 0, 4409, 0, 0, 0; // +4 thief clothes agav
+getitem2 1208, 1, 1, 7, 0, 4004, 4004, 4004, 4004; // +7 mg 4drops
+getitem2 2104, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 buckler thara
+getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 undershirt raydric
+getitem2 2404, 1, 1, 4, 0, 4381, 0, 0, 0; // +4 shoes green ferus
+getitem2 2607, 2, 1, 0, 0, 4064, 0, 0, 0; // 2x clip zerom
+goto L_RWCROClass;
+break;
+
+L_RWCROClass:
+jobchange 0; 
+resetlvl(1);
+jobchange .job;
+set BaseLevel, 90;
+set JobLevel, 60;
+set SkillPoint, 108;
+set StatusPoint, 1132;
+goto PLAT_SKILLS;
+
+L_RWCROClassNERF:
+jobchange 0; 
+resetlvl(1);
+jobchange .job;
+set BaseLevel, 85;
+set JobLevel, 60;
+resetstatus;
+resetskill;
+set SkillPoint, 108;
+set StatusPoint, 1032;
+resetstatus;
+resetskill;
+goto PLAT_SKILLS;
+
+PLAT_SKILLS:
+savepoint "izlude", 128, 105;
+skill 1,9,0;
+	switch(BaseClass) {
+		case 0: if (Class !=23) skill 143,1,0; break;
+		case 1: skill 144,1,0; skill 145,1,0; skill 146,1,0; break;
+		case 2: skill 157,1,0; break;
+		case 3: skill 147,1,0; skill 148,1,0; break;
+		case 4: skill 156,1,0; break;
+		case 5: skill 153,1,0; skill 154,1,0; skill 155,1,0; break;
+		case 6: skill 149,1,0; skill 150,1,0; skill 151,1,0; skill 152,1,0; break;
+		default: break;
+	}
+	switch(BaseJob) {
+		case 7: skill 1001,1,0; break;
+		case 8: skill 1014,1,0; break;
+		case 9: skill 1006,1,0; break;
+		case 10: skill 1012,1,0; skill 1013,1,0; break;
+		case 11: skill 1009,1,0; break;
+		case 12: skill 1003,1,0; skill 1004,1,0; break;
+		case 14: skill 1002,1,0; break;
+		case 15: skill 1015,1,0; skill 1016,1,0; break;
+		case 16: skill 1007,1,0; skill 1008,1,0; skill 1017,1,0; skill 1018,1,0; skill 1019,1,0; break;
+		case 17: skill 1005,1,0; break;
+		case 19: skill 1010,1,0; break;
+		case 20: skill 1011,1,0; break;
+		default: break;
+	}
+set classe,1;
+next;
+mes "[ ^0000FFJob Master^000000 ]";
+mes "Congratulations, you just turn one ^ff0000[ "+jobname(Class)+" ]^000000.";
+next;
+mes "[ ^cead00Owner^000000 ]";
+mes "[ ^FF0000Disclaimer to avoid little bitch whining^000000 ]";
+mes "You received useful gears to save you some time. Make sure to visit the market if you want any different equipaments.";
+// warp "izlude",128,105; pqp praq namoralzinha praq praq praq
+close;
+}
+}

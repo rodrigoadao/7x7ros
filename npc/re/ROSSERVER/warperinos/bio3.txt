@@ -1,0 +1,7 @@
+//izlude,158,98,0 warp    autismo3    0,0,izlude,162,87
+//izlude,162,87,0 warp autismo4 0,0,izlude,159,98
+
+//izlude,162,87,0 warp    autismo1    0,0,lhz_dun03,139,137
+//lhz_dun03,139,137,0	warp	autismo2	1,1,izlude,162,87
+
+izlude,109,151,0	warp	iz01	3,3,izlude_in,65,87

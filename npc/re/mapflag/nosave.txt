@@ -1,0 +1,137 @@
+//===== rAthena Script =======================================
+//= Mapflag: Disable auto-save.
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 1.9
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: ========================================= 
+//= Characters logging out on the specified map will be warped
+//= to the map specified in the last field, or "SavePoint".
+//===== Additional Comments: ================================= 
+//= 1.7 Updated. [Lupus]
+//= 1.8 Updated. [L0ne_W0lf]
+//= 1.9 Renewal split. [Euphy]
+//============================================================
+
+// Job Quests ====================
+//job_thief1	mapflag	nosave	SavePoint
+pvp_y_1-1	mapflag	nosave	SavePoint
+pvp_y_1-2	mapflag	nosave	SavePoint
+2012rwc_01	mapflag	nosave	SavePoint
+2012rwc_02	mapflag	nosave	SavePoint
+2012rwc_03	mapflag	nosave	SavePoint
+2012rwc_04	mapflag	nosave	SavePoint
+guild_vs1	mapflag	nosave
+arug_cas02	mapflag	nosave
+arena1	mapflag	nosave
+arena2	mapflag	nosave
+arena3	mapflag	nosave
+arena4	mapflag	nosave
+arena5	mapflag	nosave
+arena6	mapflag	nosave
+arena7	mapflag	nosave
+arena8	mapflag	nosave
+arena9	mapflag	nosave
+arena10	mapflag	nosave
+arena11	mapflag	nosave
+arena12	mapflag	nosave
+arena13	mapflag	nosave
+arena14	mapflag	nosave
+arena15	mapflag	nosave
+arena16	mapflag	nosave
+arena17	mapflag	nosave
+arena18	mapflag	nosave
+arena19	mapflag	nosave
+arena20	mapflag	nosave
+arena21	mapflag	nosave
+arena22	mapflag	nosave
+arena23	mapflag	nosave
+arena24	mapflag	nosave
+arena25	mapflag	nosave
+arena26	mapflag	nosave
+arena27	mapflag	nosave
+arena28	mapflag	nosave
+arena29	mapflag	nosave
+arena30	mapflag	nosave
+arena31	mapflag	nosave
+arena32	mapflag	nosave
+arena33	mapflag	nosave
+arena34	mapflag	nosave
+arena35	mapflag	nosave
+arena36	mapflag	nosave
+arena37	mapflag	nosave
+arena38	mapflag	nosave
+arena39	mapflag	nosave
+arena40	mapflag	nosave
+arena41	mapflag	nosave
+arena42	mapflag	nosave
+2009rwc_01	mapflag	nosave	SavePoint
+2009rwc_02	mapflag	nosave	SavePoint
+2009rwc_03	mapflag	nosave	SavePoint
+2009rwc_04	mapflag	nosave	SavePoint
+quiz_02	mapflag	nosave	SavePoint
+rwc01	mapflag	nosave	SavePoint
+rwc02	mapflag	nosave	SavePoint
+rwc03	mapflag	nosave	SavePoint
+2008rwc_01	mapflag	nosave	SavePoint
+2008rwc_02	mapflag	nosave	SavePoint
+2008rwc_03	mapflag	nosave	SavePoint
+2008rwc_04	mapflag	nosave	SavePoint
+kvm	mapflag	nosave	SavePoint
+flavius	mapflag	nosave	SavePoint
+bio4	mapflag	nosave	SavePoint
+1@lab	mapflag	nosave	SavePoint
+1@dth3	mapflag	nosave	SavePoint
+1@tnm1	mapflag	nosave	SavePoint
+1@pump	mapflag	nosave	SavePoint
+2@pump	mapflag	nosave	SavePoint
+job_prist	mapflag	nosave	SavePoint
+ecl_tdun02	mapflag	nosave	SavePoint
+evt_bomb	mapflag	nosave	SavePoint
+arug_cas01	mapflag	nosave
+arug_cas03	mapflag	nosave
+arug_cas04	mapflag	nosave
+arug_cas05	mapflag	nosave
+payg_cas01	mapflag	nosave
+payg_cas02	mapflag	nosave
+payg_cas03	mapflag	nosave
+payg_cas04	mapflag	nosave
+payg_cas05	mapflag	nosave
+gefg_cas03	mapflag	nosave
+gefg_cas04	mapflag	nosave
+gefg_cas02	mapflag	nosave
+gefg_cas01	mapflag	nosave
+gefg_cas05	mapflag	nosave
+schg_cas01	mapflag	nosave
+schg_cas02	mapflag	nosave
+schg_cas03	mapflag	nosave
+schg_cas04	mapflag	nosave
+schg_cas05	mapflag	nosave
+aldeg_cas01	mapflag	nosave
+aldeg_cas02	mapflag	nosave
+aldeg_cas03	mapflag	nosave
+aldeg_cas04	mapflag	nosave
+aldeg_cas05	mapflag	nosave
+prtg_cas01	mapflag	nosave
+prtg_cas02	mapflag	nosave
+prtg_cas03	mapflag	nosave
+prtg_cas04	mapflag	nosave
+prtg_cas05	mapflag	nosave
+//
+ros2024	mapflag	nosave
+ros2025_1	mapflag	nosave
+ros2025_2	mapflag	nosave
+ros2025_3	mapflag	nosave
+ros2025_4	mapflag	nosave
+ros2025_5	mapflag	nosave
+ros2025_6	mapflag	nosave
+//
+v4arena1	mapflag	nosave
+v4arena2	mapflag	nosave
+v4arena3	mapflag	nosave
+v4arena4	mapflag	nosave
+v4arena5	mapflag	nosave
+v4arena6	mapflag	nosave
+v4arena7	mapflag	nosave

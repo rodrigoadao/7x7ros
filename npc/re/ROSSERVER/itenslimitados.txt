@@ -1,0 +1,86 @@
+izlude,122,124,4	script	Itens Limitados	885,{
+	mes "[Itens Limitados]";
+	mes "Eu lhe doarei itens especiais que só poderão ser obtidos novamente após um certo tempo. Você só pode ter um certo número destes itens no inventário. O timer é account bounded.";
+	next;
+	mes "[Itens Limitados]";
+	mes "Atente-se que cada item só é concedido caso seja pertinente para sua classe.";
+	next;
+	switch(select("Fechar:EDP:AD")) {
+	case 1:
+		mes "[Itens Limitados]";
+		mes "Ótima escolha, vá jogar de classes de gente.";
+		close;
+	case 2:
+		if (Class != 4013) {
+			mes "[Itens Limitados]";
+			mes "Volte quando estiver menos bêbado: para receber edp você precisa ser SinX~*.";
+			close;
+		}
+		if (gettimetick(2) - #last_edp < 1800) {
+			mes "[Itens Limitados]";
+			mes "Infelizmente você não está no mbRO, portanto, você só pode ter 3 edps a cada 30 minutos. Xora newbha.";
+			close;
+		}
+		set .@have, countitem(678);
+		set .@give, 3 - .@have;
+		if (.@give <= 0) {
+			mes "[Itens Limitados]";
+			mes "Você já tem 3 edps: aqui não é aquele private que roda em aegis e dá pra dupar itens.";
+			close;
+		}
+		if (checkweight(678,.@give) == 0) {
+			mes "[Itens Limitados]";
+			mes "Você está com inchaço nível 37 (eufemismo para obesidade mórbida). Volte quando estiver mais leve.";
+			close;
+		}
+		getitem 678, .@give;
+		set #last_edp, gettimetick(2);
+		mes "[Itens Limitados]";
+		mes "Aqui estão suas edps, não esqueça de fazer um vídeo mostrando os coitados rodarem na SB: coloque uma música pica de tiktok.";
+		mes "E me manda um pix 7x7rwc@gmail.com";
+		close;
+	case 3:
+		if (Class != 4019) {
+			mes "[Itens Limitados]";
+			mes "Mermão, AD é só pra creator.";
+			close;
+		}
+		if (gettimetick(2) - #last_ad < 1800) {
+			mes "[Itens Limitados]";
+			mes "Você não está no xRO jogando pela beastmode, as ADs aqui só são obtíveis a cada 30 minutos.";
+			close;
+		}
+		set .@have1, countitem(7136);
+		set .@have2, countitem(7135);
+		set .@give1, 5 - .@have1;
+		set .@give2, 5 - .@have2;
+		
+		if (.@give1 <= 0 && .@give2 <= 0) {
+			mes "[Itens Limitados]";
+			mes "5 ADs parece pouco, né, seu merdinha? Pois é, vai ter que pensar pra usar.";
+			close;
+		}
+		
+		if (checkweight(7136,.@give1) == 0 || checkweight(7135,.@give2) == 0) {
+			mes "[Itens Limitados]";
+			mes "Você está com inchaço nível 37 (eufemismo para obesidade mórbida). Volte quando estiver mais leve.";
+			close;
+		}
+		
+		if (.@give1 > 0) {
+			getitem 7136, .@give1;
+			mes "[Itens Limitados]";
+			mes "Aqui estão os" + .@give1 + " Acid Bottles.";
+			mes "E me manda um pix 7x7rwc@gmail.com";
+		}
+		if (.@give2 > 0) {
+			getitem 7135, .@give2;
+			mes "[Itens Limitados]";
+			mes "Aqui estão os" + .@give2 + " Fire Bottles.";
+			mes "E me manda um pix 7x7rwc@gmail.com";
+		}
+		
+		set #last_ad, gettimetick(2);
+		close;
+}
+}

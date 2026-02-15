@@ -1,0 +1,763 @@
+// ==============================================================================
+// Arena 7x7 - Sistema de Ranking Integrado
+// Criado por Moskaum Y (2025) - Sistema de tracking detalhado
+// ==============================================================================
+// Este arquivo adiciona integracao do sistema de ranking Arena 7x7
+// ao NPC existente da Arena ROS.
+// ==============================================================================
+
+// ============================================================================
+// Variaveis Globais do Sistema de Ranking
+// ============================================================================
+//   $@arena7x7_match_id - ID da partida atual
+//   $@arena7x7_blue_guild$ - Nome da guild do time azul
+//   $@arena7x7_red_guild$ - Nome da guild do time vermelho
+// ============================================================================
+
+// ============================================================================
+// Hook para Inicio de Partida - Chamar de OnStart
+// ============================================================================
+-	script	Arena7x7_Ranking_Hook	-1,{
+	end;
+
+// Chamado quando uma partida inicia
+OnMatchStart:
+	// Buscar o proximo match_id do banco de dados
+	query_sql("SELECT COALESCE(MAX(`match_id`), 0) + 1 FROM `arena7x7_matches`", .@next_match_id);
+	
+	// Criar partida no sistema de ranking
+	set $@arena7x7_match_id, arena7x7_create("ros2024");
+	debugmes "[Arena7x7] Match ID criado: " + $@arena7x7_match_id;
+	
+	// if ($@arena7x7_match_id == 0) {
+	// 	//debugmes "[Arena7x7] ERRO: Falha ao criar partida no sistema de ranking";
+	// 	end;
+	// }
+	
+	//debugmes "[Arena7x7] Partida " + $@arena7x7_match_id + " criada";
+	
+	// Pegar informacoes das guilds dos times
+	set $@arena7x7_blue_guild$, "";
+	set $@arena7x7_red_guild$, "";
+	
+	// Adicionar jogadores do Time Azul e pegar nome da guild
+	set .@bg_id, $@KvM80BG_id1;
+	set .@count, bg_get_data(.@bg_id, 0);
+	
+	for (set .@i, 0; .@i < .@count; set .@i, .@i + 1) {
+		// Usar mapreg para pegar os char_ids
+		bg_get_data(.@bg_id, 1);  // Popula $@arenamembers
+		set .@aid, $@arenamembers[.@i];
+		if (.@aid > 0) {
+			if (attachrid(.@aid)) {
+				// Pegar nome da guild se ainda nao temos
+				if ($@arena7x7_blue_guild$ == "" && getcharid(2) > 0) {
+					set $@arena7x7_blue_guild$, getguildname(getcharid(2));
+				}
+				
+				// if (arena7x7_join($@arena7x7_match_id, 1, (.@i == 0 ? 1 : 0))) {
+				// 	debugmes "[Arena7x7] Jogador " + strcharinfo(0) + " adicionado ao Time Azul";
+				// }
+				detachrid;
+			}
+		}
+	}
+	
+	// Adicionar jogadores do Time Vermelho e pegar nome da guild
+	set .@bg_id, $@KvM80BG_id2;
+	set .@count, bg_get_data(.@bg_id, 0);
+	
+	for (set .@i, 0; .@i < .@count; set .@i, .@i + 1) {
+		bg_get_data(.@bg_id, 1);  // Popula $@arenamembers
+		set .@aid, $@arenamembers[.@i];
+		if (.@aid > 0) {
+			if (attachrid(.@aid)) {
+				// Pegar nome da guild se ainda nao temos
+				if ($@arena7x7_red_guild$ == "" && getcharid(2) > 0) {
+					set $@arena7x7_red_guild$, getguildname(getcharid(2));
+				}
+				
+				// if (arena7x7_join($@arena7x7_match_id, 2, (.@i == 0 ? 1 : 0))) {
+				// 	debugmes "[Arena7x7] Jogador " + strcharinfo(0) + " adicionado ao Time Vermelho";
+				// }
+				detachrid;
+			}
+		}
+	}
+	
+	// Iniciar a partida no sistema de ranking
+	arena7x7_start($@arena7x7_match_id);
+	
+	debugmes "[Arena7x7] Antes do anuncio - Match ID: " + $@arena7x7_match_id + " | Blue: " + $@arena7x7_blue_guild$ + " | Red: " + $@arena7x7_red_guild$;
+	
+	// Anuncio GLOBAL do inicio da partida
+	if ($@arena7x7_blue_guild$ != "" && $@arena7x7_red_guild$ != "") {
+		announce "Partida " + $@arena7x7_blue_guild$ + " vs " + $@arena7x7_red_guild$ + " (" + $@arena7x7_match_id + ") iniciada",bc_all,0xFFD700;
+	} else {
+		set .@mid, $@arena7x7_match_id;
+		announce "Partida iniciada (" + .@mid + ")",bc_all,0xFFD700;
+	}
+	
+	end;
+// Chamado quando Time Azul vence
+OnBlueWin:
+	if ($@arena7x7_match_id == 0) end;
+	
+	set .@blue_score, getvariableofnpc(.Guillaume_Score, "KvM80_BG");
+	set .@red_score, getvariableofnpc(.Croix_Score, "KvM80_BG");
+	
+	arena7x7_finish($@arena7x7_match_id, 1, .@blue_score, .@red_score);
+	
+	// Recuperar nomes das guilds do sistema C++
+	set .@blue_guild$, arena7x7_getguildname($@arena7x7_match_id, 1);
+	set .@red_guild$, arena7x7_getguildname($@arena7x7_match_id, 2);
+	if (.@blue_guild$ == "") set .@blue_guild$, "BLUE TEAM";
+	if (.@red_guild$ == "") set .@red_guild$, "RED TEAM";
+	
+	// Anuncio GLOBAL do fim da partida (compacto)
+	//announce "aYt " + .@blue_guild$ + " venceu (" + .@blue_score + "x" + .@red_score + ") a partida #" + .@match_id + " na arena ros2024",bc_all,0x00BFFF;
+	announce .@blue_guild$ + " venceu (" + .@blue_score + "x" + .@red_score + ") a partida " + .@match_id + " na arena ros2024",bc_all,0x00BFFF;
+
+	// Enviar estatisticas para os jogadores
+	debugmes "[OnBlueWin] Chamando F_SendMatchStats com match_id: " + $@arena7x7_match_id;
+	callfunc("F_SendMatchStats", $@arena7x7_match_id, 1);
+	debugmes "[OnBlueWin] F_SendMatchStats retornou";
+	
+	//debugmes "[Arena7x7] Partida " + $@arena7x7_match_id + " finalizada - Vitoria Time Azul";
+	set $@arena7x7_match_id, 0;
+	set $@arena7x7_blue_guild$, "";
+	set $@arena7x7_red_guild$, "";
+	end;
+
+// Chamado quando Time Vermelho vence
+OnRedWin:
+	if ($@arena7x7_match_id == 0) end;
+	
+	set .@blue_score, getvariableofnpc(.Guillaume_Score, "KvM80_BG");
+	set .@red_score, getvariableofnpc(.Croix_Score, "KvM80_BG");
+	
+	arena7x7_finish($@arena7x7_match_id, 2, .@blue_score, .@red_score);
+	
+	// Recuperar nomes das guilds do sistema C++
+	set .@blue_guild$, arena7x7_getguildname($@arena7x7_match_id, 1);
+	set .@red_guild$, arena7x7_getguildname($@arena7x7_match_id, 2);
+	if (.@blue_guild$ == "") set .@blue_guild$, "BLUE TEAM";
+	if (.@red_guild$ == "") set .@red_guild$, "RED TEAM";
+	
+	// Anuncio GLOBAL do fim da partida (compacto)
+	//announce "aYt " + .@red_guild$ + " venceu (" + .@red_score + "x" + .@blue_score + ") a partida #" + .@match_id + " na arena ros2024",bc_all,0xFF6347;
+	announce .@red_guild$ + " venceu (" + .@red_score + "x" + .@blue_score + ") a partida " + .@match_id + " na arena ros2024",bc_all,0xFF6347;
+
+	// Enviar estatisticas para os jogadores
+	callfunc("F_SendMatchStats", $@arena7x7_match_id, 2);
+	
+	//debugmes "[Arena7x7] Partida " + $@arena7x7_match_id + " finalizada - Vitoria Time Vermelho";
+	set $@arena7x7_match_id, 0;
+	set $@arena7x7_blue_guild$, "";
+	set $@arena7x7_red_guild$, "";
+	end;
+
+// Chamado quando ha empate
+OnDraw:
+	if ($@arena7x7_match_id == 0) end;
+	
+	set .@blue_score, getvariableofnpc(.Guillaume_Score, "KvM80_BG");
+	set .@red_score, getvariableofnpc(.Croix_Score, "KvM80_BG");
+	
+	arena7x7_finish($@arena7x7_match_id, 0, .@blue_score, .@red_score);
+	
+	// Anuncio GLOBAL do fim da partida (compacto)
+	//announce "aYt Empate (" + .@blue_score + "x" + .@red_score + ") na partida #" + .@match_id + " na arena ros2024",bc_all,0xFFFF00;
+	announce "Empate (" + .@blue_score + "x" + .@red_score + ") na partida " + .@match_id + " na arena ros2024",bc_all,0xFFFF00;
+
+	// Enviar estatisticas para os jogadores
+	callfunc("F_SendMatchStats", $@arena7x7_match_id, 0);
+	
+	//debugmes "[Arena7x7] Partida " + $@arena7x7_match_id + " finalizada - Empate";
+	set $@arena7x7_match_id, 0;
+	set $@arena7x7_blue_guild$, "";
+	set $@arena7x7_red_guild$, "";
+	end;
+
+// Chamado quando a partida e cancelada
+OnMatchCancel:
+	if ($@arena7x7_match_id == 0) end;
+	
+	arena7x7_cancel($@arena7x7_match_id);
+	
+	announce "ARENA 7x7 - PARTIDA " + $@arena7x7_match_id + " CANCELADA",bc_all,0xFF0000;
+	
+	//debugmes "[Arena7x7] Partida " + $@arena7x7_match_id + " cancelada";
+	set $@arena7x7_match_id, 0;
+	set $@arena7x7_blue_guild$, "";
+	set $@arena7x7_red_guild$, "";
+	end;
+
+// Chamado quando um jogador sai (desertor)
+OnPlayerDeserter:
+	if ($@arena7x7_match_id == 0) end;
+	
+	arena7x7_leave(1); // 1 = desertor
+	end;
+}
+
+// ============================================================================
+// Funcao para enviar estatisticas da partida para os jogadores
+// ============================================================================
+function	script	F_SendMatchStats	{
+	set .@match_id, getarg(0);
+	set .@winner_team, getarg(1);
+	
+	debugmes "[F_SendMatchStats] INICIO - match_id: " + .@match_id + " | winner: " + .@winner_team;  // 0=empate, 1=blue, 2=red
+	
+	// Buscar nomes das guilds do sistema C++
+	set .@blue_guild$, arena7x7_getguildname(.@match_id, 1);
+	set .@red_guild$, arena7x7_getguildname(.@match_id, 2);
+	if (.@blue_guild$ == "") set .@blue_guild$, "BLUE TEAM";
+	if (.@red_guild$ == "") set .@red_guild$, "RED TEAM";
+	
+	// Buscar guild_ids dos times
+	set .@blue_guild_id, 0;
+	set .@red_guild_id, 0;
+	
+	// Buscar estatisticas de todos os jogadores da partida (com classe)
+	query_sql("SELECT mp.`char_id`, mp.`char_name`, mp.`team`, " +
+		"COALESCE(ms.`kills`, 0), COALESCE(ms.`deaths`, 0), COALESCE(ms.`assists`, 0), " +
+		"COALESCE(ms.`damage_done`, 0), COALESCE(ms.`damage_received`, 0), " +
+		"c.`guild_id`, mp.`job_class` " +
+		"FROM `arena7x7_match_players` mp " +
+		"LEFT JOIN `arena7x7_match_stats` ms ON mp.`match_id` = ms.`match_id` AND mp.`char_id` = ms.`char_id` " +
+		"LEFT JOIN `char` c ON mp.`char_id` = c.`char_id` " +
+		"WHERE mp.`match_id` = " + .@match_id + " " +
+		"ORDER BY mp.`team`, ms.`kills` DESC",
+		.@char_ids, .@names$, .@teams, .@kills, .@deaths, .@assists, .@dmg_done, .@dmg_recv, .@guild_ids, .@job_classes);
+	
+	// Pegar os guild_ids de cada time
+	for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+		if (.@teams[.@i] == 1 && .@blue_guild_id == 0 && .@guild_ids[.@i] > 0) {
+			set .@blue_guild_id, .@guild_ids[.@i];
+		} else if (.@teams[.@i] == 2 && .@red_guild_id == 0 && .@guild_ids[.@i] > 0) {
+			set .@red_guild_id, .@guild_ids[.@i];
+		}
+	}
+	
+	// ===============================================================
+	// ENVIAR ESTATISTICAS NO GUILD CHAT
+	// ===============================================================
+	
+	// Mensagem de resultado
+	if (.@winner_team == 1) {
+		set .@result_msg$, "VITORIA! Partida " + .@match_id + " encerrada!";
+		set .@loser_msg$, "DERROTA! Partida " + .@match_id + " encerrada!";
+	} else if (.@winner_team == 2) {
+		set .@result_msg$, "DERROTA! Partida " + .@match_id + " encerrada!";
+		set .@loser_msg$, "VITORIA! Partida " + .@match_id + " encerrada!";
+	} else {
+		set .@result_msg$, "EMPATE! Partida " + .@match_id + " encerrada!";
+		set .@loser_msg$, "EMPATE! Partida " + .@match_id + " encerrada!";
+	}
+	
+	// Enviar para BLUE GUILD
+	if (.@blue_guild_id > 0) {
+		guildmes(.@blue_guild_id, "========================================");
+		
+		if (.@winner_team == 1) {
+			guildmes(.@blue_guild_id, "[VITORIA] " + .@result_msg$);
+		} else if (.@winner_team == 2) {
+			guildmes(.@blue_guild_id, "[DERROTA] " + .@loser_msg$);
+		} else {
+			guildmes(.@blue_guild_id, "[EMPATE] " + .@result_msg$);
+		}
+		
+		guildmes(.@blue_guild_id, "---- NOSSO TIME (BLUE) ----");
+		
+		for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+			if (.@teams[.@i] == 1) {
+				set .@class_name$, callfunc("F_GetClassName", .@job_classes[.@i]);
+				guildmes(.@blue_guild_id, .@names$[.@i] + " (" + .@class_name$ + "): " + .@kills[.@i] + "K/" + .@deaths[.@i] + "D/0A | DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i]);
+			}
+		}
+		
+		guildmes(.@blue_guild_id, "---- TIME ADVERSARIO (RED) ----");
+		
+		for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+			if (.@teams[.@i] == 2) {
+				set .@class_name$, callfunc("F_GetClassName", .@job_classes[.@i]);
+				guildmes(.@blue_guild_id, .@names$[.@i] + " (" + .@class_name$ + "): " + .@kills[.@i] + "K/" + .@deaths[.@i] + "D/0A | DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i]);
+			}
+		}
+		
+		guildmes(.@blue_guild_id, "========================================");
+	}
+	
+	// Enviar para RED GUILD
+	if (.@red_guild_id > 0) {
+		guildmes(.@red_guild_id, "========================================");
+		
+		if (.@winner_team == 2) {
+			guildmes(.@red_guild_id, "[VITORIA] Partida " + .@match_id + " encerrada!");
+		} else if (.@winner_team == 1) {
+			guildmes(.@red_guild_id, "[DERROTA] Partida " + .@match_id + " encerrada!");
+		} else {
+			guildmes(.@red_guild_id, "[EMPATE] Partida " + .@match_id + " encerrada!");
+		}
+		
+		guildmes(.@red_guild_id, "---- NOSSO TIME (RED) ----");
+		
+		for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+			if (.@teams[.@i] == 2) {
+				set .@class_name$, callfunc("F_GetClassName", .@job_classes[.@i]);
+				guildmes(.@red_guild_id, .@names$[.@i] + " (" + .@class_name$ + "): " + .@kills[.@i] + "K/" + .@deaths[.@i] + "D/0A | DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i]);
+			}
+		}
+		
+		guildmes(.@red_guild_id, "---- TIME ADVERSARIO (BLUE) ----");
+		
+		for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+			if (.@teams[.@i] == 1) {
+				set .@class_name$, callfunc("F_GetClassName", .@job_classes[.@i]);
+				guildmes(.@red_guild_id, .@names$[.@i] + " (" + .@class_name$ + "): " + .@kills[.@i] + "K/" + .@deaths[.@i] + "D/0A | DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i]);
+			}
+		}
+		
+		guildmes(.@red_guild_id, "========================================");
+	}
+	
+	// ===============================================================
+	// TAMBEM ANUNCIAR NO MAPA DA ARENA
+	// ===============================================================
+	
+	sleep 1000;
+	
+	if (.@winner_team == 1) {
+		//mapannounce "ros2024", "=== aYt " + .@blue_guild$ + " VENCEU! ===", bc_map, 0x00BFFF;
+		//mapannounce "ros2024", .@blue_guild$ + " VENCEU!", bc_map, 0x00BFFF;
+	} else if (.@winner_team == 2) {
+		// mapannounce "ros2024", "=== aYt " + .@red_guild$ + " VENCEU! ===", bc_map, 0xFF6347;
+		//mapannounce "ros2024", .@red_guild$ + " VENCEU!", bc_map, 0xFF6347;
+	} else {
+		//mapannounce "ros2024", "=== aYt EMPATE! ===", bc_map, 0xFFFF00;
+		//mapannounce "ros2024", "EMPATE!", bc_map, 0xFFFF00;
+	}
+	
+	sleep 500;
+	//mapannounce "ros2024", "====== " + .@blue_guild$ + " ======", bc_map, 0x00BFFF;
+	// mapannounce "ros2024", "Estat?sticas da " + .@blue_guild$ + ":", bc_map, 0x00BFFF;
+//custom moskaum
+	// Calcular APM da guild azul
+	set .@blue_apm, 0;
+	set .@skills, 0;
+	set .@duration, 0;
+	
+	// Calcular duration manualmente (end_time - start_time)
+	set .@start_time, 0;
+	set .@end_time, 0;
+	query_sql("SELECT UNIX_TIMESTAMP(start_time), UNIX_TIMESTAMP(end_time) FROM arena7x7_matches WHERE match_id = " + .@match_id, .@start_time, .@end_time);
+	set .@duration, .@end_time - .@start_time;
+	
+	debugmes "[F_SendMatchStats] Duration calculado: " + .@duration + " segundos (start: " + .@start_time + ", end: " + .@end_time + ")";
+	debugmes "[F_SendMatchStats] Array char_ids size: " + getarraysize(.@char_ids);
+	
+	// Calcular APM média da guild azul (soma APM de cada jogador / número de jogadores)
+	set .@blue_total_apm, 0;
+	set .@blue_player_count, 0;
+	
+	// Contar jogadores e somar APM individual
+	for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+		if (.@teams[.@i] == 1) {
+			set .@p_skills, 0;
+			query_sql("SELECT (skills_used + items_used) FROM arena7x7_match_stats WHERE match_id = " + .@match_id + " AND char_id = " + .@char_ids[.@i], .@p_skills);
+			
+			if (.@duration > 0 && .@p_skills > 0) {
+				set .@p_apm, (.@p_skills * 600) / .@duration;
+				set .@blue_total_apm, .@blue_total_apm + .@p_apm;
+			}
+			set .@blue_player_count, .@blue_player_count + 1;
+		}
+	}
+	
+	// Calcular m?dia
+	if (.@blue_player_count > 0) {
+		set .@blue_apm, .@blue_total_apm / .@blue_player_count;
+	} else {
+		set .@blue_apm, 0;
+	}
+	
+	set .@blue_apm_int, .@blue_apm / 10;
+	set .@blue_apm_dec, .@blue_apm % 10;
+	
+	mapannounce "ros2024", "Estatísticas da " + .@blue_guild$ + " (" + .@blue_apm_int + "." + .@blue_apm_dec + " APM):", bc_map, 0x00BFFF;
+//fim do custom moskaum
+
+//custom moskaum (AZUL)
+	for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+		if (.@teams[.@i] == 1) {
+			set .@class_name$, callfunc("F_GetClassName", .@job_classes[.@i]);
+			// Calcular APM individual do jogador
+			set .@player_apm, 0;
+			set .@p_skills, 0;
+			set .@p_duration, 0;
+		// Usar a duração já calculada
+		set .@p_duration, .@duration;
+		query_sql("SELECT (skills_used + items_used) FROM arena7x7_match_stats WHERE match_id = " + .@match_id + " AND char_id = " + .@char_ids[.@i], .@p_skills);
+		
+		if (.@p_duration > 0 && .@p_skills > 0) {
+			set .@player_apm, (.@p_skills * 600) / .@p_duration;
+		} else {
+			set .@player_apm, 0;
+		}
+		set .@player_apm_int, .@player_apm / 10;
+		set .@player_apm_dec, .@player_apm % 10;
+		mapannounce "ros2024", .@names$[.@i] + " (" + .@class_name$ + "): " + .@kills[.@i] + " Kills (" + .@player_apm_int + "." + .@player_apm_dec + " APM), " + .@deaths[.@i] + " Death | DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i], bc_map, 0x00BFFF;
+		}
+	}
+//fim do custom moskaum
+	// 	}
+	// }
+
+//custom moskaum (AZUL)
+	for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+		if (.@teams[.@i] == 1) {
+			set .@class_name$, callfunc("F_GetClassName", .@job_classes[.@i]);
+			// Calcular APM individual do jogador
+			set .@player_apm, 0;
+			set .@p_skills, 0;
+			set .@p_duration, 0;
+		// Usar a dura??o j? calculada
+		set .@p_duration, .@duration;
+		query_sql("SELECT (skills_used + items_used) FROM arena7x7_match_stats WHERE match_id = " + .@match_id + " AND char_id = " + .@char_ids[.@i], .@p_skills);
+		
+		if (.@p_duration > 0 && .@p_skills > 0) {
+				// F?rmula: (skills ? 60 ? 10) ? duration para ter 1 casa decimal
+				set .@player_apm, (.@p_skills * 600) / .@p_duration;
+				// Arredondar: adicionar 5 antes de separar int/dec
+				// set .@player_apm, .@player_apm + 5;
+			} else {
+				set .@player_apm, 0;
+			}
+			// Separar parte inteira e decimal (j? est? na escala ?10)
+			set .@player_apm_int, .@player_apm / 10;
+			set .@player_apm_dec, .@player_apm % 10;
+			//mapannounce "ros2024", .@names$[.@i] + " (" + .@class_name$ + "): " + .@kills[.@i] + "K/" + .@deaths[.@i] + "D/0A | DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i], bc_map, 0x00BFFF;
+			mapannounce "ros2024", .@names$[.@i] + " (" + .@class_name$ + "): " + .@kills[.@i] + " Kills (" + .@player_apm_int + "." + .@player_apm_dec + " APM), " + .@deaths[.@i] + " Death | DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i], bc_map, 0x00BFFF;
+		}
+	}
+//fim do custom moskaum
+
+	sleep 500;
+	// mapannounce "ros2024", "Estat?sticas da " + .@red_guild$ + ":", bc_map, 0xFF6347;
+
+//custom moskaum
+	// Calcular APM m?dia da guild vermelha (soma APM de cada jogador / n?mero de jogadores)
+	set .@red_total_apm, 0;
+	set .@red_player_count, 0;
+	
+	// Contar jogadores e somar APM individual
+	for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+		if (.@teams[.@i] == 2) {
+			set .@p_skills, 0;
+			query_sql("SELECT (skills_used + items_used) FROM arena7x7_match_stats WHERE match_id = " + .@match_id + " AND char_id = " + .@char_ids[.@i], .@p_skills);
+			
+			if (.@duration > 0 && .@p_skills > 0) {
+				set .@p_apm, (.@p_skills * 600) / .@duration;
+				// set .@p_apm, .@p_apm + 5;
+				// set .@p_apm, .@p_apm / 10;
+				set .@red_total_apm, .@red_total_apm + .@p_apm;
+			}
+			set .@red_player_count, .@red_player_count + 1;
+		}
+	}
+	
+	// Calcular m?dia
+	if (.@red_player_count > 0) {
+		set .@red_apm, .@red_total_apm / .@red_player_count;
+	} else {
+		set .@red_apm, 0;
+	}
+	
+	set .@red_apm_int, .@red_apm / 10;
+	set .@red_apm_dec, .@red_apm % 10;
+	mapannounce "ros2024", "Estat\xedsticas da " + .@red_guild$ + " (" + .@red_apm_int + "." + .@red_apm_dec + " APM):", bc_map, 0xFF6347;
+//fim do custom moskaum
+
+	// for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+	// 	if (.@teams[.@i] == 2) {
+	// 		set .@class_name$, callfunc("F_GetClassName", .@job_classes[.@i]);
+	// 		//mapannounce "ros2024", .@names$[.@i] + " (" + .@class_name$ + "): " + .@kills[.@i] + "K/" + .@deaths[.@i] + "D/0A | DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i], bc_map, 0xFF6347;
+	// 		mapannounce "ros2024", .@names$[.@i] + " (" + .@class_name$ + "): " + .@kills[.@i] + " Kills, " + .@deaths[.@i] + " Death | DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i], bc_map, 0xFF6347;
+	// 	}
+	// }
+
+//custom moskaum (RED)
+	for (set .@i, 0; .@i < getarraysize(.@char_ids); set .@i, .@i + 1) {
+		if (.@teams[.@i] == 2) {
+			set .@class_name$, callfunc("F_GetClassName", .@job_classes[.@i]);
+			// Calcular APM individual do jogador
+			set .@player_apm, 0;
+			set .@p_skills, 0;
+			set .@p_duration, 0;
+		// Usar a dura??o j? calculada
+		set .@p_duration, .@duration;
+		query_sql("SELECT (skills_used + items_used) FROM arena7x7_match_stats WHERE match_id = " + .@match_id + " AND char_id = " + .@char_ids[.@i], .@p_skills);
+		
+		if (.@p_duration > 0 && .@p_skills > 0) {
+				// F?rmula: (skills ? 60 ? 10) ? duration para ter 1 casa decimal
+				set .@player_apm, (.@p_skills * 600) / .@p_duration;
+				// Arredondar: adicionar 5 antes de separar int/dec
+				// set .@player_apm, .@player_apm + 5;
+			} else {
+				set .@player_apm, 0;
+			}
+			// Separar parte inteira e decimal (j? est? na escala ?10)
+			set .@player_apm_int, .@player_apm / 10;
+			set .@player_apm_dec, .@player_apm % 10;
+			//mapannounce "ros2024", .@names$[.@i] + " (" + .@class_name$ + "): " + .@kills[.@i] + "K/" + .@deaths[.@i] + "D/0A | DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i], bc_map, 0xFF6347;
+			mapannounce "ros2024", .@names$[.@i] + " (" + .@class_name$ + "): " + .@kills[.@i] + " Kills (" + .@player_apm_int + "." + .@player_apm_dec + " APM), " + .@deaths[.@i] + " Death | DMG:" + .@dmg_done[.@i] + " RCV:" + .@dmg_recv[.@i], bc_map, 0xFF6347;
+		}
+	}
+//fim do custom moskaum
+
+	return;
+}
+
+// ============================================================================
+// NPC de Consulta de Ranking
+// ============================================================================
+izlude,130,140,5	script	Arena 7x7 Ranking	100,{
+	mes "[^FF6600Arena 7x7 Ranking^000000]";
+	mes "Ola, " + strcharinfo(0) + "!";
+	mes "Aqui voce pode consultar suas estatisticas nas arenas 7x7.";
+	next;
+	
+	switch(select("Minhas Estatisticas:Ranking Top 10:Estatisticas da Partida Atual:Sair")) {
+		case 1:
+			// Consultar estatisticas pessoais do SQL
+			mes "[^FF6600Suas Estatisticas^000000]";
+			
+			// Verificar se tem partidas
+			query_sql("SELECT `wins`, `losses`, `ties`, `matches_played`, `total_kills`, `total_deaths`, `total_assists`, `total_damage_done`, `total_healing_done`, `points` FROM `arena7x7_ranking` WHERE `char_id` = " + getcharid(0), .@wins, .@losses, .@ties, .@matches, .@kills, .@deaths, .@assists, .@damage, .@healing, .@points);
+			
+			if (.@matches == 0) {
+				mes "Voce ainda nao participou de nenhuma partida na arena 7x7.";
+				mes "Entre na arena para comecar a acumular estatisticas!";
+			} else {
+				mes "^0000FF=============================^000000";
+				mes "^008800Partidas:^000000 " + .@matches;
+				mes "^008800Vitorias:^000000 " + .@wins + " | ^FF0000Derrotas:^000000 " + .@losses + " | ^888888Empates:^000000 " + .@ties;
+				mes " ";
+				mes "^0000FFKills:^000000 " + .@kills + " | ^FF0000Deaths:^000000 " + .@deaths + " | ^FFaa00Assists:^000000 " + .@assists;
+				
+				if (.@deaths > 0) {
+					set .@kd, .@kills * 100 / .@deaths;
+					mes "^008800K/D Ratio:^000000 " + (.@kd / 100) + "." + (.@kd % 100);
+				} else {
+					mes "^008800K/D Ratio:^000000 " + .@kills + ".00 (perfeito!)";
+				}
+				
+				mes " ";
+				mes "^FF6600Dano Total:^000000 " + .@damage;
+				mes "^00FF00Cura Total:^000000 " + .@healing;
+				mes " ";
+				mes "^FF00FFPontos:^000000 " + .@points;
+				mes "^0000FF=============================^000000";
+			}
+			break;
+			
+		case 2:
+			// Top 10 Ranking
+			mes "[^FF6600Top 10 Jogadores^000000]";
+			mes "^0000FF=============================^000000";
+			
+			query_sql("SELECT `char_name`, `points`, `wins`, `total_kills` FROM `arena7x7_ranking` ORDER BY `points` DESC LIMIT 10", .@name$, .@pts, .@wins, .@kills);
+			
+			for (set .@i, 0; .@i < getarraysize(.@name$); set .@i, .@i + 1) {
+				mes "^FF6600#" + (.@i + 1) + "^000000 " + .@name$[.@i];
+				mes "    Pts: " + .@pts[.@i] + " | W: " + .@wins[.@i] + " | K: " + .@kills[.@i];
+			}
+			
+			if (getarraysize(.@name$) == 0) {
+				mes "Ainda nao ha jogadores no ranking.";
+			}
+			
+			mes "^0000FF=============================^000000";
+			break;
+			
+		case 3:
+			// Estatisticas em tempo real da partida atual
+			mes "[^FF6600Partida Atual^000000]";
+			
+			if (!arena7x7_inprogress()) {
+				mes "Voce nao esta em uma partida no momento.";
+				mes "Entre em uma partida para ver suas estatisticas em tempo real!";
+			} else {
+				mes "^0000FF=============================^000000";
+				mes "^008800Sua Performance:^000000";
+				mes " ";
+				mes "^0000FFKills:^000000 " + arena7x7_getstats(0);
+				mes "^FF0000Deaths:^000000 " + arena7x7_getstats(1);
+				mes "^FFaa00Assists:^000000 " + arena7x7_getstats(2);
+				mes " ";
+				mes "^FF6600Dano Causado:^000000 " + arena7x7_getstats(3);
+				mes "^FF0000Dano Recebido:^000000 " + arena7x7_getstats(4);
+				mes "^00FF00Cura Realizada:^000000 " + arena7x7_getstats(5);
+				mes " ";
+				mes "^FF00FFSequencia Atual:^000000 " + arena7x7_getstats(6);
+				mes "^FFD700Maior Dano:^000000 " + arena7x7_getstats(7);
+				mes "^0000FF=============================^000000";
+				
+				set .@team, arena7x7_getteam();
+				if (.@team == 1) {
+					mes "^0000FFVoce esta no Time Azul^000000";
+				} else if (.@team == 2) {
+					mes "^FF0000Voce esta no Time Vermelho^000000";
+				}
+			}
+			break;
+			
+		case 4:
+			mes "Ate mais! Boa sorte nas arenas!";
+			close;
+	}
+	
+	next;
+	goto L_Menu;
+	
+L_Menu:
+	switch(select("Minhas Estatisticas:Ranking Top 10:Estatisticas da Partida Atual:Sair")) {
+		case 1: goto case1;
+		case 2: goto case2;
+		case 3: goto case3;
+		case 4: close;
+	}
+	close;
+
+case1:
+	mes "[^FF6600Suas Estatisticas^000000]";
+	query_sql("SELECT `wins`, `losses`, `ties`, `matches_played`, `total_kills`, `total_deaths`, `total_assists`, `total_damage_done`, `total_healing_done`, `points` FROM `arena7x7_ranking` WHERE `char_id` = " + getcharid(0), .@wins, .@losses, .@ties, .@matches, .@kills, .@deaths, .@assists, .@damage, .@healing, .@points);
+	
+	if (.@matches == 0) {
+		mes "Voce ainda nao participou de nenhuma partida.";
+	} else {
+		mes "^0000FF=============================^000000";
+		mes "Partidas: " + .@matches + " | V: " + .@wins + " D: " + .@losses;
+		mes "K/D/A: " + .@kills + "/" + .@deaths + "/" + .@assists;
+		mes "Dano: " + .@damage + " | Cura: " + .@healing;
+		mes "Pontos: " + .@points;
+	}
+	next;
+	goto L_Menu;
+
+case2:
+	mes "[^FF6600Top 10^000000]";
+	query_sql("SELECT `char_name`, `points` FROM `arena7x7_ranking` ORDER BY `points` DESC LIMIT 10", .@name$, .@pts);
+	for (set .@i, 0; .@i < getarraysize(.@name$); set .@i, .@i + 1) {
+		mes "" + (.@i + 1) + " " + .@name$[.@i] + " - " + .@pts[.@i] + " pts";
+	}
+	next;
+	goto L_Menu;
+
+case3:
+	mes "[^FF6600Partida Atual^000000]";
+	if (!arena7x7_inprogress()) {
+		mes "Voce nao esta em partida.";
+	} else {
+		mes "K: " + arena7x7_getstats(0) + " D: " + arena7x7_getstats(1) + " A: " + arena7x7_getstats(2);
+		mes "Dano: " + arena7x7_getstats(3) + " | Cura: " + arena7x7_getstats(5);
+	}
+	next;
+	goto L_Menu;
+}
+
+// ============================================================================
+// Instrucoes para Integracao com Arena_ROS_01.txt
+// ============================================================================
+// 
+// ============================================================================
+// Funcao para converter job_class em nome abreviado da classe
+// ============================================================================
+function	script	F_GetClassName	{
+	set .@job, getarg(0);
+	
+	// 3rd Classes Trans (principais do servidor)
+	if (.@job == 4060) return "RK";      // Rune Knight
+	if (.@job == 4061) return "WL";      // Warlock
+	if (.@job == 4062) return "Ranger";  // Ranger
+	if (.@job == 4063) return "AB";      // Arch Bishop
+	if (.@job == 4064) return "Mecha";   // Mechanic
+	if (.@job == 4065) return "GX";      // Guillotine Cross
+	if (.@job == 4066) return "RG";      // Royal Guard
+	if (.@job == 4067) return "Sorc";    // Sorcerer
+	if (.@job == 4068) return "Trova";    // Minstrel
+	if (.@job == 4069) return "Musa";    // Wanderer
+	if (.@job == 4070) return "Shura";    // Sura
+	if (.@job == 4071) return "Genetic";    // Genetic
+	if (.@job == 4072) return "SC";      // Shadow Chaser
+	
+	// 3rd Classes Base
+	if (.@job == 4054) return "RK";      // Rune Knight
+	if (.@job == 4055) return "WL";      // Warlock
+	if (.@job == 4056) return "Ranger";  // Ranger
+	if (.@job == 4057) return "AB";      // Arch Bishop
+	if (.@job == 4058) return "Mecha";   // Mechanic
+	if (.@job == 4059) return "GC";      // Guillotine Cross
+	if (.@job == 4073) return "RG";      // Royal Guard
+	if (.@job == 4074) return "Sorc";    // Sorcerer
+	if (.@job == 4075) return "Mins";    // Minstrel
+	if (.@job == 4076) return "Wand";    // Wanderer
+	if (.@job == 4077) return "Sura";    // Sura
+	if (.@job == 4078) return "Gene";    // Genetic
+	if (.@job == 4079) return "SC";      // Shadow Chaser
+	
+	// Trans 2nd Classes
+	if (.@job == 4008) return "LK";      // Lord Knight
+	if (.@job == 4009) return "HW";      // High Wizard
+	if (.@job == 4010) return "Sniper";  // Sniper
+	if (.@job == 4011) return "HP";      // High Priest
+	if (.@job == 4012) return "WS";      // Whitesmith
+	if (.@job == 4013) return "SinX";    // Assassin Cross
+	if (.@job == 4015) return "Pala";    // Paladin
+	if (.@job == 4016) return "Prof";    // Professor
+	if (.@job == 4017) return "Clown";   // Clown
+	if (.@job == 4018) return "Gypsy";   // Gypsy
+	if (.@job == 4019) return "Champ";   // Champion
+	if (.@job == 4020) return "Creat";   // Creator
+	if (.@job == 4021) return "Stalker"; // Stalker
+	
+	// 2nd Classes
+	if (.@job == 7) return "Knight";     // Knight
+	if (.@job == 9) return "Wizard";     // Wizard
+	if (.@job == 11) return "Hunter";    // Hunter
+	if (.@job == 8) return "Priest";     // Priest
+	if (.@job == 10) return "BS";        // Blacksmith
+	if (.@job == 12) return "Assassin";  // Assassin
+	if (.@job == 14) return "Crusader";  // Crusader
+	if (.@job == 16) return "Sage";      // Sage
+	if (.@job == 19) return "Bard";      // Bard
+	if (.@job == 20) return "Dancer";    // Dancer
+	if (.@job == 15) return "Monk";      // Monk
+	if (.@job == 18) return "Alche";     // Alchemist
+	if (.@job == 17) return "Rogue";     // Rogue
+	
+	// 1st Classes
+	if (.@job == 1) return "Swordman";
+	if (.@job == 2) return "Mage";
+	if (.@job == 3) return "Archer";
+	if (.@job == 4) return "Acolyte";
+	if (.@job == 5) return "Merchant";
+	if (.@job == 6) return "Thief";
+	
+	// Special
+	if (.@job == 23) return "SN";        // Super Novice
+	if (.@job == 24) return "Gunner";    // Gunslinger
+	if (.@job == 25) return "Ninja";     // Ninja
+	if (.@job == 4046) return "Taekwon"; // Taekwon
+	if (.@job == 4047) return "SL";      // Star Gladiator / Star Emperor
+	if (.@job == 4049) return "SoulL";   // Soul Linker
+	
+	// Default
+	return "???";
+}
+
+// ============================================================================
+// INSTRUCOES DE INTEGRACAO (ja aplicadas)
+// ============================================================================

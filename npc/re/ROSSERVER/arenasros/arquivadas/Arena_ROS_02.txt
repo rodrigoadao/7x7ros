@@ -1,0 +1,363 @@
+// ==============================================================================
+// Arenas 7vs7 modificada inicialmente por rodrigo aka narutekz (2014) e Fissuris (2017) 
+// e intensamente aprimorada por Moskaum Y (2024 e 2025)
+// ==============================================================================
+quiz_02,237,349,5	script	Waiting Room::KvM81R_Guillaume	418,{
+	cutin "ros2",4;
+	mes "Se voc? tem se divertido no servidor, demonstre sua aprecia??o ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que voc? sente ser proporcional ao entretenimento que voc? est? tendo:";
+	mes "^33940CCHAVE PIX 7x7rwc@gmail.com^000000";
+	next;
+	cutin "", 255;
+	end;
+	
+OnInit:
+	while (1){
+		sleep 2000;
+		if (getwaitingroomstate (1) != $@jogadoresbluechat){
+			delwaitingroom;
+			waitingroom "Arena 2 - GH ros2025_1",$@jogadoresbluechat,"KvM81_BG::OnGuillaumeJoin",1;
+			}
+	}
+	end;
+	
+OnEnterBG:
+	set $@KvM81BG_id1, waitingroom2bg("izlude",128,135,"KvM81_BG::OnGuillaumeQuit","KvM81_BG::OnGuillaumeDie");
+	end;
+}
+
+quiz_02,262,349,4	script	Waiting Room::KvM81R_Croix	414,{
+	cutin "ros2",4;
+	mes "Se voc? tem se divertido no servidor, demonstre sua aprecia??o ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que voc? sente ser proporcional ao entretenimento que voc? est? tendo:";
+	mes "^33940CCHAVE PIX 7x7rwc@gmail.com^000000";
+	next;
+	cutin "", 255;
+	end;
+
+OnInit:
+	while (1){
+		sleep 2000;
+		if (getwaitingroomstate (1) != $@jogadoresredchat){
+			delwaitingroom;
+			waitingroom "Arena 2 - GH ros2025_1",$@jogadoresredchat,"KvM81_BG::OnCroixJoin",1;
+			}
+	}
+	end;
+
+OnEnterBG:
+	set $@KvM81BG_id2, waitingroom2bg("izlude",128,135,"KvM81_BG::OnCroixQuit","KvM81_BG::OnCroixDie");
+	end;
+}
+
+// Battleground Engine
+// *********************************************************************
+
+-	script	KvM81_BG	-1,{
+	end;
+
+OnGuillaumeJoin:
+OnCroixJoin:
+	donpcevent "KvM81_BG::OnReadyCheck";
+	end;
+
+OnGuillaumeQuit:
+	set BG_Delay_Tick, gettimetick(2) + 2000;
+	donpcevent "Arena7x7_Ranking_02_Hook::OnPlayerDeserter";
+OnGuillaumeDie:
+	//debugmes "[NPC DEBUG] OnGuillaumeDie chamado para " + strcharinfo(0);
+	if( $@KvM81BG == 2 )
+	{
+		// Decrementar contador de jogadores vivos do time azul
+		if (.Guillaume_Count > 0) {
+			set .Guillaume_Count, .Guillaume_Count - 1;
+		}
+		// Incrementar pontuação do time vermelho (1 ponto por kill)
+		set .Croix_Score, .Croix_Score + 1;
+		bg_updatescore "ros2025_1",.Guillaume_Score,.Croix_Score;
+		// Verificar se o time azul foi eliminado
+		if( (.Guillaume_Count) < 1 ){
+			donpcevent "KvM81_BG::OnCroixWin";
+		}
+	}
+	end;
+OnCroixQuit:
+	set BG_Delay_Tick, gettimetick(2) + 2000;
+	donpcevent "Arena7x7_Ranking_02_Hook::OnPlayerDeserter";
+OnCroixDie:
+	//debugmes "[NPC DEBUG] OnCroixDie chamado para " + strcharinfo(0);
+	if( $@KvM81BG == 2 )
+	{
+		// Decrementar contador de jogadores vivos do time vermelho
+		if (.Croix_Count > 0) {
+			set .Croix_Count, .Croix_Count - 1;
+		}
+		// Incrementar pontuação do time azul (1 ponto por kill)
+		set .Guillaume_Score, .Guillaume_Score + 1;
+		bg_updatescore "ros2025_1",.Guillaume_Score,.Croix_Score;
+		// Verificar se o time vermelho foi eliminado
+		if( (.Croix_Count) < 1 ){
+			donpcevent "KvM81_BG::OnGuillaumeWin";
+		}
+	}
+	end;
+OnReadyCheck:
+	if( $@KvM81BG )
+		end;
+	set .@Guillaume, getwaitingroomstate(0,"KvM81R_Guillaume");
+	set .@Croix, getwaitingroomstate(0,"KvM81R_Croix");
+
+	// Verificação de jogadores na waitingroom (necessário 7 de cada time para 7x7)
+	// Usa $@jogadoresblue/$@jogadoresred que são definidos nos NPCs Blue Team e Red Team
+	if((.@Guillaume < $@jogadoresblue) || (.@Croix < $@jogadoresred) )
+	{
+		// Define os nomes das guildas para exibir (usa valor padrão se não definido)
+		if ($@BlueGuildName$ == "") set .@bluename$, "Blue Team"; else set .@bluename$, $@BlueGuildName$;
+		if ($@RedGuildName$ == "") set .@redname$, "Red Team"; else set .@redname$, $@RedGuildName$;
+		
+		if( .@Guillaume > 0 && .@Croix > 0 && !agitcheck() && $@KvM_Flood < gettimetick(2) )
+		{
+			announce "Arena 2 - ros2025_1 | " + .@bluename$ + ": " + .@Guillaume + "/" + $@jogadoresblue + " vs " + .@redname$ + ": " + .@Croix + "/" + $@jogadoresred,0,0xFFA500;
+			set $@KvM_Flood, gettimetick(2) + 15;
+		}
+		else
+			mapannounce "quiz_02","Arena 2 - ros2025_1 | " + .@bluename$ + ": " + .@Guillaume + "/" + $@jogadoresblue + " vs " + .@redname$ + ": " + .@Croix + "/" + $@jogadoresred,1,0xFFA500;
+		end;
+	}
+
+	set $@KvM81BG, 1; // Starting
+	donpcevent "KvM81R_Croix::OnEnterBG";
+	donpcevent "KvM81R_Guillaume::OnEnterBG";
+	donpcevent "KvM81_BG::OnStart";
+	end;
+
+OnStart:
+	announce "- Duas equipes entraram na [ Arena 2 - GH ros2025_1 ]. -", bc_yellow;
+	set $@KvM81BG_Victory, 0;
+	// Warp Teams
+	bg_warp $@KvM81BG_id1,"ros2025_1",119,155;
+	bg_warp $@KvM81BG_id2,"ros2025_1",236,155;
+
+	if ($@guildsInArena2 > 0) {
+        $@guildsInArena2--;
+    }
+	if ($@guildsInArena2 > 0) {
+        $@guildsInArena2--;
+    }
+
+	setwall "ros2025_1",139,159,10,4,0,"a";
+	setwall "ros2025_1",216,159,10,4,0,"b";
+	// setwall "ros2025_1",229,113,8,4,0,"batc01wall_ae01";139,159 / 216,159
+	// setwall "ros2025_1",113,113,8,4,0,"batc01wall_ae02";
+
+	sleep 100;
+	// ScoreBoard
+	
+	set .Guillaume_Score, 0;
+	set .Croix_Score, 0;
+	initnpctimer;
+	bg_updatescore "ros2025_1",.Guillaume_Score,.Croix_Score;
+	end;
+
+OnTimer5000:
+	mapannounce "ros2025_1","- The match will begin in 25 seconds! -", bc_yellow;
+	end;
+
+OnTimer25000:
+	// Verifica??o antecipada de jogadores (5 segundos antes)
+	set .@blue_check, bg_get_data($@KvM81BG_id1, 0);
+	set .@red_check, bg_get_data($@KvM81BG_id2, 0);
+	
+	if( (.@blue_check < $@jogadoresblue) || (.@red_check < $@jogadoresred) )
+	{
+		set $@KvM81BG_Victory, 3;
+		set $@KvM81BG, 3;
+		
+		set .@missing_blue, $@jogadoresblue - .@blue_check;
+		set .@missing_red, $@jogadoresred - .@red_check;
+		
+		if (.@missing_blue > 0 && .@missing_red > 0) {
+			mapannounce "ros2025_1","- Partida cancelada: jogadores desconectaram de ambos os times! -", bc_yellow;
+		} else if (.@missing_blue > 0) {
+			mapannounce "ros2025_1","- Partida cancelada: " + .@missing_blue + " jogador(es) do Time Azul desconectou! -", bc_yellow;
+		} else {
+			mapannounce "ros2025_1","- Partida cancelada: " + .@missing_red + " jogador(es) do Time Vermelho desconectou! -", bc_yellow;
+		}
+		
+		donpcevent "Arena7x7_Ranking_Hook::OnMatchCancel";
+		stopnpctimer;
+		sleep 2000;
+		donpcevent "KvM80_BG::OnStop";
+		end;
+	}
+	
+	mapannounce "ros2025_1","- The match will begin in 5 seconds! -", bc_yellow;
+	end;
+
+OnTimer26000:
+	mapannounce "ros2025_1","- The match will begin in 4 seconds! -", bc_yellow;
+	end;
+
+OnTimer27000:
+	mapannounce "ros2025_1","- The match will begin in 3 seconds! -", bc_yellow;
+	end;
+
+OnTimer28000:
+	mapannounce "ros2025_1","- The match will begin in 2 seconds! -", bc_yellow;
+	end;
+	
+OnTimer29000:
+	mapannounce "ros2025_1","- The match will begin in 1 second! -", bc_yellow;
+	end;
+
+//
+OnTimer30000:
+	// Obter contagem de jogadores em cada time via bg_get_data
+	set .Guillaume_Count, bg_get_data($@KvM81BG_id1, 0);
+	set .Croix_Count, bg_get_data($@KvM81BG_id2, 0);
+	
+	// FALLBACK: Se bg_get_data retornou 0, usar getmapusers como estimativa
+	// Divide por 2 assumindo que metade é de cada time
+	if (.Guillaume_Count == 0 && .Croix_Count == 0) {
+		set .@map_users, getmapusers("ros2025_1");
+		
+		// Estimativa: dividir jogadores no mapa entre os dois times
+		if (.@map_users >= 2) {
+			set .Guillaume_Count, .@map_users / 2;
+			set .Croix_Count, .@map_users - .Guillaume_Count;
+		}
+	}
+	
+	// Verificação de jogadores suficientes para iniciar (7 de cada time)
+	if( (.Guillaume_Count < $@jogadoresblue) || (.Croix_Count < $@jogadoresred) )
+	{
+		set $@KvM81BG_Victory, 3;
+		set $@KvM81BG, 3;
+//
+		
+		// Detectar qual time perdeu jogadores
+		set .@missing_blue, $@jogadoresblue - .Guillaume_Count;
+		set .@missing_red, $@jogadoresred - .Croix_Count;
+		
+		if (.@missing_blue > 0 && .@missing_red > 0) {
+			mapannounce "ros2025_1","- Partida cancelada: jogadores desconectaram de ambos os times! -", bc_yellow;
+		} else if (.@missing_blue > 0) {
+			mapannounce "ros2025_1","- Partida cancelada: " + .@missing_blue + " jogador(es) do Time Azul desconectou! -", bc_yellow;
+		} else {
+			mapannounce "ros2025_1","- Partida cancelada: " + .@missing_red + " jogador(es) do Time Vermelho desconectou! -", bc_yellow;
+		}
+		
+		// Cancelar a partida no sistema de ranking (se foi criada)
+		donpcevent "Arena7x7_Ranking_02_Hook::OnMatchCancel";
+
+//
+		stopnpctimer;
+		sleep 2000;
+		donpcevent "KvM80_BG::OnStop";
+		end;
+	}
+	set $@KvM81BG, 2; // Playing
+	donpcevent "Arena7x7_Ranking_02_Hook::OnMatchStart";
+	delwall "a";
+	delwall "b";
+	// delwall "batc01wall_ae01";
+	// delwall "batc01wall_ae02";
+	end;
+
+OnTimer30001:
+	mapannounce "ros2025_1","- The match started! Good luck to all. -", bc_yellow;
+killmonsterall "ros2025_1";
+	end;
+
+OnTimer420000:
+	mapannounce "ros2025_1","- The match will end in 30 seconds! -", bc_yellow;
+	end;
+
+OnTimer450000:
+	if( .Croix_Count > .Guillaume_Count )
+		donpcevent "KvM81_BG::OnCroixWin";
+	else if( .Croix_Count < .Guillaume_Count )
+		donpcevent "KvM81_BG::OnGuillaumeWin";
+	else
+	{ // Draw Game
+		set $@KvM81BG, 3;
+		set $@KvM81BG_Victory, 3;
+		donpcevent "Arena7x7_Ranking_02_Hook::OnDraw";
+
+		stopnpctimer;
+		sleep 2000;
+		announce "- As duas equipes empataram! -", bc_yellow;
+		donpcevent "KvM81_BG::OnStop";
+	}
+	end;
+
+OnGuillaumeWin:
+	set $@KvM81BG, 3;
+	set $@KvM81BG_Victory, 1;
+	donpcevent "Arena7x7_Ranking_02_Hook::OnBlueWin";
+
+	stopnpctimer;
+	sleep 1000;	
+	// announce "- Blue Team VENCEU! -",bc_all,0x00bfff;
+	sleep 3000;
+	donpcevent "KvM81_BG::OnStop";
+	end;
+
+OnCroixWin:
+	set $@KvM81BG, 3;
+	set $@KvM81BG_Victory, 2;
+	donpcevent "Arena7x7_Ranking_02_Hook::OnRedWin";
+	
+	stopnpctimer;
+	sleep 1000;
+	// announce "- Red Team VENCEU! -",bc_all,0xff6347;
+	sleep 3000;
+	donpcevent "KvM81_BG::OnStop";
+	end;
+
+OnStop:
+	if ($spectator_count9 > 0) {
+       set $spectator_count9, $spectator_count9 - 1;
+    }
+	if ($spectator_count9 > 0) {
+       set $spectator_count9, $spectator_count9 - 1;
+    }
+	// Warp Teams
+	mapwarp "ros2025_1","izlude",128,135;
+	donpcevent "KvM81_BG_Out::OnBegin";
+	end;
+
+OnReset:
+	donpcevent "Arena7x7_Ranking_02_Hook::OnMatchCancel";
+	stopnpctimer;
+	stopnpctimer "KvM81_BG_Out";
+	set .Croix_Count, 0;
+	set .Guillaume_Count, 0;
+	set .Croix_Score, 0;
+	set .Guillaume_Score, 0;
+	set $@KvM81BG_Victory, 0;
+	if( $@KvM81BG_id1 ) { bg_destroy $@KvM81BG_id1; set $@KvM81BG_id1, 0; }
+	if( $@KvM81BG_id2 ) { bg_destroy $@KvM81BG_id2; set $@KvM81BG_id2, 0; }
+	sleep 2000;
+	mapwarp "ros2025_1","izlude",128,135;
+	sleep 2000;
+	maprespawnguildid "ros2025_1",0,3; // Just in case someone else
+	bg_updatescore "ros2025_1",0,0;
+	sleep 2000;
+	set $@KvM81BG, 0;
+	donpcevent "KvM81_BG::OnReadyCheck"; // Maybe a game is ready to start
+	end;
+}
+
+-	script	KvM81_BG_Out	-1,{
+	end;
+
+OnBegin:
+	initnpctimer;
+	end;
+
+OnTimer50000:
+	mapannounce "ros2025_1","- The match will end in 10 seconds! -",1,0x696969;
+	end;
+OnTimer5000:
+	donpcevent "KvM81_BG::OnReset";
+	end;
+}

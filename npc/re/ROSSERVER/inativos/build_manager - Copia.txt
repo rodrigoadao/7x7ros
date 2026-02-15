@@ -1,0 +1,138 @@
+izlude,127,112,6	script	Build Manager	754,{
+	mes "[Build Manager]";
+	mes "Welcome! What would you like to do?";
+	next;
+	menu "Save a new build", SaveBuild, "Apply a build", ApplyBuild, "Show my builds", ShowBuilds, "Delete a build", DeleteBuild, "Nothing", Cancel;
+
+	SaveBuild:
+		mes "[Build Manager]";
+		mes "Please enter a name for your build:";
+		input @build_name$;
+
+		// Check for existing build with the same name for this character
+		if (query_sql("SELECT `id` FROM `ero_buildmanager` WHERE `cid` = "+getcharid(0)+" AND `build_name` = '"+escape_sql(@build_name$)+"'", .@id) > 0) {
+			mes "A build with this name already exists.";
+			close;
+		}
+
+		.@cid = getcharid(0);
+		.@aid = getcharid(3);
+		.@class = eaclass();
+		.@base_level = BaseLevel;
+		.@job_level = JobLevel;
+		.@str = readparam(bStr);
+		.@agi = readparam(bAgi);
+		.@vit = readparam(bVit);
+		.@int = readparam(bInt);
+		.@dex = readparam(bDex);
+		.@luk = readparam(bLuk);
+		.@status_points = StatusPoint;
+		.@skill_points = SkillPoint;
+
+		// Insert the new build into the database
+		query_sql("INSERT INTO `ero_buildmanager` (`aid`, `cid`, `build_name`, `eaj_class`, `base_level`, `job_level`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `status_point`, `skill_point`, `created`) VALUES ("+
+			.@aid+", "+.@cid+", '"+escape_sql(@build_name$)+"', "+.@class+", "+.@base_level+", "+.@job_level+", "+.@str+", "+.@agi+", "+.@vit+", "+.@int+", "+.@dex+", "+.@luk+", "+.@status_points+", "+.@skill_points+", NOW())");
+
+		next;
+
+		mes "[Build Manager]";
+		mes "Your build has been saved.";
+		close;
+
+	ApplyBuild:
+		mes "[Build Manager]";
+		.@cid = getcharid(0);
+		// Retrieve builds for this character
+		.@size = query_sql("SELECT `id`, `build_name`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `status_point` FROM `ero_buildmanager` WHERE `cid` = "+.@cid, .@id, .@build_name$, .@str, .@agi, .@vit, .@int, .@dex, .@luk, .@status_points);
+
+		if (.@size == 0) {
+			mes "You have no saved builds.";
+			close;
+		}
+
+		mes "Select a build to apply:";
+		next;
+
+		.@menu$ = "";
+		for (.@i = 0; .@i < .@size; .@i++) {
+			if (.@i > 0) .@menu$ = .@menu$ + ":";
+			.@menu$ = .@menu$ + .@build_name$[.@i];
+		}
+		.@selection = select(.@menu$) - 1;
+		callsub ApplyBuildSelection, .@id[.@selection], .@str[.@selection], .@agi[.@selection], .@vit[.@selection], .@int[.@selection], .@dex[.@selection], .@luk[.@selection], .@status_points[.@selection];
+		close;
+
+	ShowBuilds:
+		mes "[Build Manager]";
+		.@cid = getcharid(0);
+		// Retrieve builds for this character
+		.@size = query_sql("SELECT `build_name` FROM `ero_buildmanager` WHERE `cid` = "+.@cid, .@build_name$);
+
+		if (.@size == 0) {
+			mes "You have no saved builds.";
+			close;
+		}
+		for (.@i = 0; .@i < .@size; .@i++) {
+			mes "Build " + (.@i + 1) + ": " + .@build_name$[.@i];
+		}
+		close;
+
+	DeleteBuild:
+		mes "[Build Manager]";
+		.@cid = getcharid(0);
+		// Retrieve builds for this character
+		.@size = query_sql("SELECT `id`, `build_name` FROM `ero_buildmanager` WHERE `cid` = "+.@cid, .@id, .@build_name$);
+
+		if (.@size == 0) {
+			mes "You have no saved builds.";
+			close;
+		}
+
+		mes "Select a build to delete:";
+		next;
+
+		.@menu$ = "";
+		for (.@i = 0; .@i < .@size; .@i++) {
+			if (.@i > 0) .@menu$ = .@menu$ + ":";
+			.@menu$ = .@menu$ + .@build_name$[.@i];
+		}
+		.@selection = select(.@menu$) - 1;
+		query_sql("DELETE FROM `ero_buildmanager` WHERE `id` = "+.@id[.@selection]);
+
+		mes "[Build Manager]";
+		mes "Build deleted.";
+		close;
+
+	ApplyBuildSelection:
+		.@id = getarg(0);
+		.@str = getarg(1);
+		.@agi = getarg(2);
+		.@vit = getarg(3);
+		.@int = getarg(4);
+		.@dex = getarg(5);
+		.@luk = getarg(6);
+		.@status_points = getarg(7);
+
+		resetstatus;
+		statusup2 bStr, .@str - readparam(bStr);
+		statusup2 bAgi, .@agi - readparam(bAgi);
+		statusup2 bVit, .@vit - readparam(bVit);
+		statusup2 bInt, .@int - readparam(bInt);
+		statusup2 bDex, .@dex - readparam(bDex);
+		statusup2 bLuk, .@luk - readparam(bLuk);
+		set StatusPoint, .@status_points;
+
+		mes "[Build Manager]";
+		mes "Build has been applied.";
+		close;
+
+	Cancel:
+		mes "[Build Manager]";
+		mes "Alright, come back anytime you need!";
+		close;
+}
+
+quiz_02,139,353,6	duplicate(Build Manager)	Build Manager Blue#iz	754
+quiz_02,241,351,5	duplicate(Build Manager)	Build Manager Blue#quiz_02_2	754
+quiz_02,156,353,0	duplicate(Build Manager)	Build Manager Red#iz	754
+quiz_02,258,351,5	duplicate(Build Manager)	Build Manager Red#quiz_02_2	754

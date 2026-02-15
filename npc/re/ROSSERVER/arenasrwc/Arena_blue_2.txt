@@ -1,0 +1,202 @@
+// TIME BLUE
+// *********************************************************************
+izlude,121,107,6	script	Blue Team 2	418,{
+
+    mes "[^0000FFBlue Team^000000 ]";
+    mes "You need 7 members in guild and party^000000";
+    next;
+
+    // Check for party
+    if ( !getcharid(1) ) {
+        mes "[ ^0000FFBlue Team^000000 ]";
+        mes "^0000ffYou need a party.^000000";
+        close;
+    }
+
+    // Check for guild
+    if ( !getcharid(2) ) {
+        mes "[ ^0000FFBlue Team^000000 ]";
+        mes "^0000ffYou need a guild.^000000";
+        close;
+    }
+
+     // Check if there are already two guilds on the map
+    if ($@guildsInArena2 >= 2) {
+        mes "[ ^0000FFBlue Team^000000 ]";
+        mes "^0000ffThe arena is full. Please try again later.^000000";
+        close;
+    }
+
+    set .@guild_id, getcharid(2);
+    if ( (getguildmasterid(.@guild_id)) == (getcharid(0)) ){
+        $@jogadoresblue1 = 1; // Number of players required
+        if ($@jogadoresblue1 < 0){
+            mes "^ff0000You need 7 players^000000";
+            close;
+        }
+        $@jogadoresblue = $@jogadoresblue1;
+        $@jogadoresbluechat = $@jogadoresblue + 1;
+    }
+
+    set .@party_id, getcharid(1);
+    set .@guild_id, getcharid(2);
+    getpartymember .@party_id,1;
+    getpartymember .@party_id,2;
+    set .@partymembercount, $@partymembercount;
+    copyarray .@partymembername$[0], $@partymembername$[0], .@partymembercount;
+
+    if ((.@partymembercount == $@jogadoresblue) && (getcharid(2)) && (strcharinfo(0) == getguildmaster(.@guild_id))) {
+        // Check the party size
+        if ( .@partymembercount < $@jogadoresblue ) {
+            mes "[ ^0000FFBlue Team^000000 ]";
+            mes "^0000ffYou need "+ $@jogadoresblue +" party members online to enter.^000000";
+            close;
+        }
+
+        // Check if there are too few people in the party
+        for ( set .@i, 0; .@i < .@partymembercount; set .@i, .@i + 1 ) {
+            if ( !isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ) continue;
+            set .@islogin, .@islogin + 1;
+        }
+        if ( .@islogin < $@jogadoresblue ) {
+            mes "[ ^0000FFBlue Team^000000 ]";
+            mes "^0000ffYou need "+ $@jogadoresblue +" party members online to enter.^000000";
+            close;
+        }
+
+        mes "[ ^0000FFBlue Team^000000 ]";
+        mes "Welcome ^0000ff[ "+ strcharinfo(0) +" ]^000000.";
+        mes "Guild leader of ^0000ff[ "+ strcharinfo(2) +" ] ^000000.";
+        mes "Do you want to enter the waiting room with your team?";
+        next;
+        if (select("Yes, please.:No, thanks.") == 2) close;
+        next;
+
+        // Use temporary global variables to avoid conflicts
+        $currentLeader = getcharid(0);
+        $currentTeam$ = "blue";
+        $currentPartyID = .@party_id;
+        $currentGuildID = .@guild_id;
+
+        // Increase the count of guilds in the arena
+        if ($@guildsInArena2 < 2) {
+            $@guildsInArena2++;
+        }
+
+
+        // Execute the removal of buffs and teleport in a separate script to avoid conflicts
+        donpcevent "TeleportAndBuffRemovalBlue2::OnTeleport";
+
+        close;
+    } else {
+        mes "[ ^0000FFBlue Team^000000 ]";
+        mes "^0000ffYour team should have "+ $@jogadoresblue +" members, all in the same party/guild and everyone has to be online.^000000";
+        mes "^0000ffAfter that, the GUILD LEADER can enter the room with their team.^000000";
+        close;
+    }
+}
+// ========================================================= Teleporte
+//=======================================================================
+
+quiz_02,230,340,7	script	Employee#timeaz2	417,{
+
+    mes "[^0000ffEmployee^000000]";
+    mes "Do you wanna go back?";
+    switch(select("Yes.:No.")){
+        case 1:
+            // Check if the player is the guild leader
+            if (getcharid(2) == $currentGuildID && getcharid(0) == getguildmasterid($currentGuildID)) {
+                // Decrease the count of guilds in the arena
+                if ($@guildsInArena2 > 0) {
+                    $@guildsInArena2--;
+                }
+
+                // Teleport the entire guild out of the arena
+                warpguild "izlude",128,105,getcharid(2);
+            }
+            else {
+                warp "izlude",128,105;
+            }
+            close;
+
+        case 2:
+            close;
+    }
+}
+
+quiz_02,245,340,9	script	Employee#timeazul2	419,{
+
+    mes "[^0000ffEmployee^000000]";
+    mes "Do you wanna go to the red team?";
+    switch(select("Yes.:No.")){
+        case 1:
+            // Check if the player is the guild leader
+            if (getcharid(2) == $currentGuildID && getcharid(0) == getguildmasterid($currentGuildID)) {
+                // Teleport the entire guild to the red team
+                warpguild "quiz_02",256,345,getcharid(2);
+            }
+            close;
+
+        case 2:
+            close;
+    }
+}
+
+// ========================================================= Buff Removal and Teleportation
+//=======================================================================
+
+-	script	TeleportAndBuffRemovalBlue2	-1,{
+OnTeleport:
+    set .@leader, $currentLeader;
+    set .@team$, $currentTeam$;
+    set .@party_id, $currentPartyID;
+    set .@guild_id, $currentGuildID;
+
+    if (.@team$ == "blue") {
+        set .@teamcolor, "^0000FF";
+        set .@dest_map$, "quiz_02";
+        set .@x, 141;
+        set .@y, 347;
+    } else {
+        set .@teamcolor, "^ff0000";
+        set .@dest_map$, "quiz_02";
+        set .@x, 154;
+        set .@y, 347;
+    }
+
+    getpartymember .@party_id, 1;
+    getpartymember .@party_id, 2;
+    set .@partymembercount, $@partymembercount;
+
+    // Loop through all party members and remove all buffs
+    for ( set .@i, 0; .@i < .@partymembercount; set .@i, .@i + 1 ) {
+        if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
+            attachrid $@partymemberaid[.@i];
+            sc_end SC_ALL;
+            setoption 0x40 | Option_Invisible | Option_Xmas, 0;
+        }
+    }
+
+    warpguild "quiz_02",243,345,getcharid(2);
+
+    end;
+}
+
+// ========================================================= Check to teleport guild out of waiting room if the leader relogs
+//=======================================================================
+
+-	script	BlueTeamLogoutHandler2	-1,{
+
+OnPCLogoutEvent:
+    // Check if the player is the guild leader and is logging out from the arena
+    if (strcharinfo(3) == "quiz_02" && getcharid(0) == getguildmasterid(getcharid(2))) {
+        // Decrease the count of guilds in the arena
+        if ($@guildsInArena2 > 0) {
+            $@guildsInArena2--;
+        }
+
+        // Teleport the entire guild out of the arena
+        warpguild "izlude",128,105,getcharid(2);
+    }
+    end;
+}

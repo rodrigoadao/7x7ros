@@ -1,0 +1,288 @@
+// ==============================================================================
+// Arenas 7vs7 modificada inicialmente por rodrigo aka narutekz (2014) e Fissuris (2017) 
+// e intensamente aprimorada por Moskaum Y (2024 e 2025)
+// ==============================================================================
+quiz_02,129,338,5	script	Waiting Room::kvm71R_Guillaume	418,{
+	//cutin "arug_cas02",4;
+	mes "Se você tem se divertido no servidor, demonstre sua apreciação ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que você sente ser proporcional ao entretenimento que você está tendo:";
+	mes "^33940CCHAVE PIX 7x7rwc@gmail.com^000000";
+	next;
+	//cutin "", 255;
+	end;
+	
+OnInit:
+	while (1){
+		sleep 2000;
+		if (getwaitingroomstate (1) != $@jogadoresbluechat){
+			delwaitingroom;
+			waitingroom "Arena 41 - arug_cas02",$@jogadoresbluechat,"kvm71_BG::OnGuillaumeJoin",1;
+			}
+	}
+	end;
+	
+OnEnterBG:
+	set $@kvm71BG_id1, waitingroom2bg("izlude",128,105,"kvm71_BG::OnGuillaumeQuit","kvm71_BG::OnGuillaumeDie");
+	end;
+}
+
+quiz_02,166,338,4	script	Waiting Room::kvm71R_Croix	414,{
+	//cutin "arena30",4;
+	mes "Se você tem se divertido no servidor, demonstre sua apreciação ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que você sente ser proporcional ao entretenimento que você está tendo:";
+	mes "^33940CCHAVE PIX 7x7rwc@gmail.com^000000";
+	next;
+	//cutin "", 255;
+	end;
+
+OnInit:
+	while (1){
+		sleep 2000;
+		if (getwaitingroomstate (1) != $@jogadoresredchat){
+			delwaitingroom;
+			waitingroom "Arena 41 - arug_cas02",$@jogadoresredchat,"kvm71_BG::OnCroixJoin",1;
+			}
+	}
+	end;
+
+OnEnterBG:
+	set $@kvm71BG_id2, waitingroom2bg("izlude",128,105,"kvm71_BG::OnCroixQuit","kvm71_BG::OnCroixDie");
+	end;
+}
+
+// Battleground Engine
+// *********************************************************************
+
+-	script	kvm71_BG	-1,{
+	end;
+
+OnGuillaumeJoin:
+OnCroixJoin:
+	donpcevent "kvm71_BG::OnReadyCheck";
+	end;
+
+OnGuillaumeQuit:
+	set BG_Delay_Tick, gettimetick(2) + 2000;
+OnGuillaumeDie:
+	if( $@kvm71BG == 2 )
+	{
+		set .Guillaume_Count, .Guillaume_Count - 1;
+		set .Croix_Score, .Croix_Score + 1;
+		bg_updatescore "arug_cas02",.Guillaume_Score,.Croix_Score;
+		if( .Guillaume_Count < 1 ){
+			donpcevent "kvm71_BG::OnCroixWin";
+		}
+	}
+	end;
+
+OnCroixQuit:
+	set BG_Delay_Tick, gettimetick(2) + 2000;
+OnCroixDie:
+	if( $@kvm71BG == 2 )
+	{
+		set .Croix_Count, .Croix_Count - 1;
+		set .Guillaume_Score, .Guillaume_Score + 1;
+		bg_updatescore "arug_cas02",.Guillaume_Score,.Croix_Score;
+		if( .Croix_Count < 1 ){
+			donpcevent "kvm71_BG::OnGuillaumeWin";
+		}
+	}
+	end;
+
+OnReadyCheck:
+	if( $@kvm71BG )
+		end;
+	set .@Guillaume, getwaitingroomstate(0,"kvm71R_Guillaume");
+	set .@Croix, getwaitingroomstate(0,"kvm71R_Croix");
+
+	if((.@Guillaume < $@jogadoresblue) || (.@Croix < $@jogadoresred))
+	{
+		if( .@Guillaume > 1 && .@Croix > 1 && !agitcheck() && $@KvM_Flood < gettimetick(2) )
+		{
+			announce "Arena 41 - arug_cas02 | Blue Team: " + .@Guillaume + "/"+$@jogadoresblue+", Red Team: " + .@Croix + "/"+$@jogadoresred+"",0,0x00bfff;
+			set $@KvM_Flood, gettimetick(2) + 15;
+		}
+		else
+			mapannounce "quiz_02","Arena 41 - arug_cas02 | Blue Team: " + .@Guillaume + "/"+$@jogadoresblue+", Red Team: " + .@Croix + "/"+$@jogadoresred+"",1,0x00bfff;
+		end;
+	}
+
+	if ((.@Guillaume == 0) || (.@Croix == 0)) {
+		end;
+	}
+	
+	set $@kvm71BG, 1; // Starting
+	donpcevent "kvm71R_Croix::OnEnterBG";
+	donpcevent "kvm71R_Guillaume::OnEnterBG";
+	donpcevent "kvm71_BG::OnStart";
+	end;
+
+OnStart:
+	announce "- Duas equipes entraram na [ Arena 41 - arug_cas02 ]. -", bc_yellow;
+	set $@kvm71BG_Victory, 0;
+	// Warp Teams
+	bg_warp $@kvm71BG_id1,"arug_cas02",15,356;
+	bg_warp $@kvm71BG_id2,"arug_cas02",70,317;
+
+	if ($@guildsInArena2 > 0) {
+        $@guildsInArena2--;
+    }
+	if ($@guildsInArena2 > 0) {
+        $@guildsInArena2--;
+    }
+	setwall "arug_cas02",20,351,15,0,0,"batc20wall_a";
+	setwall "arug_cas02",19,351,15,2,0,"batc20wall_b";
+	setwall "arug_cas02",66,321,15,4,0,"batc20wall_c";
+	setwall "arug_cas02",67,321,9,6,0,"batc20wall_d";
+	// setwall "arug_cas02",94,42,9,6,0,"batc20wall_e";
+	// setwall "arug_cas02",102,41,9,4,0,"batc20wall_f";
+
+	sleep 100;
+	// ScoreBoard
+	
+	set .Guillaume_Score, 0;
+	set .Croix_Score, 0;
+	initnpctimer;
+	end;
+
+OnTimer3000:
+	mapannounce "arug_cas02","- The match will begin in 15 seconds! -", bc_yellow;
+	end;
+
+OnTimer15000:
+	mapannounce "arug_cas02","- The match will begin in 5 seconds! -", bc_yellow;
+	end;
+
+OnTimer16000:
+	mapannounce "arug_cas02","- The match will begin in 4 seconds! -", bc_yellow;
+	end;
+
+OnTimer17000:
+	mapannounce "arug_cas02","- The match will begin in 3 seconds! -", bc_yellow;
+	end;
+
+OnTimer18000:
+	mapannounce "arug_cas02","- The match will begin in 2 seconds! -", bc_yellow;
+	end;
+	
+OnTimer19000:
+	mapannounce "arug_cas02","- The match will begin in 1 second! -", bc_yellow;
+	end;
+
+OnTimer20000:
+	// Team Members
+	set .Guillaume_Count, bg_get_data($@kvm71BG_id1, 0);
+	set .Croix_Count, bg_get_data($@kvm71BG_id2, 0);
+	if( (.Guillaume_Count < $@jogadoresblue) || (.Croix_Count < $@jogadoresred) )
+	{
+		set $@kvm71BG_Victory, 3;
+		set $@kvm71BG, 3;
+		mapannounce "arug_cas02","- There are not enough players to start the match. -", bc_yellow;
+		stopnpctimer;
+		sleep 2000;
+		donpcevent "kvm71_BG::OnStop";
+		end;
+	}
+
+	set $@kvm71BG, 2; // Playing
+	delwall "batc20wall_a";
+	delwall "batc20wall_b";
+	delwall "batc20wall_c";
+	delwall "batc20wall_d";
+	// delwall "batc20wall_e";
+	// delwall "batc20wall_f";
+	end;
+
+OnTimer25001:
+	mapannounce "arug_cas02","- The match started! Good luck to all. -", bc_yellow;
+killmonsterall "arug_cas02";
+	end;
+
+OnTimer420000:
+	mapannounce "arug_cas02","- The match will end in 30 seconds! -", bc_yellow;
+	end;
+
+OnTimer450000:
+	if( .Croix_Count > .Guillaume_Count )
+		donpcevent "kvm71_BG::OnCroixWin";
+	else if( .Croix_Count < .Guillaume_Count )
+		donpcevent "kvm71_BG::OnGuillaumeWin";
+	else
+	{ // Draw Game
+		set $@kvm71BG, 3;
+		set $@kvm71BG_Victory, 3;
+
+		stopnpctimer;
+		sleep 2000;
+		announce "- As duas equipes empataram! -", bc_yellow;
+		donpcevent "kvm71_BG::OnStop";
+	}
+	end;
+
+OnGuillaumeWin:
+	set $@kvm71BG, 3;
+	set $@kvm71BG_Victory, 1;
+
+	stopnpctimer;
+	sleep 1000;	
+	announce "- Blue Team VENCEU! -",bc_all,0x00bfff;
+	sleep 3000;
+	donpcevent "kvm71_BG::OnStop";
+	end;
+
+OnCroixWin:
+	set $@kvm71BG, 3;
+	set $@kvm71BG_Victory, 2;
+
+	stopnpctimer;
+	sleep 1000;
+	announce "- Red Team VENCEU! -",bc_all,0xff6347;
+	sleep 3000;
+	donpcevent "kvm71_BG::OnStop";
+	end;
+
+OnStop:
+	if ($spectator_count10 > 0) {
+       set $spectator_count10, $spectator_count10 - 1;
+    }
+	if ($spectator_count10 > 0) {
+       set $spectator_count10, $spectator_count10 - 1;
+    }
+	// Warp Teams
+	mapwarp "arug_cas02","izlude",128,105;
+	donpcevent "kvm71_BG_Out::OnBegin";
+	end;
+
+OnReset:
+	stopnpctimer;
+	stopnpctimer "kvm71_BG_Out";
+	set .Croix_Count, 0;
+	set .Guillaume_Count, 0;
+	set .Croix_Score, 0;
+	set .Guillaume_Score, 0;
+	set $@kvm71BG_Victory, 0;
+	if( $@kvm71BG_id1 ) { bg_destroy $@kvm71BG_id1; set $@kvm71BG_id1, 0; }
+	if( $@kvm71BG_id2 ) { bg_destroy $@kvm71BG_id2; set $@kvm71BG_id2, 0; }
+	sleep 2000;
+	mapwarp "arug_cas02","izlude",128,105;
+	sleep 2000;
+	maprespawnguildid "arug_cas02",0,3; // Just in case someone else
+	bg_updatescore "arug_cas02",0,0;
+	sleep 2000;
+	set $@kvm71BG, 0;
+	donpcevent "kvm71_BG::OnReadyCheck"; // Maybe a game is ready to start
+	end;
+}
+
+-	script	kvm71_BG_Out	-1,{
+	end;
+
+OnBegin:
+	initnpctimer;
+	end;
+
+OnTimer50000:
+	mapannounce "arug_cas02","- The match will end in 10 seconds! -",1,0x696969;
+	end;
+OnTimer3000:
+	donpcevent "kvm71_BG::OnReset";
+	end;
+}

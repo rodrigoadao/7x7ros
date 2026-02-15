@@ -1,0 +1,290 @@
+//===== Plagiadora v2.2 FINAL =====
+//===== Suporta Plagiarism e Reproduce =====
+//===== Plagiarism: 1a/2a classe | Reproduce: TODAS =====
+//===== SEM CUSTO DE ZENY =====
+
+izlude,127,148,3	script	Plagiadora	10010,{
+	set .@plagiarism_lv, getskilllv("RG_PLAGIARISM");
+	set .@reproduce_lv, getskilllv("SC_REPRODUCE");
+	
+	cutin "lydia_a",2;
+	mes "[ Lidia ]";
+	mes "Ap�s anos tentando ensinar as pessoas a terem dual para serem autosuficientes, o npc de pl�gio foi criado; em seguida, anos foram dedicados para ensinar as pessoas a relogarem ap�s falar com o NPC. Foi um fracasso total. Perante essa trag�dia, grande filantropista Ricardo financiou o presente NPC que supre as sequelas de quoeficiente de intelig�ncia dos nossos coleguinhas neandertais.";
+	next;
+	
+	if (!.@plagiarism_lv && !.@reproduce_lv) {
+		mes "[ Lidia ]";
+		mes "Eu preciso te dizer que s� quem tem ^FF0000Pl�gio^000000 e ^FF0000Mimetismo^000000 pode receber skills?";
+		cutin "", 255;
+		close;
+	}
+	
+	while(1) {
+		// RESET de todas as variáveis de controle
+		set .@opt_plag, 0;
+		set .@opt_unplag, 0;
+		set .@opt_repro, 0;
+		set .@opt_unrepro, 0;
+		
+		mes "[ Lidia ]";
+		mes " ";
+		// Mostra Plagiarism
+		if (.@plagiarism_lv) {
+			//mes "[Plagiarism]";
+			if (CLONE_SKILL_PLAGIARISM && CLONE_SKILL_PLAGIARISM_LV) {
+				// Busca o nome da skill no array
+				set .@found, 0;
+				for (set .@i, 0; .@i < .skill_size; set .@i, .@i + 1) {
+					if (.skill_id[.@i] == CLONE_SKILL_PLAGIARISM) {
+						mes "[Plagiarism] " + .skill_name$[.@i] + " Lv" + CLONE_SKILL_PLAGIARISM_LV;
+						set .@found, 1;
+						break;
+					}
+				}
+				if (!.@found)
+					mes "  Skill ID: " + CLONE_SKILL_PLAGIARISM + " Lv" + CLONE_SKILL_PLAGIARISM_LV;
+			} else {
+				mes "  Vazio";
+			}
+			mes " ";
+		}
+		
+		// Mostra Reproduce
+		if (.@reproduce_lv) {
+			//mes "[Reproduce] Slot:";
+			if (CLONE_SKILL_REPRODUCE && CLONE_SKILL_REPRODUCE_LV) {
+				// Busca o nome da skill no array
+				set .@found, 0;
+				for (set .@i, 0; .@i < .skill_size; set .@i, .@i + 1) {
+					if (.skill_id[.@i] == CLONE_SKILL_REPRODUCE) {
+						mes "[Reproduce] " + .skill_name$[.@i] + " Lv" + CLONE_SKILL_REPRODUCE_LV;
+						set .@found, 1;
+						break;
+					}
+				}
+				if (!.@found)
+					mes "  Skill ID: " + CLONE_SKILL_REPRODUCE + " Lv" + CLONE_SKILL_REPRODUCE_LV;
+			} else {
+				mes "  Vazio";
+			}
+		}
+		next;
+		
+		// Constrói menu DINAMICAMENTE
+		set .@menu$, "";
+		set .@opt, 1;
+		
+		if (.@plagiarism_lv) {
+			if (CLONE_SKILL_PLAGIARISM && CLONE_SKILL_PLAGIARISM_LV) {
+				set .@menu$, .@menu$ + "Desaprender Plagiarism:";
+				set .@opt_unplag, .@opt;
+				set .@opt, .@opt + 1;
+			} else {
+				set .@menu$, .@menu$ + "Aprender Plagiarism:";
+				set .@opt_plag, .@opt;
+				set .@opt, .@opt + 1;
+			}
+		}
+		
+		if (.@reproduce_lv) {
+			if (CLONE_SKILL_REPRODUCE && CLONE_SKILL_REPRODUCE_LV) {
+				set .@menu$, .@menu$ + "Desaprender Reproduce:";
+				set .@opt_unrepro, .@opt;
+				set .@opt, .@opt + 1;
+			} else {
+				set .@menu$, .@menu$ + "Aprender Reproduce:";
+				set .@opt_repro, .@opt;
+				set .@opt, .@opt + 1;
+			}
+		}
+		
+		set .@menu$, .@menu$ + "Sair";
+		set .@choice, select(.@menu$);
+		
+		// ═══════════════════════════════════════
+		// Desaprender Plagiarism
+		// ═══════════════════════════════════════
+		if (.@opt_unplag && .@choice == .@opt_unplag) {
+			skill CLONE_SKILL_PLAGIARISM, 0, 0;
+			set CLONE_SKILL_PLAGIARISM, 0;
+			set CLONE_SKILL_PLAGIARISM_LV, 0;
+			mes "[ Lidia ]";
+			mes "Skill de Plagiarism removida!";
+			next;
+			continue;
+		}
+		
+		// ═══════════════════════════════════════
+		// Aprender Plagiarism (só 1a/2a classe)
+		// ═══════════════════════════════════════
+		if (.@opt_plag && .@choice == .@opt_plag) {
+			mes "[ Lidia ]";
+			mes "Escolha uma skill para Plagiarism:";
+			mes "(Apenas skills de 1a/2a classe)";
+			next;
+			
+			// Constrói menu filtrado para Plagiarism (só skill_class = 0)
+			set .@plag_menu$, "";
+			setarray .@plag_idx, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+			set .@plag_count, 0;
+			
+			for (set .@i, 0; .@i < .skill_size; set .@i, .@i + 1) {
+				if (.skill_class[.@i] == 0) {
+					set .@plag_menu$, .@plag_menu$ + "[ Lv " + .skill_max_level[.@i] + " ] " + .skill_name$[.@i] + ":";
+					set .@plag_idx[.@plag_count], .@i;
+					set .@plag_count, .@plag_count + 1;
+				}
+			}
+			
+			if (.@plag_count == 0) {
+				mes "[ Lidia ]";
+				mes "Nenhuma skill disponível!";
+				next;
+				continue;
+			}
+			
+			set .@selection, select(.@plag_menu$) - 1;
+			set .@idx, .@plag_idx[.@selection];
+			
+			set .@skill_id, .skill_id[.@idx];
+			set .@max_lv, .skill_max_level[.@idx];
+			
+			set .@learn_lv, .@plagiarism_lv;
+			if (.@learn_lv > .@max_lv)
+				set .@learn_lv, .@max_lv;
+			
+			mes "[ Lidia ]";
+			mes "Skill: " + .skill_name$[.@idx];
+			mes "Level: " + .@learn_lv;
+			mes "Slot: Plagiarism";
+			next;
+			
+			if (select("Confirmar:Cancelar") == 2)
+				continue;
+			
+			set CLONE_SKILL_PLAGIARISM, .@skill_id;
+			set CLONE_SKILL_PLAGIARISM_LV, .@learn_lv;
+			skill CLONE_SKILL_PLAGIARISM, CLONE_SKILL_PLAGIARISM_LV, 0;
+			
+			mes "[ Lidia ]";
+			mes "Skill aprendida com sucesso!";
+			next;
+			continue;
+		}
+		
+		// ═══════════════════════════════════════
+		// Desaprender Reproduce
+		// ═══════════════════════════════════════
+		if (.@opt_unrepro && .@choice == .@opt_unrepro) {
+			skill CLONE_SKILL_REPRODUCE, 0, 0;
+			set CLONE_SKILL_REPRODUCE, 0;
+			set CLONE_SKILL_REPRODUCE_LV, 0;
+			mes "[ Lidia ]";
+			mes "Skill de Reproduce removida!";
+			next;
+			continue;
+		}
+		
+		// ═══════════════════════════════════════
+		// Aprender Reproduce (TODAS as skills)
+		// ═══════════════════════════════════════
+		if (.@opt_repro && .@choice == .@opt_repro) {
+			mes "[ Lidia ]";
+			mes "Escolha uma skill para Reproduce:";
+			mes "(Todas as skills disponiveis)";
+			next;
+			
+			// Constrói menu com TODAS as skills
+			set .@repro_menu$, "";
+			setarray .@repro_idx, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+			set .@repro_count, 0;
+			
+			for (set .@i, 0; .@i < .skill_size; set .@i, .@i + 1) {
+				set .@repro_menu$, .@repro_menu$ + "[ Lv " + .skill_max_level[.@i] + " ] " + .skill_name$[.@i] + ":";
+				set .@repro_idx[.@repro_count], .@i;
+				set .@repro_count, .@repro_count + 1;
+			}
+			
+			if (.@repro_count == 0) {
+				mes "[ Lidia ]";
+				mes "Nenhuma skill dispon�vel!";
+				next;
+				continue;
+			}
+			
+			set .@selection, select(.@repro_menu$) - 1;
+			set .@idx, .@repro_idx[.@selection];
+			
+			set .@skill_id, .skill_id[.@idx];
+			set .@max_lv, .skill_max_level[.@idx];
+			
+			set .@learn_lv, .@reproduce_lv;
+			if (.@learn_lv > .@max_lv)
+				set .@learn_lv, .@max_lv;
+			
+			mes "[ Lidia ]";
+			mes "Skill: " + .skill_name$[.@idx];
+			mes "Level: " + .@learn_lv;
+			mes "Slot: Reproduce";
+			next;
+			
+			if (select("Confirmar:Cancelar") == 2)
+				continue;
+			
+			set CLONE_SKILL_REPRODUCE, .@skill_id;
+			set CLONE_SKILL_REPRODUCE_LV, .@learn_lv;
+			skill CLONE_SKILL_REPRODUCE, CLONE_SKILL_REPRODUCE_LV, 0;
+			
+			mes "[ Lidia ]";
+			mes "Skill aprendida com sucesso!";
+			next;
+			continue;
+		}
+		
+		// Sair
+		break;
+	}
+	
+	cutin "", 255;
+	close;
+
+OnInit:
+	// Skill Display Names
+	setarray .skill_name$, "Avanco Ofensivo", "Nevasca", "Revela��o", "L�minas Retalhadoras", "Erva Daninha", "Planta Infernal", "Aegis Inferi";
+	
+	// Skill ID
+	setarray .skill_id, 1001, 89, 24, 2022, 2483, 2490, 2323;
+	
+	// Skill Max Level
+	setarray .skill_max_level, 1, 10, 1, 5, 10, 5, 5;
+	
+	// Skill Class (0 = 1a/2a classe | 1 = 3a classe)
+	// Plagiarism só copia skill_class = 0
+	// Reproduce copia TODAS (ignora esse array)
+	setarray .skill_class, 0, 0, 0, 1, 1, 1, 1;
+	
+	set .skill_size, getarraysize(.skill_name$);
+	end;
+}
+
+quiz_02,241,354,3	duplicate(Plagiadora)	Plagiaridora Blue#quiz_02_2	10010
+quiz_02,258,354,6	duplicate(Plagiadora)	Plagiaridora Red#quiz_02_2	10010
+quiz_02,139,356,3	duplicate(Plagiadora)	Plagiadora Blue#quiz_02	10010
+quiz_02,156,356,6	duplicate(Plagiadora)	Plagiadora Red#quiz_02	10010
+
+-	script	RestorePlagiado	FAKE_NPC,{
+end;
+
+OnPCLoginEvent:
+OnPCLoadMapEvent:
+	if (getskilllv("RG_PLAGIARISM") && CLONE_SKILL_PLAGIARISM && CLONE_SKILL_PLAGIARISM_LV) {
+		skill CLONE_SKILL_PLAGIARISM, 0, 0;
+		skill CLONE_SKILL_PLAGIARISM, CLONE_SKILL_PLAGIARISM_LV, 0;
+	}
+	
+	if (getskilllv("SC_REPRODUCE") && CLONE_SKILL_REPRODUCE && CLONE_SKILL_REPRODUCE_LV) {
+		skill CLONE_SKILL_REPRODUCE, 0, 0;
+		skill CLONE_SKILL_REPRODUCE, CLONE_SKILL_REPRODUCE_LV, 0;
+	}
+	end;
+}

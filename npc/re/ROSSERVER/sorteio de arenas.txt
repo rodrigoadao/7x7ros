@@ -1,0 +1,160 @@
+quiz_02,249,346,4	script	Sorteio de Arenas	563,{
+	
+	// Verifica se é líder de guild
+	if (!getcharid(2)) {
+        mes "[Sorteio de Arenas]";
+		mes "Você não pertence a uma guild.";
+        mes "Apenas o guild leader pode usar este NPC.";
+		switch(select("Cancelar:Como funciona?")) {
+            case 1:
+                close;
+            case 2:
+            next;
+            mes "O guild leader inicia um sorteio que lista uma sequência de arenas (1 a 14).";
+            mes "Existem três opções: corrida por vitórias, rodada de corridas e critérios surpresa.";
+            next;
+            mes "Na corrida por vitórias, vence quem atingir o número de vitórias escolhidas.";
+            mes "Na rodada de corridas, cada arena pode ser jogada múltiplas vezes até atingir o critério.";
+            mes "Nos critérios surpresa, há padrões especiais pré-definidos.";
+            break;
+        }    
+        close;
+	}
+	if (!getguildmasterid(getcharid(2)) || getguildmasterid(getcharid(2)) != getcharid(0)) {
+		mes "[Sorteio de Arenas]";
+        mes "Apenas o guild leader pode usar este NPC.";
+        close;
+	}
+
+	// Verifica delay (30 segundos)
+	if (@ultima_corrida + 30 > gettimetick(2)) {
+		mes "[Sorteio de Arenas]";
+		mes "Aguarde ^FF0000" + ((@ultima_corrida + 30) - gettimetick(2)) + " segundos^000000 antes de usar novamente.";
+		close;
+	}
+
+	mes "[Sorteio de Arenas]";
+	mes "Qual tipo de sorteio deseja iniciar?";
+	switch(select("Fechar:Corrida por vitórias em arenas sortidas:Critério surpresa:Rodadas de corridas por vitórias:Como funciona?")) {
+		case 1:
+			close;
+		case 2:
+			mes "[Corrida por vitórias]";
+			mes "Escolha o tipo de corrida:";
+			next;
+			switch(select("Fechar:Corrida até 3 vitórias:Corrida até 5 vitórias:Corrida até 7 vitórias")) {
+				case 1: close;
+				case 2:
+					set @tipo_corrida, 3;
+					set @quantidade_numeros, 5;
+					break;
+				case 3:
+					set @tipo_corrida, 5;
+					set @quantidade_numeros, 9;
+					break;
+				case 4:
+					set @tipo_corrida, 7;
+					set @quantidade_numeros, 13;
+					break;
+			}
+			
+			// Sorteia os números (1?14)
+			deletearray @numeros_arenas[0], 14;
+			for (set .@i, 0; .@i < @quantidade_numeros; set .@i, .@i + 1) {
+				do {
+					set .@rand, rand(1,14);
+				} while (inarray(@numeros_arenas, .@rand) != -1);
+				set @numeros_arenas[.@i], .@rand;
+			}
+			
+			// Monta string
+			set .@msg$, "";
+			for (set .@j, 0; .@j < @quantidade_numeros; set .@j, .@j + 1) {
+				set .@msg$, .@msg$ + @numeros_arenas[.@j];
+				if (.@j < @quantidade_numeros - 1)
+					set .@msg$, .@msg$ + ", ";
+			}
+
+			set @ultima_corrida, gettimetick(2);
+
+			announce "Corrida até " + @tipo_corrida + " vitórias nas arenas: " + .@msg$  + ".", bc_all;
+			close;
+			
+		case 3:
+			mes "[Critério surpresa]";
+			mes "Escolha para sortear um critério aleatório.";
+			switch(select("Fechar:Sortear critério")) {
+				case 1: close;
+				case 2:
+					set .@sorteio, rand(1,10);
+					switch(.@sorteio) {
+						case 1: set .@msg$, "Sequência das arenas ímpares: 1, 3, 5, 7, 9, 11, 13."; break;
+						case 2: set .@msg$, "Sequência das arenas pares: 2, 4, 6, 8, 10, 12, 14."; break;
+						case 3: set .@msg$, "Duas partidas em cada uma: 2, 3, 5, 7, 11, 13."; break;
+						case 4: set .@msg$, "Três partidas em cada uma: 1, 5, 9, 13."; break;
+						case 5: set .@msg$, "Arenas centrais: 5, 6, 7, 8, 9, 10."; break;
+						case 6: set .@msg$, "Sequência: 1, 2, 3, 4, 5, 6, 7."; break;
+						case 7: set .@msg$, "Sequência reversa: 14, 13, 12, 11, 10, 9, 8, 7."; break;
+						case 8: set .@msg$, "Somente arenas múltiplas de 3: 3, 6, 9, 12."; break;
+						case 9: set .@msg$, "Arenas 1, 4, 7, 10, 13 ? duas partidas cada."; break;
+						case 10:set .@msg$, "Arenas alternadas: 2, 5, 8, 11, 14."; break;
+					}
+					set @ultima_corrida, gettimetick(2);
+					announce "Critério surpresa definido pela guilda " + getguildname(getcharid(2)) + ": " + .@msg$, bc_all;
+					close;
+			}
+			
+		case 4:
+			mes "[Rodadas de corridas]";
+			mes "Escolha o tipo de rodada:";
+			next;
+			switch(select("Rodada até 3 vitórias:Rodada até 5 vitórias")) {
+				case 1:
+					set @tipo_corrida, 3;
+					set @quantidade_numeros, 5;
+					break;
+				case 2:
+					set @tipo_corrida, 5;
+					set @quantidade_numeros, 9;
+					break;
+			}
+			
+			// Sorteia (sem exclusões, mas ainda entre 1?14)
+			deletearray @numeros_arenas[0], 14;
+			for (set .@i, 0; .@i < @quantidade_numeros; set .@i, .@i + 1) {
+				do {
+					set .@rand, rand(1,14);
+				} while (inarray(@numeros_arenas, .@rand) != -1);
+				set @numeros_arenas[.@i], .@rand;
+			}
+
+			// Ordena
+			for (set .@i, 0; .@i < @quantidade_numeros - 1; set .@i, .@i + 1) {
+				for (set .@j, .@i + 1; .@j < @quantidade_numeros; set .@j, .@j + 1) {
+					if (@numeros_arenas[.@i] > @numeros_arenas[.@j]) {
+						set .@temp, @numeros_arenas[.@i];
+						set @numeros_arenas[.@i], @numeros_arenas[.@j];
+						set @numeros_arenas[.@j], .@temp;
+					}
+				}
+			}
+
+			// Monta mensagem
+			set .@msg$, "";
+			for (set .@k, 0; .@k < @quantidade_numeros; set .@k, .@k + 1) {
+				set .@msg$, .@msg$ + @numeros_arenas[.@k];
+				if (.@k < @quantidade_numeros - 1)
+					set .@msg$, .@msg$ + ", ";
+			}
+			
+			announce "Rodadas de corridas até " + @tipo_corrida + " vitórias nas arenas: " + .@msg$ + ".", bc_all;
+			close;
+
+		case 5:
+			mes "[Como funciona]";
+			mes "Este NPC sorteia arenas numeradas de 1 a 14 para partidas competitivas.";
+			mes "Há três modos: corrida, rodada e surpresa. Use conforme o tipo de evento.";
+			close;
+	}
+	close;
+}

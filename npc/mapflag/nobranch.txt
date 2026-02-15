@@ -1,0 +1,139 @@
+//===== rAthena Script =======================================
+//= Mapflag: Disable Dead Branch use.
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 2.0
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: ========================================= 
+//= Disables the following items:
+//=   Dead Branch (604), Bloody Branch (12103),
+//=   Red Pouch (12024), Poring Box (12109)
+//===== Additional Comments: ================================= 
+//= 1.3 Updated. [massdriller]
+//= 1.6a Updated. [Lupus]
+//= 1.7 Added all novice maps. [L0ne_W0lf]
+//= 1.8 Removed restriction on PVP maps. [L0ne_W0lf]
+//= 1.9 Updated. [L0ne_W0lf]
+//= 2.0 Renewal split. [Euphy]
+//============================================================
+
+// Cities ======================
+ayo_in01	mapflag	nobranch
+2012rwc_01	mapflag	nobranch
+2012rwc_02	mapflag	nobranch
+2012rwc_03	mapflag	nobranch
+2012rwc_04	mapflag	nobranch
+guild_vs1	mapflag	nobranch
+arug_cas02	mapflag	nobranch
+arena1	mapflag	nobranch
+arena2	mapflag	nobranch
+arena3	mapflag	nobranch
+arena4	mapflag	nobranch
+arena5	mapflag	nobranch
+arena6	mapflag	nobranch
+arena7	mapflag	nobranch
+arena8	mapflag	nobranch
+arena9	mapflag	nobranch
+arena10	mapflag	nobranch
+arena11	mapflag	nobranch
+arena12	mapflag	nobranch
+arena13	mapflag	nobranch
+arena14	mapflag	nobranch
+arena15	mapflag	nobranch
+arena16	mapflag	nobranch
+arena17	mapflag	nobranch
+arena18	mapflag	nobranch
+arena19	mapflag	nobranch
+arena20	mapflag	nobranch
+arena21	mapflag	nobranch
+arena22	mapflag	nobranch
+arena23	mapflag	nobranch
+arena24	mapflag	nobranch
+arena25	mapflag	nobranch
+arena26	mapflag	nobranch
+arena27	mapflag	nobranch
+arena28	mapflag	nobranch
+arena29	mapflag	nobranch
+arena30	mapflag	nobranch
+arena31	mapflag	nobranch
+arena32	mapflag	nobranch
+arena33	mapflag	nobranch
+arena34	mapflag	nobranch
+arena35	mapflag	nobranch
+arena36	mapflag	nobranch
+arena37	mapflag	nobranch
+arena38	mapflag	nobranch
+arena39	mapflag	nobranch
+arena40	mapflag	nobranch
+arena41	mapflag	nobranch
+arena42	mapflag	nobranch
+2009rwc_01	mapflag	nobranch
+2009rwc_02	mapflag	nobranch
+2009rwc_03	mapflag	nobranch
+2009rwc_04	mapflag	nobranch
+quiz_02	mapflag	nobranch
+rwc01	mapflag	nobranch
+rwc02	mapflag	nobranch
+rwc03	mapflag	nobranch
+2008rwc_01	mapflag	nobranch
+2008rwc_02	mapflag	nobranch
+2008rwc_03	mapflag	nobranch
+2008rwc_04	mapflag	nobranch
+kvm	mapflag	nobranch
+flavius	mapflag	nobranch
+bio4	mapflag	nobranch
+1@lab	mapflag	nobranch
+1@dth3	mapflag	nobranch
+1@tnm1	mapflag	nobranch
+1@pump	mapflag	nobranch
+2@pump	mapflag	nobranch
+job_prist	mapflag	nobranch
+ecl_tdun02	mapflag	nobranch
+evt_bomb	mapflag	nobranch
+arug_cas01	mapflag	nobranch
+arug_cas03	mapflag	nobranch
+arug_cas04	mapflag	nobranch
+arug_cas05	mapflag	nobranch
+payg_cas01	mapflag	nobranch
+payg_cas02	mapflag	nobranch
+payg_cas03	mapflag	nobranch
+payg_cas04	mapflag	nobranch
+payg_cas05	mapflag	nobranch
+gefg_cas03	mapflag	nobranch
+gefg_cas04	mapflag	nobranch
+gefg_cas02	mapflag	nobranch
+gefg_cas01	mapflag	nobranch
+gefg_cas05	mapflag	nobranch
+schg_cas01	mapflag	nobranch
+schg_cas02	mapflag	nobranch
+schg_cas03	mapflag	nobranch
+schg_cas04	mapflag	nobranch
+schg_cas05	mapflag	nobranch
+aldeg_cas01	mapflag	nobranch
+aldeg_cas02	mapflag	nobranch
+aldeg_cas03	mapflag	nobranch
+aldeg_cas04	mapflag	nobranch
+aldeg_cas05	mapflag	nobranch
+prtg_cas01	mapflag	nobranch
+prtg_cas02	mapflag	nobranch
+prtg_cas03	mapflag	nobranch
+prtg_cas04	mapflag	nobranch
+prtg_cas05	mapflag	nobranch
+//
+ros2024	mapflag	nobranch
+ros2025_1	mapflag	nobranch
+ros2025_2	mapflag	nobranch
+ros2025_3	mapflag	nobranch
+ros2025_4	mapflag	nobranch
+ros2025_5	mapflag	nobranch
+ros2025_6	mapflag	nobranch
+//
+v4arena1	mapflag	nobranch
+v4arena2	mapflag	nobranch
+v4arena3	mapflag	nobranch
+v4arena4	mapflag	nobranch
+v4arena5	mapflag	nobranch
+v4arena6	mapflag	nobranch
+v4arena7	mapflag	nobranch

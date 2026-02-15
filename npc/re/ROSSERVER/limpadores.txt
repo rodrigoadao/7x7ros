@@ -1,0 +1,4 @@
+izlude,0,0	monster	que porra eh essa	1261,30,5000,5000
+izlude,124,131	monster	que	1905,1,5000,5000
+izlude,124,82	monster	meu santo cacete	1905,1,5000,5000
+izlude,148,165	monster	aeuhUEHUA	1905,1,5000,5000

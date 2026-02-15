@@ -1,0 +1,17 @@
+izlude,0,0,0	script	HiddenNPC	-1,{
+	OnInit:
+		while(1) {
+			sleep 1000; // adjust the sleep time if needed
+		}
+		end;
+	
+	OnPCLoadMapEvent:
+		if (strcharinfo(3) == "izlude") {
+            sc_end SC_ALL;
+            set Manner, 0;
+			setoption Option_Invisible | Option_Xmas, 0;
+		}
+		end;
+}
+
+izlude	mapflag	loadevent

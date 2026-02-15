@@ -1,0 +1,284 @@
+// ==============================================================================
+// Arenas 7vs7 modificada inicialmente por rodrigo aka narutekz (2014) e Fissuris (2017) 
+// e intensamente aprimorada por Moskaum Y (2024 e 2025)
+// ==============================================================================
+quiz_02,135,346,5	script	Waiting Room::KvM37R_Guillaume	418,{
+	cutin "arena7",4;
+	mes "Se você tem se divertido no servidor, demonstre sua apreciaçãoo ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que você sente ser proporcional ao entretenimento que você está tendo:";
+	mes "^33940CCHAVE PIX 7x7rwc@gmail.com^000000";
+	next;
+	cutin "", 255;
+	end;
+	
+OnInit:
+	while (1){
+		sleep 2000;
+		if (getwaitingroomstate (1) != $@jogadoresbluechat){
+			delwaitingroom;
+			waitingroom "Arena 7 - 2009rwc_03",$@jogadoresbluechat,"KvM37_BG::OnGuillaumeJoin",1;
+			}
+	}
+	end;
+	
+OnEnterBG:
+	set $@KvM37BG_id1, waitingroom2bg("izlude",128,105,"KvM37_BG::OnGuillaumeQuit","KvM37_BG::OnGuillaumeDie");
+	end;
+}
+
+quiz_02,160,346,4	script	Waiting Room::KvM37R_Croix	414,{
+	cutin "arena7",4;
+	mes "Se você tem se divertido no servidor, demonstre sua apreciaçãoo ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que você sente ser proporcional ao entretenimento que você está tendo:";
+	mes "^33940CCHAVE PIX 7x7rwc@gmail.com^000000";
+	next;
+	cutin "", 255;
+	end;
+
+OnInit:
+	while (1){
+		sleep 2000;
+		if (getwaitingroomstate (1) != $@jogadoresredchat){
+			delwaitingroom;
+			waitingroom "Arena 7 - 2009rwc_03",$@jogadoresredchat,"KvM37_BG::OnCroixJoin",1;
+			}
+	}
+	end;
+
+OnEnterBG:
+	set $@KvM37BG_id2, waitingroom2bg("izlude",128,105,"KvM37_BG::OnCroixQuit","KvM37_BG::OnCroixDie");
+	end;
+}
+
+// Battleground Engine
+// *********************************************************************
+
+-	script	KvM37_BG	-1,{
+	end;
+
+OnGuillaumeJoin:
+OnCroixJoin:
+	donpcevent "KvM37_BG::OnReadyCheck";
+	end;
+
+OnGuillaumeQuit:
+	set BG_Delay_Tick, gettimetick(2) + 2000;
+OnGuillaumeDie:
+	if( $@KvM37BG == 2 )
+	{
+		set .Guillaume_Count, .Guillaume_Count - 1;
+		set .Croix_Score, .Croix_Score + 1;
+		bg_updatescore "2009rwc_03",.Guillaume_Score,.Croix_Score;
+		if( .Guillaume_Count < 1 ){
+			donpcevent "KvM37_BG::OnCroixWin";
+		}
+	}
+	end;
+
+OnCroixQuit:
+	set BG_Delay_Tick, gettimetick(2) + 2000;
+OnCroixDie:
+	if( $@KvM37BG == 2 )
+	{
+		set .Croix_Count, .Croix_Count - 1;
+		set .Guillaume_Score, .Guillaume_Score + 1;
+		bg_updatescore "2009rwc_03",.Guillaume_Score,.Croix_Score;
+		if( .Croix_Count < 1 ){
+			donpcevent "KvM37_BG::OnGuillaumeWin";
+		}
+	}
+	end;
+
+OnReadyCheck:
+	if( $@KvM37BG )
+		end;
+	set .@Guillaume, getwaitingroomstate(0,"KvM37R_Guillaume");
+	set .@Croix, getwaitingroomstate(0,"KvM37R_Croix");
+
+	if((.@Guillaume < $@jogadoresblue) || (.@Croix < $@jogadoresred))
+	{
+		if( .@Guillaume > 3 && .@Croix > 3 && !agitcheck() && $@KvM_Flood < gettimetick(2) )
+		{
+			announce "Arena 7 - 2009rwc_03 | Blue Team: " + .@Guillaume + "/"+$@jogadoresblue+", Red Team: " + .@Croix + "/"+$@jogadoresred+"",0,0x7FFF00;
+			set $@KvM_Flood, gettimetick(2) + 15;
+		}
+		else
+			mapannounce "quiz_02","Arena 7 - 2009rwc_03 | Blue Team: " + .@Guillaume + "/"+$@jogadoresblue+", Red Team: " + .@Croix + "/"+$@jogadoresred+"",1,0x7FFF00;
+		end;
+	}
+	
+	if ((.@Guillaume == 0) || (.@Croix == 0)) {
+		end;
+	}
+	
+	set $@KvM37BG, 1; // Starting
+	donpcevent "KvM37R_Croix::OnEnterBG";
+	donpcevent "KvM37R_Guillaume::OnEnterBG";
+	donpcevent "KvM37_BG::OnStart";
+	end;
+
+OnStart:
+	announce "- Duas equipes entraram na [ Arena 7 - 2009rwc_03 ]. -", bc_yellow;
+	set $@KvM37BG_Victory, 0;
+	// Warp Teams
+	bg_warp $@KvM37BG_id1,"2009rwc_03",10,50;
+	bg_warp $@KvM37BG_id2,"2009rwc_03",90,50;
+
+	if ($@guildsInArena2 > 0) {
+        $@guildsInArena2--;
+    }
+	if ($@guildsInArena2 > 0) {
+        $@guildsInArena2--;
+    }
+
+	setwall "2009rwc_03",14,53,8,4,0,"batc26wall_a";
+	setwall "2009rwc_03",15,53,8,4,0,"batc26wall_d";
+	setwall "2009rwc_03",86,53,8,4,0,"batc26wall_b";
+	setwall "2009rwc_03",86,49,8,4,0,"batc26wall_c";
+
+	sleep 100;
+	// ScoreBoard
+	set .Guillaume_Score, 0;
+	set .Croix_Score, 0;
+	initnpctimer;
+	end;
+
+OnTimer3000:
+	mapannounce "2009rwc_03","- The match will begin in 15 seconds! -", bc_yellow;
+	end;
+
+OnTimer15000:
+	mapannounce "2009rwc_03","- The match will begin in 5 seconds! -", bc_yellow;
+	end;
+
+OnTimer16000:
+	mapannounce "2009rwc_03","- The match will begin in 4 seconds! -", bc_yellow;
+	end;
+
+OnTimer17000:
+	mapannounce "2009rwc_03","- The match will begin in 3 seconds! -", bc_yellow;
+	end;
+
+OnTimer18000:
+	mapannounce "2009rwc_03","- The match will begin in 2 seconds! -", bc_yellow;
+	end;
+	
+OnTimer19000:
+	mapannounce "2009rwc_03","- The match will begin in 1 second! -", bc_yellow;
+	end;
+
+OnTimer20000:
+	// Team Members
+	set .Guillaume_Count, bg_get_data($@KvM37BG_id1, 0);
+	set .Croix_Count, bg_get_data($@KvM37BG_id2, 0);
+	if( (.Guillaume_Count < $@jogadoresblue) || (.Croix_Count < $@jogadoresred) )
+	{
+		set $@KvM37BG_Victory, 3;
+		set $@KvM37BG, 3;
+		mapannounce "2009rwc_03","- There are not enough players to start the match. -", bc_yellow;
+		stopnpctimer;
+		sleep 2000;
+		donpcevent "KvM37_BG::OnStop";
+		end;
+	}
+
+	set $@KvM37BG, 2; // Playing
+	delwall "batc26wall_a";
+	delwall "batc26wall_d";
+	delwall "batc26wall_b";
+	delwall "batc26wall_c";
+	end;
+
+OnTimer25001:
+	mapannounce "2009rwc_03","- The match started! Good luck to all. -", bc_yellow;
+	killmonsterall "2009rwc_03";
+	end;
+
+OnTimer420000:
+	mapannounce "2009rwc_03","- The match will end in 30 seconds! -", bc_yellow;
+	end;
+
+OnTimer450000:
+	if( .Croix_Count > .Guillaume_Count )
+		donpcevent "KvM37_BG::OnCroixWin";
+	else if( .Croix_Count < .Guillaume_Count )
+		donpcevent "KvM37_BG::OnGuillaumeWin";
+	else
+	{ // Draw Game
+		set $@KvM37BG, 3;
+		set $@KvM37BG_Victory, 3;
+
+		stopnpctimer;
+		sleep 2000;
+		announce "- As duas equipes empataram! -", bc_yellow;
+		donpcevent "KvM37_BG::OnStop";
+	}
+	end;
+
+OnGuillaumeWin:
+	set $@KvM37BG, 3;
+	set $@KvM37BG_Victory, 1;
+
+	stopnpctimer;
+	sleep 1000;	
+	announce "- Blue Team VENCEU! -",bc_all,0x00bfff;
+	sleep 3000;
+	donpcevent "KvM37_BG::OnStop";
+	end;
+
+OnCroixWin:
+	set $@KvM37BG, 3;
+	set $@KvM37BG_Victory, 2;
+
+	stopnpctimer;
+	sleep 1000;
+	announce "- Red Team VENCEU! -",bc_all,0xff6347;
+	sleep 3000;
+	donpcevent "KvM37_BG::OnStop";
+	end;
+
+OnStop:
+	if ($spectator_count7 > 0) {
+       set $spectator_count7, $spectator_count7 - 1;
+    }
+	if ($spectator_count7 > 0) {
+       set $spectator_count7, $spectator_count7 - 1;
+    }
+	// Warp Teams
+	mapwarp "2009rwc_03","izlude",128,105;
+	donpcevent "KvM37_BG_Out::OnBegin";
+	end;
+
+OnReset:
+	stopnpctimer;
+	stopnpctimer "KvM37_BG_Out";
+	set .Croix_Count, 0;
+	set .Guillaume_Count, 0;
+	set .Croix_Score, 0;
+	set .Guillaume_Score, 0;
+	set $@KvM37BG_Victory, 0;
+	if( $@KvM37BG_id1 ) { bg_destroy $@KvM37BG_id1; set $@KvM37BG_id1, 0; }
+	if( $@KvM37BG_id2 ) { bg_destroy $@KvM37BG_id2; set $@KvM37BG_id2, 0; }
+	sleep 2000;
+	mapwarp "2009rwc_03","izlude",128,105;
+	sleep 2000;
+	maprespawnguildid "2009rwc_03",0,3; // Just in case someone else
+	bg_updatescore "2009rwc_03",0,0;
+	sleep 2000;
+	set $@KvM37BG, 0;
+	donpcevent "KvM37_BG::OnReadyCheck"; // Maybe a game is ready to start
+	end;
+}
+
+-	script	KvM37_BG_Out	-1,{
+	end;
+
+OnBegin:
+	initnpctimer;
+	end;
+
+OnTimer50000:
+	mapannounce "2009rwc_03","- The match will end in 10 seconds! -",1,0x696969;
+	end;
+OnTimer3000:
+	donpcevent "KvM37_BG::OnReset";
+	end;
+}

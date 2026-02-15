@@ -1,0 +1,2 @@
+// Internal default is limited to 128 lines.  If you need more, you will need to modify the MOTD_LINE_SIZE definition in pc.cpp
+Contribuiram significativamente para a criação do servidor: Timbalaiê, Fissuris, Narutekz, Baray, uniatrix, Illegit, Joe, Fatal, Crime, Cremané, Ricardo e os jogadores de todas as versões.

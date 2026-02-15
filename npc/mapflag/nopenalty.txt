@@ -1,0 +1,136 @@
+//===== rAthena Script =======================================
+//= Mapflag: Disable death penalty.
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 1.6
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: ========================================= 
+//= Same as 'noexppenalty' and 'nozenypenalty' combined.
+//===== Additional Comments: ================================= 
+//= 1.2 Updated. [Lupus]
+//= 1.3 Added all novice maps. [L0ne_W0lf]
+//= 1.4 Removed Nightmare PVP maps. [L0ne_W0lf]
+//= 1.5 Updated. [L0ne_Wolf]
+//= 1.6 Renewal split. [Euphy]
+//============================================================
+
+// Towns ====================
+// ayo_in01	mapflag	nopenalty
+2012rwc_01	mapflag	nopenalty
+2012rwc_02	mapflag	nopenalty
+2012rwc_03	mapflag	nopenalty
+2012rwc_04	mapflag	nopenalty
+guild_vs1	mapflag	nopenalty
+arug_cas02	mapflag	nopenalty
+arena1	mapflag	nopenalty
+arena2	mapflag	nopenalty
+arena3	mapflag	nopenalty
+arena4	mapflag	nopenalty
+arena5	mapflag	nopenalty
+arena6	mapflag	nopenalty
+arena7	mapflag	nopenalty
+arena8	mapflag	nopenalty
+arena9	mapflag	nopenalty
+arena10	mapflag	nopenalty
+arena11	mapflag	nopenalty
+arena12	mapflag	nopenalty
+arena13	mapflag	nopenalty
+arena14	mapflag	nopenalty
+arena15	mapflag	nopenalty
+arena16	mapflag	nopenalty
+arena17	mapflag	nopenalty
+arena18	mapflag	nopenalty
+arena19	mapflag	nopenalty
+arena20	mapflag	nopenalty
+arena21	mapflag	nopenalty
+arena22	mapflag	nopenalty
+arena23	mapflag	nopenalty
+arena24	mapflag	nopenalty
+arena25	mapflag	nopenalty
+arena26	mapflag	nopenalty
+arena27	mapflag	nopenalty
+arena28	mapflag	nopenalty
+arena29	mapflag	nopenalty
+arena30	mapflag	nopenalty
+arena31	mapflag	nopenalty
+arena32	mapflag	nopenalty
+arena33	mapflag	nopenalty
+arena34	mapflag	nopenalty
+arena35	mapflag	nopenalty
+arena36	mapflag	nopenalty
+arena37	mapflag	nopenalty
+arena38	mapflag	nopenalty
+arena39	mapflag	nopenalty
+arena40	mapflag	nopenalty
+arena41	mapflag	nopenalty
+arena42	mapflag	nopenalty
+2009rwc_01	mapflag	nopenalty
+2009rwc_02	mapflag	nopenalty
+2009rwc_03	mapflag	nopenalty
+2009rwc_04	mapflag	nopenalty
+quiz_02	mapflag	nopenalty
+rwc01	mapflag	nopenalty
+rwc02	mapflag	nopenalty
+rwc03	mapflag	nopenalty
+2008rwc_01	mapflag	nopenalty
+2008rwc_02	mapflag	nopenalty
+2008rwc_03	mapflag	nopenalty
+2008rwc_04	mapflag	nopenalty
+kvm	mapflag	nopenalty
+flavius	mapflag	nopenalty
+bio4	mapflag	nopenalty
+1@lab	mapflag	nopenalty
+1@dth3	mapflag	nopenalty
+1@tnm1	mapflag	nopenalty
+1@pump	mapflag	nopenalty
+2@pump	mapflag	nopenalty
+job_prist	mapflag	nopenalty
+ecl_tdun02	mapflag	nopenalty
+evt_bomb	mapflag	nopenalty
+arug_cas01	mapflag	nopenalty
+arug_cas03	mapflag	nopenalty
+arug_cas04	mapflag	nopenalty
+arug_cas05	mapflag	nopenalty
+payg_cas01	mapflag	nopenalty
+payg_cas02	mapflag	nopenalty
+payg_cas03	mapflag	nopenalty
+payg_cas04	mapflag	nopenalty
+payg_cas05	mapflag	nopenalty
+gefg_cas03	mapflag	nopenalty
+gefg_cas04	mapflag	nopenalty
+gefg_cas02	mapflag	nopenalty
+gefg_cas01	mapflag	nopenalty
+gefg_cas05	mapflag	nopenalty
+schg_cas01	mapflag	nopenalty
+schg_cas02	mapflag	nopenalty
+schg_cas03	mapflag	nopenalty
+schg_cas04	mapflag	nopenalty
+schg_cas05	mapflag	nopenalty
+aldeg_cas01	mapflag	nopenalty
+aldeg_cas02	mapflag	nopenalty
+aldeg_cas03	mapflag	nopenalty
+aldeg_cas04	mapflag	nopenalty
+aldeg_cas05	mapflag	nopenalty
+prtg_cas01	mapflag	nopenalty
+prtg_cas02	mapflag	nopenalty
+prtg_cas03	mapflag	nopenalty
+prtg_cas04	mapflag	nopenalty
+prtg_cas05	mapflag	nopenalty
+//
+ros2024	mapflag	nopenalty
+ros2025_1	mapflag	nopenalty
+ros2025_2	mapflag	nopenalty
+ros2025_3	mapflag	nopenalty
+ros2025_4	mapflag	nopenalty
+ros2025_5	mapflag	nopenalty
+ros2025_6	mapflag	nopenalty
+//
+v4arena1	mapflag	nopenalty
+v4arena2	mapflag	nopenalty
+v4arena3	mapflag	nopenalty
+v4arena4	mapflag	nopenalty
+v4arena5	mapflag	nopenalty
+v4arena6	mapflag	nopenalty
+v4arena7	mapflag	nopenalty

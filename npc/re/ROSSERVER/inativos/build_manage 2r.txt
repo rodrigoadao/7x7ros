@@ -1,0 +1,253 @@
+/* CREATE TABLE IF NOT EXISTS `ero_buildmanager` (
+	`id` int(11) unsigned NOT NULL auto_increment,
+	`aid` int(11) NOT NULL default '0',
+	`cid` int(11) NOT NULL default '0',
+	`build_name` varchar(255) NOT NULL default '',
+	`eaj_class` smallint(6) unsigned NOT NULL default '0',
+	`base_level` smallint(6) unsigned NOT NULL default '1',
+	`job_level` smallint(6) unsigned NOT NULL default '1',
+	`str` smallint(4) unsigned NOT NULL default '0',
+	`agi` smallint(4) unsigned NOT NULL default '0',
+	`vit` smallint(4) unsigned NOT NULL default '0',
+	`int` smallint(4) unsigned NOT NULL default '0',
+	`dex` smallint(4) unsigned NOT NULL default '0',
+	`luk` smallint(4) unsigned NOT NULL default '0',
+	`pow` smallint(4) unsigned NOT NULL default '0',
+	`sta` smallint(4) unsigned NOT NULL default '0',
+	`wis` smallint(4) unsigned NOT NULL default '0',
+	`spl` smallint(4) unsigned NOT NULL default '0',
+	`con` smallint(4) unsigned NOT NULL default '0',
+	`crt` smallint(4) unsigned NOT NULL default '0',
+	`status_point` int(11) unsigned NOT NULL default '0',
+	`skill_point` int(11) unsigned NOT NULL default '0',
+	`trait_point` int(11) unsigned NOT NULL default '0',
+	`created` datetime DEFAULT NULL,
+	PRIMARY KEY  (`id`),
+	INDEX (`aid`),
+	INDEX (`cid`)
+  ) ENGINE=MyISAM; */
+  
+  izlude,127,112,4	script	Build Manager	894,{
+	mes "[Stats and Skills]";
+	mes "Reset or Build Manager";
+	next;
+	menu "Close", Missclicked, "Reset", Reset, "Build Manager", BuildManager;
+	
+	Missclicked:
+	close;
+
+	Reset:
+	set .@ResetStat,0;	// Zeny for stat reset
+	set .@ResetSkill,0;	// Zeny for skill reset
+	set .@ResetBoth,0;	// Zeny for resetting both together
+
+	mes "[Reset]";
+	mes "Choose";
+	mes "Reset Stats: "+ .@ResetStat +"z";
+	mes "Reset Skills: "+ .@ResetSkill +"z";
+	mes "Reset Both: "+ .@ResetBoth +"z";
+	mes "Please select the service you want:";
+	next;
+	switch(select("Close:^FF3355Reset Skills:Reset Stats:Reset Both^000000")) {
+	case 1:
+		close;
+	case 2:
+		mes "[Reset]";
+		if (Zeny < .@ResetSkill) {
+			mes "Sorry, you don't have enough Zeny.";
+			close;
+		}
+		Zeny -= .@ResetSkill;
+		sc_end SC_ALL;
+		resetskill;
+		mes "There you go!";
+		close;
+	case 3:
+		mes "[Reset]";
+		if (Zeny < .@ResetStat) {
+			mes "Sorry, you don't have enough Zeny.";
+			close;
+		}
+		Zeny -= .@ResetStat;
+		resetstatus;
+		mes "There you go!";
+		close;
+	case 4:
+		mes "[Reset]";
+		if (Zeny < .@ResetBoth) {
+			mes "Sorry, you don't have enough Zeny.";
+			close;
+		}
+		Zeny -= .@ResetBoth;
+		sc_end SC_ALL;
+		resetskill;
+		resetstatus;
+		mes "There you go!";
+		close;
+	}
+
+	BuildManager:
+	mes "[Build Manager]";
+	mes "Welcome! What would you like to do?";
+	next;
+	menu "Close", Cancel, "Save a new build", SaveBuild, "Apply a build", ApplyStarterBuild, "Apply the Starter Build", ApplyBuild, "Show my builds", ShowBuilds, "Delete a build", DeleteBuild;
+
+	SaveBuild:
+		mes "[Build Manager]";
+		mes "Please enter a name for your build:";
+		input @build_name$;
+
+		// Check for existing build with the same name for this character
+		if (query_sql("SELECT `id` FROM `ero_buildmanager` WHERE `cid` = "+getcharid(0)+" AND `build_name` = '"+escape_sql(@build_name$)+"'", .@id) > 0) {
+			mes "A build with this name already exists.";
+			close;
+		}
+
+		.@cid = getcharid(0);
+		.@aid = getcharid(3);
+		.@class = eaclass();
+		.@base_level = BaseLevel;
+		.@job_level = JobLevel;
+		.@str = readparam(bStr);
+		.@agi = readparam(bAgi);
+		.@vit = readparam(bVit);
+		.@int = readparam(bInt);
+		.@dex = readparam(bDex);
+		.@luk = readparam(bLuk);
+		.@status_points = StatusPoint;
+		.@skill_points = SkillPoint;
+
+		// Insert the new build into the database
+		query_sql("INSERT INTO `ero_buildmanager` (`aid`, `cid`, `build_name`, `eaj_class`, `base_level`, `job_level`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `status_point`, `skill_point`, `created`) VALUES ("+
+			.@aid+", "+.@cid+", '"+escape_sql(@build_name$)+"', "+.@class+", "+.@base_level+", "+.@job_level+", "+.@str+", "+.@agi+", "+.@vit+", "+.@int+", "+.@dex+", "+.@luk+", "+.@status_points+", "+.@skill_points+", NOW())");
+
+		next;
+
+		mes "[Build Manager]";
+		mes "Your build has been saved.";
+		close;
+
+	ApplyStarterBuild:
+		mes "[Build Manager]";
+		mes "You are applying the start build";
+		next;
+		menu "Close", Cancel2, "Only stats", ApplyStatsDefault, "Only skills";//, ApplySkillsDefault, "Both", ApplyBothDefault;
+		
+		Cancel2:
+			mes "[Build Manager]";
+			mes "Alright, come back anytime you need!";
+			close;
+
+		ApplyStatsDefault:
+			//build stats
+			set StatusPoint, 0;
+			statusup2 bStr, 62;
+			statusup2 bVit, 64;
+			statusup2 bInt, 30;
+			statusup2 bDex, 98;
+			statusup2 bLuk, 6;
+			close;
+		
+/* 		ApplySkillsDefault
+			//a
+		
+		ApplyBothDefault
+			//a */
+		
+	ApplyBuild:
+		mes "[Build Manager]";
+		.@cid = getcharid(0);
+		// Retrieve builds for this character
+		.@size = query_sql("SELECT `id`, `build_name`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `status_point` FROM `ero_buildmanager` WHERE `cid` = "+.@cid, .@id, .@build_name$, .@str, .@agi, .@vit, .@int, .@dex, .@luk, .@status_points);
+
+		if (.@size == 0) {
+			mes "You have no saved builds.";
+			close;
+		}
+
+		mes "Select a build to apply:";
+		next;
+
+		.@menu$ = "";
+		for (.@i = 0; .@i < .@size; .@i++) {
+			if (.@i > 0) .@menu$ = .@menu$ + ":";
+			.@menu$ = .@menu$ + .@build_name$[.@i];
+		}
+		.@selection = select(.@menu$) - 1;
+		callsub ApplyBuildSelection, .@id[.@selection], .@str[.@selection], .@agi[.@selection], .@vit[.@selection], .@int[.@selection], .@dex[.@selection], .@luk[.@selection], .@status_points[.@selection];
+		close;
+
+	ShowBuilds:
+		mes "[Build Manager]";
+		.@cid = getcharid(0);
+		// Retrieve builds for this character
+		.@size = query_sql("SELECT `build_name` FROM `ero_buildmanager` WHERE `cid` = "+.@cid, .@build_name$);
+
+		if (.@size == 0) {
+			mes "You have no saved builds.";
+			close;
+		}
+		for (.@i = 0; .@i < .@size; .@i++) {
+			mes "Build " + (.@i + 1) + ": " + .@build_name$[.@i];
+		}
+		close;
+
+	DeleteBuild:
+		mes "[Build Manager]";
+		.@cid = getcharid(0);
+		// Retrieve builds for this character
+		.@size = query_sql("SELECT `id`, `build_name` FROM `ero_buildmanager` WHERE `cid` = "+.@cid, .@id, .@build_name$);
+
+		if (.@size == 0) {
+			mes "You have no saved builds.";
+			close;
+		}
+
+		mes "Select a build to delete:";
+		next;
+
+		.@menu$ = "";
+		for (.@i = 0; .@i < .@size; .@i++) {
+			if (.@i > 0) .@menu$ = .@menu$ + ":";
+			.@menu$ = .@menu$ + .@build_name$[.@i];
+		}
+		.@selection = select(.@menu$) - 1;
+		query_sql("DELETE FROM `ero_buildmanager` WHERE `id` = "+.@id[.@selection]);
+
+		mes "[Build Manager]";
+		mes "Build deleted.";
+		close;
+
+	ApplyBuildSelection:
+		.@id = getarg(0);
+		.@str = getarg(1);
+		.@agi = getarg(2);
+		.@vit = getarg(3);
+		.@int = getarg(4);
+		.@dex = getarg(5);
+		.@luk = getarg(6);
+		.@status_points = getarg(7);
+
+		resetstatus;
+		statusup2 bStr, .@str - readparam(bStr);
+		statusup2 bAgi, .@agi - readparam(bAgi);
+		statusup2 bVit, .@vit - readparam(bVit);
+		statusup2 bInt, .@int - readparam(bInt);
+		statusup2 bDex, .@dex - readparam(bDex);
+		statusup2 bLuk, .@luk - readparam(bLuk);
+		set StatusPoint, .@status_points;
+
+		mes "[Build Manager]";
+		mes "Build has been applied.";
+		close;
+
+	Cancel:
+		mes "[Build Manager]";
+		mes "Alright, come back anytime you need!";
+		close;
+}
+
+quiz_02,139,353,3	duplicate(Build Manager)	Build Manager Blue#iz	894
+quiz_02,241,351,5	duplicate(Build Manager)	Build Manager Blue#quiz_02_2	894
+quiz_02,156,353,6	duplicate(Build Manager)	Build Manager Red#iz	894
+quiz_02,258,351,4	duplicate(Build Manager)	Build Manager Red#quiz_02_2	894

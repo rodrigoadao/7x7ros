@@ -1,0 +1,42 @@
+prontera,150,190,95,79,5	script	lembrar de removerr	123,{
+	mes "[Wall Tester]";
+	mes "Oi! O que voce deseja fazer?";
+	next;
+	
+	switch(select("Cancel:Setwall:Delwall")) {
+		case 1:
+			mes "[Wall Tester]";
+			mes "Ate mais!";
+			close;
+		case 2:
+			mes "[Wall Tester]";
+			mes "Criando parede...";
+			//setwall "<mapname>", <x>, <y>, <tamanho>, <diressaum>, <wall_id>, "<sprite_name>";
+			//0=cima
+			//2=esquerda
+			//4=baixo
+			//6=direia
+			setwall strnpcinfo(4),126,235,10,2,0,"batc20wall_a";
+			setwall strnpcinfo(4),132,240,12,0,0,"batc20wall_b";
+			setwall strnpcinfo(4),163,205,8,4,0,"batc20wall_c";
+			setwall strnpcinfo(4),164,208,12,6,0,"batc20wall_d";
+			// setwall strnpcinfo(4),102,41,9,4,0,"batc20wall_f";
+			// setwall strnpcinfo(4),68,71,9,0,0,"batc20wall_g";
+			// setwall strnpcinfo(4),67,71,9,2,0,"batc20wall_h";
+			mes "Parede criada!";
+			close;
+		case 3:
+			mes "[Wall Tester]";
+			mes "Removendo parede...";
+			delwall "batc20wall_a";
+			delwall "batc20wall_b";
+			delwall "batc20wall_c";
+			delwall "batc20wall_d";
+			// delwall "batc20wall_e";
+			// delwall "batc20wall_f";
+			// delwall "batc20wall_g";
+			// delwall "batc20wall_h";
+			mes "Parede removida.";
+			close;
+	}
+}

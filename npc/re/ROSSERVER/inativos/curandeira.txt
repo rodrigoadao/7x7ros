@@ -1,0 +1,50 @@
+
+izlude,130,112,5	script	Healer	666,{
+
+//	atcommand "@repairall";
+	percentheal 100,100;
+
+	if(qtdcompbranca>0) { set .qtd, qtdcompbranca; getitem 547,.qtd-countitem(547); }
+	if(qtdpotazul>0) { set .qtd, qtdpotazul; getitem 505,.qtd-countitem(505); }
+	if(qtdyellowgem>0) { set .qtd, qtdyellowgem; getitem 715,.qtd-countitem(715); }
+	if(qtdredgem>0) { set .qtd, qtdredgem; getitem 716,.qtd-countitem(716); }
+	if(qtdbluegem>0) { set .qtd, qtdbluegem; getitem 717,.qtd-countitem(717); }
+	if(qtdteia>0) { set .qtd, qtdteia; getitem 1025,.qtd-countitem(1025); }
+	if(qtdptconcentra>0) { set .qtd, qtdptconcentra; getitem 645,.qtd-countitem(645); }
+	if(qtdptdesper>0) { set .qtd, qtdptdesper; getitem 656,.qtd-countitem(656); }
+	if(qtdpotfur>0) { set .qtd, qtdpotfur; getitem 657,.qtd-countitem(657); }
+	if(qtdpana>0) { set .qtd, qtdpana; getitem 525,.qtd-countitem(525); }
+	if(qtdpotverde>0) { set .qtd, qtdpotverde; getitem 506,.qtd-countitem(506); }
+	if(qtdflechfog>0) { set .qtd, qtdflechfog; getitem 1752,.qtd-countitem(1752); }
+	if(qtdarrow>0) { set .qtd, qtdarrow; getitem 1750,.qtd-countitem(1750); }
+	if(qtdsilverarrow>0) { set .qtd, qtdsilverarrow; getitem 1751,.qtd-countitem(1751); }
+	if(qtdstunarrow>0) { set .qtd, qtdstunarrow; getitem 1758,.qtd-countitem(1758); }
+	if(qtdsleeparrow>0) { set .qtd, qtdsleeparrow; getitem 1768,.qtd-countitem(1768); }
+	if(qtdmutearrow>0) { set .qtd, qtdmutearrow; getitem 1769,.qtd-countitem(1769); }
+	if(qtdpoisonarrow>0) { set .qtd, qtdpoisonarrow; getitem 1763,.qtd-countitem(1763); }
+	if(qtdcursedarrow>0) { set .qtd, qtdcursedarrow; getitem 1761,.qtd-countitem(1761); }
+	if(qtdfrozenarrow>0) { set .qtd, qtdfrozenarrow; getitem 1759,.qtd-countitem(1759); }
+	if(qtdflasharrow>0) { set .qtd, qtdflasharrow; getitem 1760,.qtd-countitem(1760); }
+//	if(qtdironarrow>0) { set .qtd, qtdironarrow; getitem 1770,.qtd-countitem(1770); } desativado
+	if(nosirune>0) { set .qtd, nosirune; getitem 12725,.qtd-countitem(12725); }
+	if(rhyrune>0) { set .qtd, rhyrune; getitem 12726,.qtd-countitem(12726); }
+	if(verkrune>0) { set .qtd, verkrune; getitem 12727,.qtd-countitem(12727); }
+	if(isirune>0) { set .qtd, isirune; getitem 12728,.qtd-countitem(12728); }
+	if(asirrune>0) { set .qtd, asirrune; getitem 12729,.qtd-countitem(12729); }
+	if(turirune>0) { set .qtd, turirune; getitem 12731,.qtd-countitem(12731); }
+	if(pertrune>0) { set .qtd, pertrune; getitem 12732,.qtd-countitem(12732); }
+	if(harune>0) { set .qtd, harune; getitem 12733,.qtd-countitem(12733); }
+	if(applbom>0) { set .qtd, applbom; getitem 13260,.qtd-countitem(13260); }
+	if(cocobom>0) { set .qtd, cocobom; getitem 13261,.qtd-countitem(13261); }
+	if(melonbom>0) { set .qtd, melonbom; getitem 13262,.qtd-countitem(13262); }
+	if(pinebom>0) { set .qtd, pinebom; getitem 13263,.qtd-countitem(13263); }
+	if(banabom>0) { set .qtd, banabom; getitem 13264,.qtd-countitem(13264); }
+	if(bottlegre>0) { set .qtd, bottlegre; getitem 7135,.qtd-countitem(7135); }
+	if(acidbotl>0) { set .qtd, acidbotl; getitem 7136,.qtd-countitem(7136); }
+	if(edpbottle>0) { set .qtd, edpbottle; getitem 678,.qtd-countitem(678); }
+}
+
+// Duplicates
+//crystilia,67,90,6	duplicate(Healer)	Healer#crystilia	475
+quiz_02,145,353,6	duplicate(Healer)	Healer Blue#quiz_02	666
+quiz_02,158,351,6	duplicate(Healer)	Healer Red#quiz_02	666

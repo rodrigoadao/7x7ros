@@ -1,0 +1,138 @@
+//===== rAthena Script =======================================
+//= Mapflag: Disable trade.
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 1.8
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: ========================================= 
+//= Disable trade
+//===== Additional Comments: ================================= 
+//= 1.6a Updated. [Lupus]
+//= 1.7 Updated. [L0ne_W0lf]
+//= 1.8 Renewal split. [Euphy]
+//============================================================
+
+// RWC Maps ===============
+2009rwc_01	mapflag	nodrop
+2012rwc_01	mapflag	nodrop
+2012rwc_02	mapflag	nodrop
+2012rwc_03	mapflag	nodrop
+2012rwc_04	mapflag	nodrop
+guild_vs1	mapflag	nodrop
+arug_cas02	mapflag	nodrop
+arena1	mapflag	nodrop
+arena2	mapflag	nodrop
+arena3	mapflag	nodrop
+arena4	mapflag	nodrop
+arena5	mapflag	nodrop
+arena6	mapflag	nodrop
+arena7	mapflag	nodrop
+arena8	mapflag	nodrop
+arena9	mapflag	nodrop
+arena10	mapflag	nodrop
+arena11	mapflag	nodrop
+arena12	mapflag	nodrop
+arena13	mapflag	nodrop
+arena14	mapflag	nodrop
+arena15	mapflag	nodrop
+arena16	mapflag	nodrop
+arena17	mapflag	nodrop
+arena18	mapflag	nodrop
+arena19	mapflag	nodrop
+arena20	mapflag	nodrop
+arena21	mapflag	nodrop
+arena22	mapflag	nodrop
+arena23	mapflag	nodrop
+arena24	mapflag	nodrop
+arena25	mapflag	nodrop
+arena26	mapflag	nodrop
+arena27	mapflag	nodrop
+arena28	mapflag	nodrop
+arena29	mapflag	nodrop
+arena30	mapflag	nodrop
+arena31	mapflag	nodrop
+arena32	mapflag	nodrop
+arena33	mapflag	nodrop
+arena34	mapflag	nodrop
+arena35	mapflag	nodrop
+arena36	mapflag	nodrop
+arena37	mapflag	nodrop
+arena38	mapflag	nodrop
+arena39	mapflag	nodrop
+arena40	mapflag	nodrop
+arena41	mapflag	nodrop
+arena42	mapflag	nodrop
+guild_vs2	mapflag	nodrop
+guild_vs3	mapflag	nodrop
+guild_vs4	mapflag	nodrop
+guild_vs5	mapflag	nodrop
+2009rwc_01	mapflag	nodrop
+2009rwc_02	mapflag	nodrop
+2009rwc_03	mapflag	nodrop
+2009rwc_04	mapflag	nodrop
+quiz_02	mapflag	nodrop
+rwc01	mapflag	nodrop
+rwc02	mapflag	nodrop
+rwc03	mapflag	nodrop
+2008rwc_01	mapflag	nodrop
+2008rwc_02	mapflag	nodrop
+2008rwc_03	mapflag	nodrop
+2008rwc_04	mapflag	nodrop
+kvm	mapflag	nodrop
+flavius	mapflag	nodrop
+bio4	mapflag	nodrop
+1@lab	mapflag	nodrop
+1@dth3	mapflag	nodrop
+1@tnm1	mapflag	nodrop
+1@pump	mapflag	nodrop
+2@pump	mapflag	nodrop
+job_prist	mapflag	nodrop
+ecl_tdun02	mapflag	nodrop
+evt_bomb	mapflag	nodrop
+arug_cas01	mapflag	nodrop
+arug_cas03	mapflag	nodrop
+arug_cas04	mapflag	nodrop
+arug_cas05	mapflag	nodrop
+payg_cas01	mapflag	nodrop
+payg_cas02	mapflag	nodrop
+payg_cas03	mapflag	nodrop
+payg_cas04	mapflag	nodrop
+payg_cas05	mapflag	nodrop
+gefg_cas03	mapflag	nodrop
+gefg_cas04	mapflag	nodrop
+gefg_cas02	mapflag	nodrop
+gefg_cas01	mapflag	nodrop
+gefg_cas05	mapflag	nodrop
+schg_cas01	mapflag	nodrop
+schg_cas02	mapflag	nodrop
+schg_cas03	mapflag	nodrop
+schg_cas04	mapflag	nodrop
+schg_cas05	mapflag	nodrop
+aldeg_cas01	mapflag	nodrop
+aldeg_cas02	mapflag	nodrop
+aldeg_cas03	mapflag	nodrop
+aldeg_cas04	mapflag	nodrop
+aldeg_cas05	mapflag	nodrop
+prtg_cas01	mapflag	nodrop
+prtg_cas02	mapflag	nodrop
+prtg_cas03	mapflag	nodrop
+prtg_cas04	mapflag	nodrop
+prtg_cas05	mapflag	nodrop
+//
+ros2024	mapflag	nodrop
+ros2025_1	mapflag	nodrop
+ros2025_2	mapflag	nodrop
+ros2025_3	mapflag	nodrop
+ros2025_4	mapflag	nodrop
+ros2025_5	mapflag	nodrop
+ros2025_6	mapflag	nodrop
+//
+v4arena1	mapflag	nodrop
+v4arena2	mapflag	nodrop
+v4arena3	mapflag	nodrop
+v4arena4	mapflag	nodrop
+v4arena5	mapflag	nodrop
+v4arena6	mapflag	nodrop
+v4arena7	mapflag	nodrop

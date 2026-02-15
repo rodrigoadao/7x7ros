@@ -1,0 +1,275 @@
+izlude,120,115,4	script	Job Master	650,{
+	// Initial check for current job class and skill points allocation
+	if (Class == 4001) { // High Novice
+		if (JobLevel == 10 && SkillPoint == 0) {
+			goto HighClassSelection;
+		} else {
+			mes "[ ^0000FFJob Master^000000 ]";
+			mes "You need to allocate all your skill points as a High Novice before proceeding.";
+			close;
+		}
+	} else if (Class == 4002 || Class == 4003 || Class == 4004 || Class == 4005 || Class == 4006 || Class == 4007) { // High 1-1 Classes
+		if (JobLevel == 50 && SkillPoint == 0) {
+			goto FinalJobChange;
+		} else {
+			mes "[ ^0000FFJob Master^000000 ]";
+			mes "You need to allocate all your skill points as a High class before proceeding.";
+			close;
+		}
+	} else if (Class >= 1 && BaseClass != 4001) {
+		mes "[ ^0000FFJob Master^000000 ]";
+		mes "You are not eligible for a job change at this moment.";
+		close;
+	}
+
+	// Initial job change to High Novice
+	mes "[ ^0000FFJob Master^000000 ]";
+	mes "Welcome ^ff0000" + strcharinfo(0) + "^000000. Please select the job you wish to change into!";
+	switch(select("High Novice")) {
+		case 1:
+			set .job, 4001; // High Novice
+			goto L_TransClass;
+		break;
+	}
+
+L_TransClass:
+	jobchange .job;
+	resetlvl(1);
+	set BaseLevel, 1;
+	set JobLevel, 10;
+	set SkillPoint, 9; // Skill points for High Novice
+	next;
+	mes "[ ^0000FFJob Master^000000 ]";
+	mes "You are now a ^ff0000[ High Novice ]^000000. Please allocate your skill points before proceeding.";
+	close;
+
+HighClassSelection:
+	mes "[ ^0000FFJob Master^000000 ]";
+	mes "You have allocated your basic skill points. Please select your high class:";
+	switch(select("High Swordsman:High Mage:High Archer:High Acolyte:High Merchant:High Thief")) {
+		case 1:
+			set .job, 4002; // High Swordsman
+			goto L_HighClass;
+		break;
+
+		case 2:
+			set .job, 4003; // High Mage
+			goto L_HighClass;
+		break;
+
+		case 3:
+			set .job, 4004; // High Archer
+			goto L_HighClass;
+		break;
+
+		case 4:
+			set .job, 4005; // High Acolyte
+			goto L_HighClass;
+		break;
+
+		case 5:
+			set .job, 4006; // High Merchant
+			goto L_HighClass;
+		break;
+
+		case 6:
+			set .job, 4007; // High Thief
+			goto L_HighClass;
+		break;
+	}
+
+L_HighClass:
+	jobchange .job;
+	resetlvl(1);
+	set BaseLevel, 1;
+	set JobLevel, 50;
+	set SkillPoint, 49; // Skill points for high 1-1 class
+	next;
+	mes "[ ^0000FFJob Master^000000 ]";
+	mes "You are now a ^ff0000[ " + jobname(.job) + " ]^000000. Please allocate your skill points before proceeding.";
+	close;
+
+FinalJobChange:
+	mes "[ ^0000FFJob Master^000000 ]";
+	mes "Welcome ^ff0000" + strcharinfo(0) + "^000000. Please select the final job you wish to change into!";
+	switch(Class) {
+		case 4002: // High Swordsman
+			switch(select("Lord Knight:Paladin")){
+				case 1: jobchange 4008; set .job, 4008; goto JobUpTrans;
+				case 2: jobchange 4015; set .job, 4015; goto JobUpTrans;
+			}
+		break;
+
+		case 4003: // High Mage
+			switch(select("High Wizard:Professor")){
+				case 1: jobchange 4010; set .job, 4010; goto JobUpTransNERF;
+				case 2: jobchange 4017; set .job, 4017; goto JobUpTrans;
+			}
+		break;
+
+		case 4004: // High Archer
+			switch(select("Sniper:Clown/Gypsy")){
+				case 1: jobchange 4012; set .job, 4012; goto JobUpTransNERF;
+				case 2: jobchange 4020; set .job, 4020; goto JobUpTrans;
+				getitem2 5364, 1, 1, 4, 0, 4412, 0, 0, 0; // +4 evil snake lord isilla
+				getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 feather beret
+				getitem2 2296, 1, 1, 0, 0, 0, 0, 0, 0; // binoculars
+				getitem2 2331, 1, 1, 4, 0, 4023, 0, 0, 0; // +4 tights baby desert wolf
+				getitem2 1902, 1, 1, 4, 0, 4004, 4004, 4004, 4004; // +4 violin 4drops
+				getitem2 1208, 1, 1, 7, 0, 4002, 4002, 4002, 4002; // +7 mg 4fabre
+				getitem2 2104, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 buckler thara
+				getitem2 2102, 1, 1, 4, 0, 4414, 0, 0, 0; // +4 guard seeker
+				getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 undershirt raydric
+				getitem2 2404, 1, 1, 4, 0, 4381, 0, 0, 0; // +4 shoes green ferus
+				getitem2 2602, 2, 1, 0, 0, 0, 0, 0, 0; // 2x unsloted earring
+			}
+		break;
+
+		case 4005: // High Acolyte
+			switch(select("High Priest:Champion")){
+				case 1: jobchange 4009; set .job, 4009; goto JobUpTransNERF;
+				case 2: jobchange 4016; set .job, 4016; goto JobUpTransNERF;
+			}
+		break;
+
+		case 4006: // High Merchant
+			switch(select("Whitesmith:Creator")){
+				case 1: jobchange 4011; set .job, 4011; goto JobUpTrans;
+				case 2: jobchange 4019; set .job, 4019; goto JobUpTrans;
+			}
+		break;
+
+		case 4007: // High Thief
+			switch(select("Assassin Cross:Stalker")){
+				case 1: jobchange 4013; set .job, 4013; goto JobUpTrans;
+				case 2: jobchange 4018; set .job, 4018; goto JobUpTrans;
+			}
+		break;
+	}
+
+
+JobUpTrans:
+	set BaseLevel, 90;
+	set JobLevel, 60;
+	set SkillPoint, 59; // Skill points for final transclass (59, since level 1 doesn't give a skill point)
+	set StatusPoint, 1132;
+	goto EquipItems;
+
+JobUpTransNERF:
+	set BaseLevel, 85;
+	set JobLevel, 60;
+	set SkillPoint, 59; // Skill points for final transclass (59, since level 1 doesn't give a skill point)
+	set StatusPoint, 1032;
+	goto EquipItems;
+
+EquipItems:
+	switch (.job) {
+		case 4008: // Lord Knight
+			getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 Feather Beret
+		break;
+		case 4010: // High Wizard
+			getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 Feather Beret
+			getitem2 2285, 1, 1, 4, 0, 0, 0, 0, 0; // +4 AOA
+			getitem2 5362, 1, 1, 0, 0, 0, 0, 0, 0; // Ninja Scroll
+			getitem2 5379, 1, 1, 4, 0, 4412, 0, 0, 0; // +4 Balloon Isilla
+			getitem2 2372, 1, 1, 4, 0, 4003, 0, 0, 0; // +4 Mage Coat Pupa
+			getitem2 1208, 1, 1, 7, 0, 4004, 4004, 4004, 4004; // +7 MG 4 Drops
+			getitem2 2131, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 Magic Bible Thara
+			getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 Undershirt Raydric
+			getitem2 2422, 1, 1, 4, 0, 4381, 0, 0, 0; // +4 High Fashion Sandals Gferus
+			getitem2 2607, 2, 1, 0, 0, 4064, 0, 0, 0; // 2x Clip Zerom
+		break;
+		case 4012: // Sniper
+			// Add Sniper items here
+		break;
+		case 4009: // High Priest
+			getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 Feather Beret
+			getitem2 5311, 1, 1, 4, 0, 4127, 0, 0, 0; // +4 Gigant Hibiscus Nightmare
+			getitem2 2326, 1, 1, 4, 0, 4054, 0, 0, 0; // +4 Saint Robe Angeling
+			getitem2 1602, 1, 1, 7, 0, 4006, 4006, 4006, 4006; // +7 Rod 4 Lunatic
+			getitem2 2104, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 Buckler Thara
+			getitem2 2102, 1, 1, 4, 0, 4414, 0, 0, 0; // +4 Guard Seeker
+			getitem2 2422, 1, 1, 4, 0, 4381, 0, 0, 0; // +4 High Fashion Sandals Gferus
+			getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 Undershirt Raydric
+			getitem2 2608, 2, 1, 0, 0, 0, 0, 0, 0; // Unslotted Rosary
+		break;
+		case 4016: // Champion
+			getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 Feather Beret
+			getitem2 5081, 1, 1, 4, 0, 0, 0, 0, 0; // +4 Mistress Crown
+			getitem2 5311, 1, 1, 4, 0, 4379, 0, 0, 0; // +4 Gigant Hibiscus Blue Acidus
+			getitem2 2285, 1, 1, 4, 0, 0, 0, 0, 0; // +4 AOA
+			getitem2 5314, 1, 1, 0, 0, 0, 0, 0, 0; // Hockey Mask
+			getitem2 2326, 1, 1, 4, 0, 4014, 0, 0, 0; // +4 Saint Robe Roda Frog
+			getitem2 1521, 1, 1, 6, 0, 4035, 4035, 4092, 0; // +6 MP 2 Hydra 1 SW
+			getitem2 2104, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 Buckler Thara
+			getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 Undershirt Raydric
+			getitem2 2422, 1, 1, 4, 0, 4100, 0, 0, 0; // +4 High Fashion Sandals Sohee
+			getitem2 2607, 2, 1, 0, 0, 4079, 0, 0, 0; // 2x Clip Mantis
+		break;
+		case 4011: // Whitesmith
+			// Add Whitesmith items here
+		break;
+		case 4013: // Assassin Cross
+			// Add Assassin Cross items here
+		break;
+		case 4017: // Professor
+			getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 Feather Beret
+			getitem2 2285, 1, 1, 4, 0, 0, 0, 0, 0; // +4 AOA
+			getitem2 2372, 1, 1, 4, 0, 4031, 0, 0, 0; // +4 Mage Coat Peco Peco
+			getitem2 1208, 1, 1, 7, 0, 4004, 4004, 4004, 4004; // +7 MG 4 Drops
+			getitem2 2131, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 Magic Bible Thara
+			getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 Undershirt Raydric
+			getitem2 2422, 1, 1, 4, 0, 4381, 0, 0, 0; // +4 High Fashion Sandals Gferus
+			getitem2 2607, 2, 1, 0, 0, 4064, 0, 0, 0; // 2x Clip Zerom
+		break;
+		case 4018: // Stalker
+			getitem2 5170, 1, 1, 4, 0, 0, 0, 0, 0; // +4 Feather Beret
+			getitem2 5379, 1, 1, 4, 0, 4412, 0, 0, 0; // +4 Balloon Isilla
+			getitem2 5362, 1, 1, 0, 0, 0, 0, 0, 0; // Ninja Scroll
+			getitem2 2336, 1, 1, 4, 0, 4409, 0, 0, 0; // +4 Thief Clothes Agav
+			getitem2 1208, 1, 1, 7, 0, 4004, 4004, 4004, 4004; // +7 MG 4 Drops
+			getitem2 2104, 1, 1, 4, 0, 4058, 0, 0, 0; // +4 Buckler Thara
+			getitem2 2523, 1, 1, 4, 0, 4133, 0, 0, 0; // +4 Undershirt Raydric
+			getitem2 2404, 1, 1, 4, 0, 4381, 0, 0, 0; // +4 Shoes Green Ferus
+			getitem2 2607, 2, 1, 0, 0, 4064, 0, 0, 0; // 2x Clip Zerom
+		break;
+	}
+
+PLAT_SKILLS:
+	savepoint "izlude", 128, 105;
+	skill 1,9,0;
+	switch(BaseClass) {
+		case 0: if (Class !=23) skill 143,1,0; break;
+		case 1: skill 144,1,0; skill 145,1,0; skill 146,1,0; break;
+		case 2: skill 157,1,0; break;
+		case 3: skill 147,1,0; skill 148,1,0; break;
+		case 4: skill 156,1,0; break;
+		case 5: skill 153,1,0; skill 154,1,0; skill 155,1,0; break;
+		case 6: skill 149,1,0; skill 150,1,0; skill 151,1,0; skill 152,1,0; break;
+		default: break;
+	}
+	switch(BaseJob) {
+		case 7: skill 1001,1,0; break;
+		case 8: skill 1014,1,0; break;
+		case 9: skill 1006,1,0; break;
+		case 10: skill 1012,1,0; skill 1013,1,0; break;
+		case 11: skill 1009,1,0; break;
+		case 12: skill 1003,1,0; skill 1004,1,0; break;
+		case 14: skill 1002,1,0; break;
+		case 15: skill 1015,1,0; skill 1016,1,0; break;
+		case 16: skill 1007,1,0; skill 1008,1,0; skill 1017,1,0; skill 1018,1,0; skill 1019,1,0; break;
+		case 17: skill 1005,1,0; break;
+		case 19: skill 1010,1,0; break;
+		case 20: skill 1011,1,0; break;
+		default: break;
+	}
+	set classe,1;
+	next;
+	mes "[ ^0000FFJob Master^000000 ]";
+	mes "Congratulations, you just turned into a ^ff0000[ " + jobname(Class) + " ]^000000.";
+	next;
+	mes "^FF0000Moskaum says:^000000";
+	mes "^FF0000Disclaimer to avoid little bitch whining^000000";
+	mes "You received useful gears to save you some time. Make sure to visit the market if you want any different equipment.";
+	close;
+}

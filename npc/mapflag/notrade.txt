@@ -1,0 +1,138 @@
+//===== rAthena Script =======================================
+//= Mapflag: Disable trade.
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 1.8
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: ========================================= 
+//= Disable trade
+//===== Additional Comments: ================================= 
+//= 1.6a Updated. [Lupus]
+//= 1.7 Updated. [L0ne_W0lf]
+//= 1.8 Renewal split. [Euphy]
+//============================================================
+
+// RWC Maps ===============
+// 2009rwc_01	mapflag	notrade
+2012rwc_01	mapflag	notrade
+2012rwc_02	mapflag	notrade
+2012rwc_03	mapflag	notrade
+2012rwc_04	mapflag	notrade
+guild_vs1	mapflag	notrade
+arug_cas02	mapflag	notrade
+arena1	mapflag	notrade
+arena2	mapflag	notrade
+arena3	mapflag	notrade
+arena4	mapflag	notrade
+arena5	mapflag	notrade
+arena6	mapflag	notrade
+arena7	mapflag	notrade
+arena8	mapflag	notrade
+arena9	mapflag	notrade
+arena10	mapflag	notrade
+arena11	mapflag	notrade
+arena12	mapflag	notrade
+arena13	mapflag	notrade
+arena14	mapflag	notrade
+arena15	mapflag	notrade
+arena16	mapflag	notrade
+arena17	mapflag	notrade
+arena18	mapflag	notrade
+arena19	mapflag	notrade
+arena20	mapflag	notrade
+arena21	mapflag	notrade
+arena22	mapflag	notrade
+arena23	mapflag	notrade
+arena24	mapflag	notrade
+arena25	mapflag	notrade
+arena26	mapflag	notrade
+arena27	mapflag	notrade
+arena28	mapflag	notrade
+arena29	mapflag	notrade
+arena30	mapflag	notrade
+arena31	mapflag	notrade
+arena32	mapflag	notrade
+arena33	mapflag	notrade
+arena34	mapflag	notrade
+arena35	mapflag	notrade
+arena36	mapflag	notrade
+arena37	mapflag	notrade
+arena38	mapflag	notrade
+arena39	mapflag	notrade
+arena40	mapflag	notrade
+arena41	mapflag	notrade
+arena42	mapflag	notrade
+guild_vs2	mapflag	notrade
+guild_vs3	mapflag	notrade
+guild_vs4	mapflag	notrade
+guild_vs5	mapflag	notrade
+2009rwc_01	mapflag	notrade
+2009rwc_02	mapflag	notrade
+2009rwc_03	mapflag	notrade
+2009rwc_04	mapflag	notrade
+quiz_02	mapflag	notrade
+rwc01	mapflag	notrade
+rwc02	mapflag	notrade
+rwc03	mapflag	notrade
+2008rwc_01	mapflag	notrade
+2008rwc_02	mapflag	notrade
+2008rwc_03	mapflag	notrade
+2008rwc_04	mapflag	notrade
+kvm	mapflag	notrade
+flavius	mapflag	notrade
+bio4	mapflag	notrade
+1@lab	mapflag	notrade
+1@dth3	mapflag	notrade
+1@tnm1	mapflag	notrade
+1@pump	mapflag	notrade
+2@pump	mapflag	notrade
+job_prist	mapflag	notrade
+ecl_tdun02	mapflag	notrade
+evt_bomb	mapflag	notrade
+arug_cas01	mapflag	notrade
+aldeg_cas01	mapflag	notrade
+aldeg_cas02	mapflag	notrade
+aldeg_cas03	mapflag	notrade
+aldeg_cas04	mapflag	notrade
+aldeg_cas05	mapflag	notrade
+prtg_cas01	mapflag	notrade
+prtg_cas02	mapflag	notrade
+prtg_cas03	mapflag	notrade
+prtg_cas04	mapflag	notrade
+prtg_cas05	mapflag	notrade
+arug_cas03	mapflag	notrade
+arug_cas04	mapflag	notrade
+arug_cas05	mapflag	notrade
+payg_cas01	mapflag	notrade
+payg_cas02	mapflag	notrade
+payg_cas03	mapflag	notrade
+payg_cas04	mapflag	notrade
+payg_cas05	mapflag	notrade
+gefg_cas03	mapflag	notrade
+gefg_cas04	mapflag	notrade
+gefg_cas02	mapflag	notrade
+gefg_cas01	mapflag	notrade
+gefg_cas05	mapflag	notrade
+schg_cas01	mapflag	notrade
+schg_cas02	mapflag	notrade
+schg_cas03	mapflag	notrade
+schg_cas04	mapflag	notrade
+schg_cas05	mapflag	notrade
+//
+ros2024	mapflag	notrade
+ros2025_1	mapflag	notrade
+ros2025_2	mapflag	notrade
+ros2025_3	mapflag	notrade
+ros2025_4	mapflag	notrade
+ros2025_5	mapflag	notrade
+ros2025_6	mapflag	notrade
+//
+v4arena1	mapflag	notrade
+v4arena2	mapflag	notrade
+v4arena3	mapflag	notrade
+v4arena4	mapflag	notrade
+v4arena5	mapflag	notrade
+v4arena6	mapflag	notrade
+v4arena7	mapflag	notrade

@@ -1,0 +1,21 @@
+izlude,125,112,5	script	Peco/Falcon/Cart	757,{
+
+mes "O que deseja para sua classe?";
+switch(select("Cart:Falcon:Peco-Peco")) {
+	case 1:
+		if (getskilllv("MC_PUSHCART")) atcommand "@option 0 0 8";
+		break;
+		
+	case 2:
+		if (getskilllv("HT_FALCON")) atcommand "@option 0 0 16";
+		break;
+	
+	case 3:
+		if (getskilllv("KN_RIDING")) atcommand "@option 0 0 32";
+		break;
+}
+close;
+}
+
+quiz_02,137,353,4	duplicate(Peco/Falcon/Cart)	Rental Blue#quiz_02	757
+quiz_02,151,353,4	duplicate(Peco/Falcon/Cart)	Rental Red#quiz_02	757

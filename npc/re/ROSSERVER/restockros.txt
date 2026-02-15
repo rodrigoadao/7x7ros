@@ -1,0 +1,179 @@
+//versao 20 ago 2024
+//precisa ser otimizado para checar se o usuario tem capacidade de receber os itens antes de dar os itens
+//se nao tiver capacidade, precisa mandar mensagem, pro player nao ficar achando que recebeu o que deveria ter recebido
+//
+//esse script tem maos de illegit, baray e uniatrix
+izlude,131,148,6	script	Restock	666,{
+	cutin "h_iris01",2;
+	mes "^DB6446[ Iris ]^000000";
+	// Confirmation message
+	mes "Para que seu score de derrotas se expanda mais rápido que o universo, eu vou agilizar sua restockagem de stuffs. Você quer salvar seus stuffs atuais?";
+	if (select("Não:Sim") == 1) {
+		cutin "", 255;
+		close;
+	}
+	cutin "", 255;
+	// Array of item IDs
+	//setarray .@item_ids[0], 501, 502, 503, 504, 505, 506, 545, 546, 547, 522, 645, 656, 657, 11547, 11548, 11549, 12392, 12393, 12394, 12427, 12424, 12436, 12437, 12429, 12430, 12431, 12432, 12433, 12434, 12114, 12115, 12116, 12117, 12118, 12119, 12120, 12121, 523, 715, 716, 717, 12004, 12005, 12006, 12007, 12008, 12009, 12010, 12011, 12012, 12013, 12014, 12015, 1065, 7940, 6144, 11513, 18000, 18001, 18002, 18003, 18004, 6145, 12383, 6146, 6147, 970, 6210, 6211, 6212, 6213, 6214, 6215, 6216, 6217, 7137, 7138, 13265, 13266, 13267, 13268, 13277, 13280, 13281, 13282, 13283, 6128, 12717, 12718, 12719, 12720, 12721, 12722, 12723, 12724, 6120, 6123, 1025, 990, 991, 992, 993, 994, 995, 996, 997, 6360, 6361, 6362, 6363, 714, 1010, 1011, 984, 985, 612, 7054, 1002, 521, 999, 757, 615, 100065, 100066, 100067, 100068, 100069, 100070, 100071, 100072;
+	setarray .@item_ids[0], 501, 502, 503, 504, 505, 506, 545, 546, 547, 522, 645, 656, 657, 11547, 11548, 11549, 12392, 12393, 12394, 12427, 12424, 12436, 12437, 12429, 12430, 12431, 12432, 12433, 12434, 12114, 12115, 12116, 12117, 12118, 12119, 12120, 12121, 523, 715, 716, 717, 12004, 12005, 12006, 12007, 12008, 12009, 12010, 12011, 12012, 12013, 12014, 12015, 1065, 7940, 6144, 11513, 18000, 18001, 18002, 18003, 18004, 6145, 12383, 6146, 6147, 970, 6210, 6211, 6212, 6213, 6214, 6215, 6216, 6217, 7137, 7138, 13265, 13266, 13267, 13268, 13277, 13280, 13281, 13282, 13283, 6128, 12717, 12718, 12719, 12720, 12721, 12722, 12723, 12724, 6120, 6123, 1025, 990, 991, 992, 993, 994, 995, 996, 997, 6360, 6361, 6362, 6363, 714, 1010, 1011, 984, 985, 612, 7054, 1002, 521, 999, 757, 615, 100065, 100066, 100067, 100068, 100069, 100070, 100071, 100072, 1750, 1751, 1752, 1753, 1754, 1755, 1756, 1757, 1762, 1765, 1767, 1770, 7049;
+	// Array of variables to store item quantities
+	//setarray .@quantities[0], qtd501, qtd502, qtd503, qtd504, qtd505, qtd506, qtd545, qtd546, qtd547, qtd522, qtd645, qtd656, qtd657, qtd11547, qtd11548, qtd11549, qtd12392, qtd12393, qtd12394, qtd12427, qtd12424, qtd12436, qtd12437, qtd12429, qtd12430, qtd12431, qtd12432, qtd12433, qtd12434, qtd12114, qtd12115, qtd12116, qtd12117, qtd12118, qtd12119, qtd12120, qtd12121, qtd523, qtd715, qtd716, qtd717, qtd12004, qtd12005, qtd12006, qtd12007, qtd12008, qtd12009, qtd12010, qtd12011, qtd12012, qtd12013, qtd12014, qtd12015, qtd1065, qtd7940, qtd6144, qtd11513, qtd18000, qtd18001, qtd18002, qtd18003, qtd18004, qtd6145, qtd12383, qtd6146, qtd6147, qtd970, qtd6210, qtd6211, qtd6212, qtd6213, qtd6214, qtd6215, qtd6216, qtd6217, qtd7137, qtd7138, qtd13265, qtd13266, qtd13267, qtd13268, qtd13277, qtd13280, qtd13281, qtd13282, qtd13283, qtd6128, qtd12717, qtd12718, qtd12719, qtd12720, qtd12721, qtd12722, qtd12723, qtd12724, qtd6120, qtd6123, qtd1025, qtd990, qtd991, qtd992, qtd993, qtd994, qtd995, qtd996, qtd997, qtd6360, qtd6361, qtd6362, qtd6363, qtd714, qtd1010, qtd1011, qtd984, qtd985, qtd612, qtd7054, qtd1002, qtd521, qtd999, qtd757, qtd615, qtd100065, qtd100066, qtd100067, qtd100068, qtd100069, qtd100070, qtd100071, qtd100072;
+	setarray .@quantities[0], qtd501, qtd502, qtd503, qtd504, qtd505, qtd506, qtd545, qtd546, qtd547, qtd522, qtd645, qtd656, qtd657, qtd11547, qtd11548, qtd11549, qtd12392, qtd12393, qtd12394, qtd12427, qtd12424, qtd12436, qtd12437, qtd12429, qtd12430, qtd12431, qtd12432, qtd12433, qtd12434, qtd12114, qtd12115, qtd12116, qtd12117, qtd12118, qtd12119, qtd12120, qtd12121, qtd523, qtd715, qtd716, qtd717, qtd12004, qtd12005, qtd12006, qtd12007, qtd12008, qtd12009, qtd12010, qtd12011, qtd12012, qtd12013, qtd12014, qtd12015, qtd1065, qtd7940, qtd6144, qtd11513, qtd18000, qtd18001, qtd18002, qtd18003, qtd18004, qtd6145, qtd12383, qtd6146, qtd6147, qtd970, qtd6210, qtd6211, qtd6212, qtd6213, qtd6214, qtd6215, qtd6216, qtd6217, qtd7137, qtd7138, qtd13265, qtd13266, qtd13267, qtd13268, qtd13277, qtd13280, qtd13281, qtd13282, qtd13283, qtd6128, qtd12717, qtd12718, qtd12719, qtd12720, qtd12721, qtd12722, qtd12723, qtd12724, qtd6120, qtd6123, qtd1025, qtd990, qtd991, qtd992, qtd993, qtd994, qtd995, qtd996, qtd997, qtd6360, qtd6361, qtd6362, qtd6363, qtd714, qtd1010, qtd1011, qtd984, qtd985, qtd612, qtd7054, qtd1002, qtd521, qtd999, qtd757, qtd615, qtd100065, qtd100066, qtd100067, qtd100068, qtd100069, qtd100070, qtd100071, qtd100072, qtd1750, qtd1751, qtd1752, qtd1753, qtd1754, qtd1755, qtd1756, qtd1757, qtd1762, qtd1765, qtd1767, qtd1770, qtd7049;
+	// Loop through each item and save the quantity in inventory
+	for (.@i = 0; .@i < getarraysize(.@item_ids); .@i++) {
+		set .@quantities[.@i], countitem(.@item_ids[.@i]);
+	}
+
+
+	// Assign the quantities back to their respective variables
+	set qtd501, .@quantities[0];
+	set qtd502, .@quantities[1];
+	set qtd503, .@quantities[2];
+	set qtd504, .@quantities[3];
+	set qtd505, .@quantities[4];
+	set qtd506, .@quantities[5];
+	set qtd545, .@quantities[6];
+	set qtd546, .@quantities[7];
+	set qtd547, .@quantities[8];
+	set qtd522, .@quantities[9];
+	set qtd645, .@quantities[10];
+	set qtd656, .@quantities[11];
+	set qtd657, .@quantities[12];
+	set qtd11547, .@quantities[13];
+	set qtd11548, .@quantities[14];
+	set qtd11549, .@quantities[15];
+	set qtd12392, .@quantities[16];
+	set qtd12393, .@quantities[17];
+	set qtd12394, .@quantities[18];
+	set qtd12427, .@quantities[19];
+	set qtd12424, .@quantities[20];
+	set qtd12436, .@quantities[21];
+	set qtd12437, .@quantities[22];
+	set qtd12429, .@quantities[23];
+	set qtd12430, .@quantities[24];
+	set qtd12431, .@quantities[25];
+	set qtd12432, .@quantities[26];
+	set qtd12433, .@quantities[27];
+	set qtd12434, .@quantities[28];
+	set qtd12114, .@quantities[29];
+	set qtd12115, .@quantities[30];
+	set qtd12116, .@quantities[31];
+	set qtd12117, .@quantities[32];
+	set qtd12118, .@quantities[33];
+	set qtd12119, .@quantities[34];
+	set qtd12120, .@quantities[35];
+	set qtd12121, .@quantities[36];
+	set qtd523, .@quantities[37];
+	set qtd715, .@quantities[38];
+	set qtd716, .@quantities[39];
+	set qtd717, .@quantities[40];
+	set qtd12004, .@quantities[41];
+	set qtd12005, .@quantities[42];
+	set qtd12006, .@quantities[43];
+	set qtd12007, .@quantities[44];
+	set qtd12008, .@quantities[45];
+	set qtd12009, .@quantities[46];
+	set qtd12010, .@quantities[47];
+	set qtd12011, .@quantities[48];
+	set qtd12012, .@quantities[49];
+	set qtd12013, .@quantities[50];
+	set qtd12014, .@quantities[51];
+	set qtd12015, .@quantities[52];
+	set qtd1065, .@quantities[53];
+	set qtd7940, .@quantities[54];
+	set qtd6144, .@quantities[55];
+	set qtd11513, .@quantities[56];
+	set qtd18000, .@quantities[57];
+	set qtd18001, .@quantities[58];
+	set qtd18002, .@quantities[59];
+	set qtd18003, .@quantities[60];
+	set qtd18004, .@quantities[61];
+	set qtd6145, .@quantities[62];
+	set qtd12383, .@quantities[63];
+	set qtd6146, .@quantities[64];
+	set qtd6147, .@quantities[65];
+	set qtd970, .@quantities[66];
+	set qtd6210, .@quantities[67];
+	set qtd6211, .@quantities[68];
+	set qtd6212, .@quantities[69];
+	set qtd6213, .@quantities[70];
+	set qtd6214, .@quantities[71];
+	set qtd6215, .@quantities[72];
+	set qtd6216, .@quantities[73];
+	set qtd6217, .@quantities[74];
+	set qtd7137, .@quantities[75];
+	set qtd7138, .@quantities[76];
+	set qtd13265, .@quantities[77];
+	set qtd13266, .@quantities[78];
+	set qtd13267, .@quantities[79];
+	set qtd13268, .@quantities[80];
+	set qtd13277, .@quantities[81];
+	set qtd13280, .@quantities[82];
+	set qtd13281, .@quantities[83];
+	set qtd13282, .@quantities[84];
+	set qtd13283, .@quantities[85];
+	set qtd6128, .@quantities[86];
+	set qtd12717, .@quantities[87];
+	set qtd12718, .@quantities[88];
+	set qtd12719, .@quantities[89];
+	set qtd12720, .@quantities[90];
+	set qtd12721, .@quantities[91];
+	set qtd12722, .@quantities[92];
+	set qtd12723, .@quantities[93];
+	set qtd12724, .@quantities[94];
+	set qtd6120, .@quantities[95];
+	set qtd6123, .@quantities[96];
+	set qtd1025, .@quantities[97];
+	set qtd990, .@quantities[98];
+	set qtd991, .@quantities[99];
+	set qtd992, .@quantities[100];
+	set qtd993, .@quantities[101];
+	set qtd994, .@quantities[102];
+	set qtd995, .@quantities[103];
+	set qtd996, .@quantities[104];
+	set qtd997, .@quantities[105];
+	set qtd6360, .@quantities[106];
+	set qtd6361, .@quantities[107];
+	set qtd6362, .@quantities[108];
+	set qtd6363, .@quantities[109];
+	set qtd714, .@quantities[110];
+	set qtd1010, .@quantities[111];
+	set qtd1011, .@quantities[112];
+	set qtd984, .@quantities[113];
+	set qtd985, .@quantities[114];
+	set qtd612, .@quantities[115];
+	set qtd7054, .@quantities[116];
+	set qtd1002, .@quantities[117];
+	set qtd521, .@quantities[118];
+	set qtd999, .@quantities[119];
+	set qtd757, .@quantities[120];
+	set qtd615, .@quantities[121];
+	set qtd100065, .@quantities[122];
+	set qtd100066, .@quantities[123];
+	set qtd100067, .@quantities[124];
+	set qtd100068, .@quantities[125];
+	set qtd100069, .@quantities[126];
+	set qtd100070, .@quantities[127];
+	set qtd100071, .@quantities[128];
+	set qtd100072, .@quantities[129];
+	set qtd1750, .@quantities[130];
+	set qtd1751, .@quantities[131];
+	set qtd1752, .@quantities[132];
+	set qtd1753, .@quantities[133];
+	set qtd1754, .@quantities[134];
+	set qtd1755, .@quantities[135];
+	set qtd1756, .@quantities[136];
+	set qtd1757, .@quantities[137];
+	set qtd1762, .@quantities[138];
+	set qtd1765, .@quantities[139];
+	set qtd1767, .@quantities[140];
+	set qtd1770, .@quantities[141];
+	set qtd7049, .@quantities[142];
+	dispbottom "Seus stuffs foram salvos. Vá, faça o que um newbha faz de melhor!";
+	close;
+}
+
+quiz_02,245,354,4	duplicate(Restock)	Restock Blue#quiz_02_2	666
+quiz_02,254,354,6	duplicate(Restock)	Restock Red#quiz_02_2	666
+quiz_02,143,356,4	duplicate(Restock)	Restock Blue#quiz_02	666
+quiz_02,152,356,6	duplicate(Restock)	Restock Red#quiz_02	666

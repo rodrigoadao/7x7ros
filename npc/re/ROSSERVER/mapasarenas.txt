@@ -1,0 +1,71 @@
+izlude,128,119,3	script	Mapas	857,{
+	cutin "mapaarenas1-15",4;
+	mes "[Mapa das arenas]";
+	mes "Você pode ver os mapas ampliados clicando no NPC da arena correspondente.";
+	mes "Selecione para repetir a imagem dos mapas.";
+	next;
+	
+	cutin "mapaarenas16-30",4;
+	next;
+	
+	menu "Close", Missclicked, "Repetir os mapas", Repete;
+	
+		Missclicked:
+			cutin "", 255;
+		close;
+	
+		Repete:
+			cutin "mapaarenas1-15",4;
+			next;
+			cutin "mapaarenas16-30",4;
+			next;
+			cutin "", 255;
+		close;
+			
+	}
+	
+// izlude,143,120,3	script	Mapas	857,{
+// 	//cutin "fenrir_a",2;
+// 	mes "Se você tem se divertido no servidor, demonstre sua apreciaçãoo ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que você sente ser proporcional ao entretenimento que você está tendo:";
+// 	mes "^33940CCHAVE PIX xxx^000000";
+// 	next;
+// 	cutin "arena1",4;
+// 	next;
+// 	cutin "arena2",4;
+// 	next;
+// 	cutin "arena3-1",4;
+// 	next;
+// 	cutin "arena3-2",4;
+// 	next;
+// 	cutin "arena4",4;
+// 	next;
+// 	cutin "arena5",4;
+// 	next;
+// 	cutin "arena6-1",4;
+// 	next;
+// 	cutin "arena6-2",4;
+// 	next;
+// 	cutin "arena7",4;
+// 	next;
+// 	cutin "arena8-1",4;
+// 	next;
+// 	cutin "arena8-2",4;
+// 	next;
+// 	cutin "arena9",4;
+// 	next;
+// 	cutin "arena10",4;
+// 	next;
+// 	cutin "arena11",4;
+// 	next;
+// 	cutin "arena12",4;
+// 	next;
+// 	cutin "arena13",4;
+// 	next;
+// 	cutin "arena14",4;
+// 	next;
+// 	cutin "", 255;
+// 	next;
+// 	close;
+// } 
+quiz_02,145,359,4	duplicate(Mapas)	Mapas Blue#quiz_02	857
+quiz_02,150,359,6	duplicate(Mapas)	Mapas Red#quiz_02	857

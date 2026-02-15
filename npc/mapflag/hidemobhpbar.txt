@@ -1,0 +1,57 @@
+//===== rAthena Script =======================================
+//= Mapflag: hidemobhpbar.
+//===== Description: =========================================
+//= Hide monster's HP bar (added in episode 14.2).
+//===== Changelogs: ==========================================
+//= 1.0 First Version. [Lemongrass]
+//============================================================
+
+// PvP ========================
+pvp_y_1-1	mapflag	hidemobhpbar
+2012rwc_01	mapflag	hidemobhpbar
+2012rwc_02	mapflag	hidemobhpbar
+2012rwc_03	mapflag	hidemobhpbar
+2012rwc_04	mapflag	hidemobhpbar
+guild_vs1	mapflag	hidemobhpbar
+guild_vs2	mapflag	hidemobhpbar
+guild_vs3	mapflag	hidemobhpbar
+guild_vs4	mapflag	hidemobhpbar
+guild_vs5	mapflag	hidemobhpbar
+2009rwc_01	mapflag	hidemobhpbar
+2009rwc_02	mapflag	hidemobhpbar
+2009rwc_03	mapflag	hidemobhpbar
+2009rwc_04	mapflag	hidemobhpbar
+quiz_02	mapflag	hidemobhpbar
+rwc01	mapflag	hidemobhpbar
+rwc03	mapflag	hidemobhpbar
+2008rwc_01	mapflag	hidemobhpbar
+2008rwc_02	mapflag	hidemobhpbar
+2008rwc_03	mapflag	hidemobhpbar
+2008rwc_04	mapflag	hidemobhpbar
+kvm	mapflag	hidemobhpbar
+flavius	mapflag	hidemobhpbar
+bio4	mapflag	hidemobhpbar
+1@lab	mapflag	hidemobhpbar
+1@dth3	mapflag	hidemobhpbar
+1@tnm1	mapflag	hidemobhpbar
+1@pump	mapflag	hidemobhpbar
+2@pump	mapflag	hidemobhpbar
+job_prist	mapflag	hidemobhpbar
+ecl_tdun02	mapflag	hidemobhpbar
+evt_bomb	mapflag	hidemobhpbar
+//
+ros2024	mapflag	hidemobhpbar
+ros2025_1	mapflag	hidemobhpbar
+ros2025_2	mapflag	hidemobhpbar
+ros2025_3	mapflag	hidemobhpbar
+ros2025_4	mapflag	hidemobhpbar
+ros2025_5	mapflag	hidemobhpbar
+ros2025_6	mapflag	hidemobhpbar
+//
+v4arena1	mapflag	hidemobhpbar
+v4arena2	mapflag	hidemobhpbar
+v4arena3	mapflag	hidemobhpbar
+v4arena4	mapflag	hidemobhpbar
+v4arena5	mapflag	hidemobhpbar
+v4arena6	mapflag	hidemobhpbar
+v4arena7	mapflag	hidemobhpbar

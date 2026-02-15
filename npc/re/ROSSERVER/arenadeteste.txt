@@ -1,0 +1,81 @@
+izlude,134,150,4	script	Test Arena	88,{
+//
+// 	switch(select("^228B22- Arena GvG^000000 ^FF0000[ "+getmapusers("arug_cas02")+" ]^000000","Cancel")){
+
+
+// case 1:
+// mes "[ ^0000ffTest Arena^000000 ]";
+// mes "Ok, good luck!";
+// warp "arug_cas02",33,168; 
+// close;
+//
+	mes "[ ^0000ffTest Arena^000000 ]";
+	mes "Hello ^ff0000"+strcharinfo(0)+"^000000, choose one of the options below:";
+	next;
+	// set .@menu$, "";
+	// for (set .@i,1; .@i <= 14; set .@i, .@i+1) {
+	// 	set .@map$, "arena"+.@i;
+	// 	set .@menu$, .@menu$+"^228B22- Arena "+.@i+"^000000 ^FF0000[ "+getmapusers(.@map$)+" ]^000000:";
+	// }
+	// set .@menu$, .@menu$+"Cancel";
+	set .@menu$, "^228B22- Arena 1^000000 ^FF0000[ "+getmapusers("v4arena1")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 2^000000 ^FF0000[ "+getmapusers("v4arena2")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 3^000000 ^FF0000[ "+getmapusers("v4arena3")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 4^000000 ^FF0000[ "+getmapusers("v4arena4")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 5^000000 ^FF0000[ "+getmapusers("v4arena5")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 6^000000 ^FF0000[ "+getmapusers("v4arena6")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 7^000000 ^FF0000[ "+getmapusers("v4arena7")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 8^000000 ^FF0000[ "+getmapusers("arena9")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 9^000000 ^FF0000[ "+getmapusers("arena10")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 10^000000 ^FF0000[ "+getmapusers("arena11")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 11^000000 ^FF0000[ "+getmapusers("arena12")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 12^000000 ^FF0000[ "+getmapusers("arena20")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 13^000000 ^FF0000[ "+getmapusers("arena25")+" ]^000000:";
+	set .@menu$, .@menu$+"^228B22- Arena 14^000000 ^FF0000[ "+getmapusers("arena28")+" ]^000000:";
+	set .@menu$, .@menu$+"Cancel";
+	//
+	set .@select, select(.@menu$);
+	if (.@select == 1) {
+		warp "v4arena1",132,79;
+		close;
+	} else if (.@select == 2) {
+		warp "v4arena2",177,142;
+		close;
+	} else if (.@select == 3) {
+		warp "v4arena3",100,69;
+		close;
+	} else if (.@select == 4) {
+		warp "v4arena4",67,101;
+		close;
+	} else if (.@select == 5) {
+		warp "v4arena5",178,134;
+		close;
+	} else if (.@select == 6) {
+		warp "v4arena6",98,70;
+		close;
+	} else if (.@select == 7) {
+		warp "v4arena7",99,76;
+		close;
+	} else if (.@select == 8) {
+		warp "arena9",102,110;
+		close;
+	} else if (.@select == 9) {
+		warp "arena10",122,158;
+		close;
+	} else if (.@select == 10) {
+		warp "arena11",46,79;
+		close;
+	} else if (.@select == 11) {
+		warp "arena12",64,92;
+		close;
+	} else if (.@select == 12) {
+		warp "arena20",56,117;
+		close;
+	} else if (.@select == 13) {
+		warp "arena25",53,128;
+		close;
+	} else if (.@select == 14) {
+		warp "arena28",123,247;
+		close;
+	} 
+}

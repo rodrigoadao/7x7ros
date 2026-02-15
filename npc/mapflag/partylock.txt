@@ -1,0 +1,135 @@
+//===== rAthena Script =======================================
+//= Mapflag: Party lock.
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 1.2
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: ========================================= 
+//= Blocks all party modifications on a map:
+//=   /organize, /leave, /invite, @changeleader
+//===== Additional Comments: ================================= 
+//= 1.0 Initial script.
+//= 1.1 Updated. [L0ne_W0lf]
+//= 1.2 Renewal split. [Euphy]
+//============================================================
+
+// Sealed Shrine ==================
+// 1@cata	mapflag	partylock
+2012rwc_01	mapflag	partylock
+2012rwc_02	mapflag	partylock
+2012rwc_03	mapflag	partylock
+2012rwc_04	mapflag	partylock
+guild_vs1	mapflag	partylock
+arug_cas02	mapflag	partylock
+arena1	mapflag	partylock
+arena2	mapflag	partylock
+arena3	mapflag	partylock
+arena4	mapflag	partylock
+arena5	mapflag	partylock
+arena6	mapflag	partylock
+arena7	mapflag	partylock
+arena8	mapflag	partylock
+arena9	mapflag	partylock
+arena10	mapflag	partylock
+arena11	mapflag	partylock
+arena12	mapflag	partylock
+arena13	mapflag	partylock
+arena14	mapflag	partylock
+arena15	mapflag	partylock
+arena16	mapflag	partylock
+arena17	mapflag	partylock
+arena18	mapflag	partylock
+arena19	mapflag	partylock
+arena20	mapflag	partylock
+arena21	mapflag	partylock
+arena22	mapflag	partylock
+arena23	mapflag	partylock
+arena24	mapflag	partylock
+arena25	mapflag	partylock
+arena26	mapflag	partylock
+arena27	mapflag	partylock
+arena28	mapflag	partylock
+arena29	mapflag	partylock
+arena30	mapflag	partylock
+arena31	mapflag	partylock
+arena32	mapflag	partylock
+arena33	mapflag	partylock
+arena34	mapflag	partylock
+arena35	mapflag	partylock
+arena36	mapflag	partylock
+arena37	mapflag	partylock
+arena38	mapflag	partylock
+arena39	mapflag	partylock
+arena40	mapflag	partylock
+arena41	mapflag	partylock
+arena42	mapflag	partylock
+2009rwc_01	mapflag	partylock
+2009rwc_02	mapflag	partylock
+2009rwc_03	mapflag	partylock
+2009rwc_04	mapflag	partylock
+quiz_02	mapflag	partylock
+rwc01	mapflag	partylock
+rwc02	mapflag	partylock
+rwc03	mapflag	partylock
+2008rwc_01	mapflag	partylock
+2008rwc_02	mapflag	partylock
+2008rwc_03	mapflag	partylock
+2008rwc_04	mapflag	partylock
+kvm	mapflag	partylock
+flavius	mapflag	partylock
+bio4	mapflag	partylock
+1@lab	mapflag	partylock
+1@dth3	mapflag	partylock
+1@tnm1	mapflag	partylock
+1@pump	mapflag	partylock
+2@pump	mapflag	partylock
+job_prist	mapflag	partylock
+ecl_tdun02	mapflag	partylock
+evt_bomb	mapflag	partylock
+arug_cas01	mapflag	partylock
+arug_cas03	mapflag	partylock
+arug_cas04	mapflag	partylock
+arug_cas05	mapflag	partylock
+payg_cas01	mapflag	partylock
+payg_cas02	mapflag	partylock
+payg_cas03	mapflag	partylock
+payg_cas04	mapflag	partylock
+payg_cas05	mapflag	partylock
+gefg_cas03	mapflag	partylock
+gefg_cas04	mapflag	partylock
+gefg_cas02	mapflag	partylock
+gefg_cas01	mapflag	partylock
+gefg_cas05	mapflag	partylock
+schg_cas01	mapflag	partylock
+schg_cas02	mapflag	partylock
+schg_cas03	mapflag	partylock
+schg_cas04	mapflag	partylock
+schg_cas05	mapflag	partylock
+aldeg_cas01	mapflag	partylock
+aldeg_cas02	mapflag	partylock
+aldeg_cas03	mapflag	partylock
+aldeg_cas04	mapflag	partylock
+aldeg_cas05	mapflag	partylock
+prtg_cas01	mapflag	partylock
+prtg_cas02	mapflag	partylock
+prtg_cas03	mapflag	partylock
+prtg_cas04	mapflag	partylock
+prtg_cas05	mapflag	partylock
+//
+ros2024	mapflag	partylock
+ros2025_1	mapflag	partylock
+ros2025_2	mapflag	partylock
+ros2025_3	mapflag	partylock
+ros2025_4	mapflag	partylock
+ros2025_5	mapflag	partylock
+ros2025_6	mapflag	partylock
+//
+v4arena1	mapflag	partylock
+v4arena2	mapflag	partylock
+v4arena3	mapflag	partylock
+v4arena4	mapflag	partylock
+v4arena5	mapflag	partylock
+v4arena6	mapflag	partylock
+v4arena7	mapflag	partylock

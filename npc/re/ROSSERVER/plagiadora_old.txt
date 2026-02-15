@@ -1,0 +1,98 @@
+
+//versao 13 set 2025
+//precisa ser otimizado
+//atualmente o usuario precisa relogar para nao perder a skill ao falar com a curandeira ou quando troca de mapa
+//e isso e um pe no saco pro player 
+
+//21 04 2025
+// NPC invis?vel para restaurar skill copiada ao trocar de mapa ou logar
+// -	script	RestorePlagiado	-1,{
+//     OnPCLoginEvent:
+//     OnPCLoadMapEvent:
+//         if (getskilllv("RG_PLAGIARISM") && CLONE_SKILL && CLONE_SKILL_LV) {
+//             // Remove qualquer vers?o anterior que possa ter sido limpada
+//             skill CLONE_SKILL, 0, 0;
+//             // Reaplica a skill
+//             skill CLONE_SKILL, CLONE_SKILL_LV, 1;
+//         }
+//         end;
+    // }
+//
+izlude,127,148,3	script	Plagiadora	10010,{
+set .@skill_level,getskilllv( "RG_PLAGIARISM" );
+
+
+cutin "lydia_a",2;
+mes "[ Lidia ]";
+mes "Eu sou a barreira de entrada de renegados: se não conseguir relogar após receber a skill que eu dou pra ele, então já sabemos que ele vai jogar mal.";
+if( !.@skill_level ){
+    cutin "lydia_a",2;
+    // mes "[ Lidia ]";
+    // mes "I provide skill to Stalker Class.";
+    //next;
+    mes "Eu preciso te dizer que só quem tem ^FF0000Plagiarism skill^000000 pode receber skills?";
+    next;
+}else{
+    if( select( ( CLONE_SKILL && CLONE_SKILL_LV )?"Un-Learn Skill":"Learn Skill","Close" ) == 1 ){
+        cutin "lydia_a",2;
+        if( CLONE_SKILL && CLONE_SKILL_LV ){
+            mes "Unlearned Copied Skill";
+            set CLONE_SKILL_LV,0;
+            skill CLONE_SKILL,CLONE_SKILL_LV,0;
+            set CLONE_SKILL,0;
+        }else{
+            mes "Please select a Skills";
+            next;
+            set .@i,select( .menu$ ) - 1;
+            if( .@skill_level > .skill_max_level[.@i] )
+                set .@skill_level,.skill_max_level[.@i];
+            mes "Skill : ^0055FF"+.skill_name$[.@i]+"^000000";
+            mes "Level : ^0055FF"+.@skill_level+"^000000";
+            mes "Cost : ^0055FF"+( ( .skill_cost[.@i] )? .skill_cost[.@i]+" Zeny":"Free" )+"^000000";
+            mes " ";
+            mes "^777777( Plagiarism Affect Skill Level )^000000";
+            if( select( "Confirm","Cancel" ) == 1 ){
+                if( .skill_cost[.@i] ){
+                    if( Zeny >= .skill_cost[.@i] ){
+                        set Zeny,Zeny - .skill_cost[.@i];
+                    }else{
+                        mes "Not enough Zeny.";
+                        cutin "", 255;
+                        close;
+                    }
+                }
+                set CLONE_SKILL,.skill_id[.@i];
+                set CLONE_SKILL_LV,.@skill_level;
+                mes "Learned Skill ^0055FFLv"+CLONE_SKILL_LV+" "+.skill_name$[.@i]+"^000000";
+                skill CLONE_SKILL,CLONE_SKILL_LV,0;
+            }
+        }
+    }
+}
+//dispbottom "Skill ID "+CLONE_SKILL+" | Level : "+CLONE_SKILL_LV;
+cutin "", 255;
+close;
+OnInit:
+// Skill Display Names
+//setarray .skill_name$,"Chute Aéreo","Lâminas Retalhadoras","Nevasca","Erva Daninha","Planta Infernal";
+setarray .skill_name$,"Avanço Ofensivo","Lâminas Retalhadoras","Nevasca","Erva Daninha","Planta Infernal","Revelação";
+// Skill ID
+setarray .skill_id,1001,2022,89,2483,2490,24;
+// Skill Max Learn-able Level
+setarray .skill_max_level,1,5,10,10,5,1;
+// Skill Cost in Zeny
+setarray .skill_cost,1,1,1,1,1,1;
+
+set .menu$,"";
+set .skill_size,getarraysize( .skill_name$ );
+while( .@i < .skill_size ){
+    set .menu$,.menu$ + "[ ^0055FFLv "+.skill_max_level[.@i]+"^000000 ] "+ .skill_name$[.@i] +":";
+    set .@i,.@i + 1;
+}
+end;
+}
+
+quiz_02,241,354,3	duplicate(Plagiadora)	Plagiaridora Blue#quiz_02_2	10010
+quiz_02,258,354,6	duplicate(Plagiadora)	Plagiaridora Red#quiz_02_2	10010
+quiz_02,139,356,3	duplicate(Plagiadora)	Plagiadora Blue#quiz_02	10010
+quiz_02,156,356,6	duplicate(Plagiadora)	Plagiadora Red#quiz_02	10010

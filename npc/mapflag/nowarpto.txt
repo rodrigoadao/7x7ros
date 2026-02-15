@@ -1,0 +1,53 @@
+// //===== rAthena Script =======================================
+// //= Mapflag: Disable warpto.
+// //===== By: ==================================================
+// //= rAthena Dev Team
+// //===== Current Version: =====================================
+// //= 1.5
+// //===== Compatible With: =====================================
+// //= rAthena Project
+// //===== Description: ========================================= 
+// //= Disables warping to a map.
+// //= Atcommands @warp, @go, @load, @jump, @partyrecall,
+// //=   @guildrecall, and @recallall are disabled.
+// //= Command /memo is disabled.
+// //===== Additional Comments: ================================= 
+// //= 1.0 Initial script.
+// //= 1.4 Updated. [L0ne_W0lf]
+// //= 1.5 Renewal split. [Euphy]
+// //============================================================
+
+// // Guild Castles ========================
+// lhz_dun03	mapflag	nowarpto
+// izlude	mapflag	nowarpto
+// 2012rwc_01	mapflag	nowarpto
+// 2012rwc_02	mapflag	nowarpto
+// 2012rwc_03	mapflag	nowarpto
+// 2012rwc_04	mapflag	nowarpto
+// guild_vs1	mapflag	nowarpto
+// guild_vs2	mapflag	nowarpto
+// guild_vs3	mapflag	nowarpto
+// guild_vs4	mapflag	nowarpto
+// guild_vs5	mapflag	nowarpto
+// 2009rwc_01	mapflag	nowarpto
+// 2009rwc_02	mapflag	nowarpto
+// 2009rwc_03	mapflag	nowarpto
+// 2009rwc_04	mapflag	nowarpto
+// quiz_02	mapflag	nowarpto
+// rwc01	mapflag	nowarpto
+// rwc03	mapflag	nowarpto
+// 2008rwc_01	mapflag	nowarpto
+// 2008rwc_02	mapflag	nowarpto
+// 2008rwc_03	mapflag	nowarpto
+// 2008rwc_04	mapflag	nowarpto
+// kvm	mapflag	nowarpto
+// flavius	mapflag	nowarpto
+// bio4	mapflag	nowarpto
+// 1@lab	mapflag	nowarpto
+// 1@dth3	mapflag	nowarpto
+// 1@tnm1	mapflag	nowarpto
+// 1@pump	mapflag	nowarpto
+// 2@pump	mapflag	nowarpto
+// job_prist	mapflag	nowarpto
+// ecl_tdun02	mapflag	nowarpto
+// evt_bomb	mapflag	nowarpto

@@ -1,0 +1,66 @@
+izlude,120,149,4	script	Itens Limitados	885,{
+	// EDP para Guillotine Cross (comum e transcendental)
+	if (Class == 4059 || Class == 4065) {
+		set .@have, countitem(678);
+		set .@give, 3 - .@have;
+		if (.@give > 0 && checkweight(678,.@give)) {
+			getitem 678, .@give;
+		}
+	}
+	
+	// Fire Bottle e Acid Bottle para Genetic (comum e transcendental)
+	if (Class == 4071 || Class == 4078) {
+		set .@have1, countitem(7135);
+		set .@have2, countitem(7136);
+		set .@give1, 5 - .@have1;
+		set .@give2, 5 - .@have2;
+		
+		if (.@give1 > 0 && checkweight(7135,.@give1)) {
+			getitem 7135, .@give1;
+		}
+		if (.@give2 > 0 && checkweight(7136,.@give2)) {
+			getitem 7136, .@give2;
+		}
+	}
+	
+	// Rune Knight Items (comum e transcendental)
+	if (Class == 4054 || Class == 4060) {
+		// Verificar quantos de cada item o jogador tem
+		set .@have1, countitem(12725);  // Item 1
+		set .@have2, countitem(12726);  // Item 2
+		set .@have3, countitem(12727);  // Item 3
+		set .@have4, countitem(12728);  // Item 4
+		set .@have5, countitem(12729);  // Item 5
+		set .@have6, countitem(12730);  // Item 6
+		set .@have7, countitem(12731);  // Item 7
+		set .@have8, countitem(12732);  // Item 8
+		set .@have9, countitem(12733);  // Item 9
+		set .@have10, countitem(22540); // Item 10
+		
+		// Calcular quantos dar de cada
+		set .@give1, 3 - .@have1;
+		set .@give2, 3 - .@have2;
+		set .@give3, 3 - .@have3;
+		set .@give4, 3 - .@have4;
+		set .@give5, 3 - .@have5;
+		set .@give6, 3 - .@have6;
+		set .@give7, 3 - .@have7;
+		set .@give8, 3 - .@have8;
+		set .@give9, 3 - .@have9;
+		set .@give10, 3 - .@have10;
+		
+		// Dar os itens se houver espaço
+		if (.@give1 > 0 && checkweight(12725,.@give1)) getitem 12725, .@give1;
+		if (.@give2 > 0 && checkweight(12726,.@give2)) getitem 12726, .@give2;
+		if (.@give3 > 0 && checkweight(12727,.@give3)) getitem 12727, .@give3;
+		if (.@give4 > 0 && checkweight(12728,.@give4)) getitem 12728, .@give4;
+		if (.@give5 > 0 && checkweight(12729,.@give5)) getitem 12729, .@give5;
+		if (.@give6 > 0 && checkweight(12730,.@give6)) getitem 12730, .@give6;
+		if (.@give7 > 0 && checkweight(12731,.@give7)) getitem 12731, .@give7;
+		if (.@give8 > 0 && checkweight(12732,.@give8)) getitem 12732, .@give8;
+		if (.@give9 > 0 && checkweight(12733,.@give9)) getitem 12733, .@give9;
+		if (.@give10 > 0 && checkweight(22540,.@give10)) getitem 22540, .@give10;
+	}
+	
+	end;
+}

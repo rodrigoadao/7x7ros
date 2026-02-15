@@ -1,0 +1,203 @@
+// TIME BLUE
+// *********************************************************************
+izlude,121,143,6	script	Blue Team	683,{
+    cutin "hero_chaos_01 rwc",2;
+    mes "[ ^0000FFChaos^000000 ]";
+    mes "Você precisa de ^0000FF7 membros^000000 na guild e na party. Será que você consegue contar até 7?";
+    next;
+
+    // Check for party
+    if ( !getcharid(1) ) {
+        mes "[ ^0000FFChaos^000000 ]";
+        mes "Você precisa estar em um ^0000FFgrupo^000000. É ótimo que você tenha pudor e evite expor a nojeira de quem você é para os outros, mas, pra jogar 7x7 você terá que melhorar. Você já ouviu a palavra 'liderança' por aí?";
+        next;
+        cutin "", 255;
+        close;
+    }
+
+    // Check for guild
+    if ( !getcharid(2) ) {
+        mes "[ ^0000FFChaos^000000 ]";
+        mes "Você precisa de estar em uma ^0000ffguild^000000. É ótimo que você tenha pudor e evite expor a nojeira de quem você é para os outros, mas, pra jogar 7x7 você terá que melhorar. Você já ouviu a palavra 'liderança' por aí?";
+        cutin "", 255;
+        close;
+    }
+
+    set .@guild_id, getcharid(2);
+    if ( (getguildmasterid(.@guild_id)) == (getcharid(0)) ){
+        $@jogadoresblue1 = 2; // Número de jogadores necessários por time (7x7)
+        if ($@jogadoresblue1 < 2){
+            mes "Eu sei que pessoas decentes não querem se associar com um resto de aborto que nem você, mas para prosseguir você precisa de ^ff00007 players^000000 na sua guild.";
+            cutin "", 255;
+            close;
+        }
+        $@jogadoresblue = $@jogadoresblue1;
+        $@jogadoresbluechat = $@jogadoresblue + 1;
+    }
+
+    set .@party_id, getcharid(1);
+    getpartymember .@party_id,1;
+    getpartymember .@party_id,2;
+    set .@partymembercount, $@partymembercount;
+    copyarray .@partymembername$[0], $@partymembername$[0], .@partymembercount;
+
+    if ((.@partymembercount >= $@jogadoresblue) && (getcharid(2)) && (strcharinfo(0) == getguildmaster(.@guild_id))) {
+        // Check the party size
+        if ( .@partymembercount < $@jogadoresblue ) {
+            mes "[ ^0000FFChaos^000000 ]";
+            mes "você precisa de ^0000ff"+ $@jogadoresblue +" pessoas^000000 online na ^ff0000party^000000 para entrar na sala de espera. Player ruim chega atrasado mesmo.";
+            cutin "", 255;
+            close;
+        }
+
+        // Check if there are too few people in the party
+        for ( set .@i, 0; .@i < .@partymembercount; set .@i, .@i + 1 ) {
+            if ( !isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ) continue;
+            set .@islogin, .@islogin + 1;
+        }
+        if ( .@islogin < $@jogadoresblue ) {
+            mes "[ ^0000FFChaos^000000 ]";
+            mes "Você precisa de ^0000ff"+ $@jogadoresblue +" pessoas^000000 online na ^ff0000party^000000 para entrar na sala de espera. Player ruim chega atrasado mesmo.";
+            cutin "", 255;
+            close;
+        }
+
+        mes "[ ^0000FFChaos^000000 ]";
+        mes "Bem-vindo, ^0000ff "+ strcharinfo(0) +"^000000, da guild ^0000ff"+ strcharinfo(2) +"^000000!";
+        mes "Quer ser espancado até desistir dos seus sonhos e perder o sentido da vida? Não se esqueça, a repetição é a mãe da habilidade.";
+        next;
+        cutin "", 255;
+        next;
+        if (select("Sim, porfavor.:Não, obrigado.") == 2) close;
+        next;
+
+        // Use array to store guild and party information
+        $@currentLeader[.@guild_id] = getcharid(0);
+        $@currentTeam$[.@guild_id] = "blue";
+        $@currentPartyID[.@guild_id] = .@party_id;
+        $@currentGuildID[.@guild_id] = .@guild_id;
+
+        // Armazena o nome da guilda azul para exibir nos anuncios
+        $@BlueGuildName$ = strcharinfo(2);
+
+        // Set temporary variable to pass the guild ID
+        $@temp_guild_id = .@guild_id;
+
+        // Execute the removal of buffs and teleport in a separate script to avoid conflicts
+        donpcevent "TeleportAndBuffRemovalBlue::OnTeleport";
+
+        close;
+    } else {
+        mes "[ ^0000FFChaos^000000 ]";
+        mes "Você precisa de ^0000ff"+ $@jogadoresblue +" membros^000000, todos online e na mesma guild e party. A dificuldade de cumprir horários é um sinal clássico de incompetência.";
+        next;
+        cutin "", 255;
+        close;
+    }
+}
+
+// ========================================================= Teleporte
+//=======================================================================
+
+quiz_02,241,335,7	script	quitter#timeaz	849,{
+
+    mes "[^0000ffquitter^000000]";
+    mes "Você quer quitar?";
+    switch(select("Sim.:Não.")){
+        case 1:
+            // Check if the player is the guild leader
+            if (getcharid(2) == $@currentGuildID[getcharid(2)] && getcharid(0) == getguildmasterid($@currentGuildID[getcharid(2)])) {
+                // Teleport the entire guild out of the arena
+                warpguild "izlude",128,141,getcharid(2);
+            }
+            else {
+                warp "izlude",128,141;
+            }
+            close;
+
+        case 2:
+            close;
+    }
+}
+
+quiz_02,245,339,9	script	Employee#timeazul	419,{
+
+    mes "[^0000ffEmployee^000000]";
+    mes "Você quer ir para o time vermelho?";
+    switch(select("Sim.:Não.")){
+        case 1:
+            // Check if the player is the guild leader
+            if (getcharid(2) == $@currentGuildID[getcharid(2)] && getcharid(0) == getguildmasterid($@currentGuildID[getcharid(2)])) {
+                // Teleport the entire guild to the red team
+                warpguild "quiz_02",256,344,getcharid(2);
+            }
+            close;
+
+        case 2:
+            close;
+    }
+}
+
+// ========================================================= Buff Removal and Teleportation
+//=======================================================================
+
+-	script	TeleportAndBuffRemovalBlue	-1,{
+OnTeleport:
+    set .@guild_id, $@temp_guild_id;
+    set .@leader, $@currentLeader[.@guild_id];
+    set .@team$, $@currentTeam$[.@guild_id];
+    set .@party_id, $@currentPartyID[.@guild_id];
+    set .@guild_id, $@currentGuildID[.@guild_id];
+
+    if (.@team$ == "blue") {
+        set .@teamcolor, "^0000FF";
+        set .@dest_map$, "quiz_02";
+        set .@x, 141;
+        set .@y, 344;
+    } else {
+        set .@teamcolor, "^ff0000";
+        set .@dest_map$, "quiz_02";
+        set .@x, 154;
+        set .@y, 347;
+    }
+
+    getpartymember .@party_id, 1;
+    getpartymember .@party_id, 2;
+    set .@partymembercount, $@partymembercount;
+
+    for ( set .@i, 0; .@i < .@partymembercount; set .@i, .@i + 1 ) {
+        if (isloggedin($@partymemberaid[.@i], $@partymembercid[.@i])) {
+            attachrid $@partymemberaid[.@i];
+            if (strcharinfo(3) == "izlude" || strcharinfo(3) == "lhz_dun03") {
+                sc_end SC_ALL;
+                setoption 0x40 | Option_Invisible | Option_Xmas, 0;
+sc_end SC_FIGHTINGSPIRIT;
+sc_end SC_LUXANIMA;
+sc_end SC_GIANTGROWTH;
+sc_end SC_STONEHARDSKIN;
+sc_end SC_VITALITYACTIVATION;
+sc_end SC_ABUNDANCE;
+sc_end SC_CRUSHSTRIKE;
+sc_end SC_REFRESH;
+sc_end SC_MILLENNIUMSHIELD;
+            }
+        }
+    }
+    warpguild "quiz_02",243,344,getcharid(2);
+
+    end;
+}
+
+// ========================================================= Check to teleport guild out of waiting room if the leader relogs
+//=======================================================================
+
+-	script	BlueTeamLogoutHandler	-1,{
+
+OnPCLogoutEvent:
+    // Check if the player is the guild leader and is logging out from the arena
+    if (strcharinfo(3) == "quiz_02" && getcharid(0) == getguildmasterid(getcharid(2))) {
+        // Teleport the entire guild out of the arena
+        warpguild "izlude",128,105,getcharid(2);
+    }
+    end;
+}

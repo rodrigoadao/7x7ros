@@ -1,0 +1,140 @@
+//===== rAthena Script =======================================
+//= Mapflag: Disable return warp.
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 1.6
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: ========================================= 
+//= Disables the following items:
+//=   Butterfly Wing (602), Siege Teleport Scroll (14591),
+//=   Yellow/Green/Red/Blue Butterfly Wings (14582-14585),
+//=   Dungeon Teleport Scrolls (14527/14581)
+//= Also restricts "warpparty" and "warpguild" script commands.
+//===== Additional Comments: ================================= 
+//= 1.3 According to the patch, enabled Butterfly wings in the Castles. [Lupus]
+//= 1.4 Enabled Butterfly wings on PvP maps. [Skotlex]
+//= 1.4a Added job_knt. [Samuray22]
+//= 1.5 Commented out new_zone entries. [L0ne_W0lf]
+//= 1.6 Enabled B. wings on all maps but que_hugel. [L0ne_W0lf]
+//============================================================
+
+// Cities ========================
+//ayo_in01	mapflag	noreturn
+2012rwc_01	mapflag	noreturn
+2012rwc_02	mapflag	noreturn
+2012rwc_03	mapflag	noreturn
+2012rwc_04	mapflag	noreturn
+guild_vs1	mapflag	noreturn
+arug_cas02	mapflag	noreturn
+arena1	mapflag	noreturn
+arena2	mapflag	noreturn
+arena3	mapflag	noreturn
+arena4	mapflag	noreturn
+arena5	mapflag	noreturn
+arena6	mapflag	noreturn
+arena7	mapflag	noreturn
+arena8	mapflag	noreturn
+arena9	mapflag	noreturn
+arena10	mapflag	noreturn
+arena11	mapflag	noreturn
+arena12	mapflag	noreturn
+arena13	mapflag	noreturn
+arena14	mapflag	noreturn
+arena15	mapflag	noreturn
+arena16	mapflag	noreturn
+arena17	mapflag	noreturn
+arena18	mapflag	noreturn
+arena19	mapflag	noreturn
+arena20	mapflag	noreturn
+arena21	mapflag	noreturn
+arena22	mapflag	noreturn
+arena23	mapflag	noreturn
+arena24	mapflag	noreturn
+arena25	mapflag	noreturn
+arena26	mapflag	noreturn
+arena27	mapflag	noreturn
+arena28	mapflag	noreturn
+arena29	mapflag	noreturn
+arena30	mapflag	noreturn
+arena31	mapflag	noreturn
+arena32	mapflag	noreturn
+arena33	mapflag	noreturn
+arena34	mapflag	noreturn
+arena35	mapflag	noreturn
+arena36	mapflag	noreturn
+arena37	mapflag	noreturn
+arena38	mapflag	noreturn
+arena39	mapflag	noreturn
+arena40	mapflag	noreturn
+arena41	mapflag	noreturn
+arena42	mapflag	noreturn
+2009rwc_01	mapflag	noreturn
+2009rwc_02	mapflag	noreturn
+2009rwc_03	mapflag	noreturn
+2009rwc_04	mapflag	noreturn
+// quiz_02	mapflag	noreturn
+rwc01	mapflag	noreturn
+rwc02	mapflag	noreturn
+rwc03	mapflag	noreturn
+2008rwc_01	mapflag	noreturn
+2008rwc_02	mapflag	noreturn
+2008rwc_03	mapflag	noreturn
+2008rwc_04	mapflag	noreturn
+kvm	mapflag	noreturn
+flavius	mapflag	noreturn
+bio4	mapflag	noreturn
+1@lab	mapflag	noreturn
+1@dth3	mapflag	noreturn
+1@tnm1	mapflag	noreturn
+1@pump	mapflag	noreturn
+2@pump	mapflag	noreturn
+job_prist	mapflag	noreturn
+ecl_tdun02	mapflag	noreturn
+evt_bomb	mapflag	noreturn
+arug_cas01	mapflag	noreturn
+aldeg_cas01	mapflag	noreturn
+aldeg_cas02	mapflag	noreturn
+aldeg_cas03	mapflag	noreturn
+aldeg_cas04	mapflag	noreturn
+aldeg_cas05	mapflag	noreturn
+prtg_cas01	mapflag	noreturn
+prtg_cas02	mapflag	noreturn
+prtg_cas03	mapflag	noreturn
+prtg_cas04	mapflag	noreturn
+prtg_cas05	mapflag	noreturn
+arug_cas03	mapflag	noreturn
+arug_cas04	mapflag	noreturn
+arug_cas05	mapflag	noreturn
+payg_cas01	mapflag	noreturn
+payg_cas02	mapflag	noreturn
+payg_cas03	mapflag	noreturn
+payg_cas04	mapflag	noreturn
+payg_cas05	mapflag	noreturn
+gefg_cas03	mapflag	noreturn
+gefg_cas04	mapflag	noreturn
+gefg_cas02	mapflag	noreturn
+gefg_cas01	mapflag	noreturn
+gefg_cas05	mapflag	noreturn
+schg_cas01	mapflag	noreturn
+schg_cas02	mapflag	noreturn
+schg_cas03	mapflag	noreturn
+schg_cas04	mapflag	noreturn
+schg_cas05	mapflag	noreturn
+//
+ros2024	mapflag	noreturn
+ros2025_1	mapflag	noreturn
+ros2025_2	mapflag	noreturn
+ros2025_3	mapflag	noreturn
+ros2025_4	mapflag	noreturn
+ros2025_5	mapflag	noreturn
+ros2025_6	mapflag	noreturn
+//
+v4arena1	mapflag	noreturn
+v4arena2	mapflag	noreturn
+v4arena3	mapflag	noreturn
+v4arena4	mapflag	noreturn
+v4arena5	mapflag	noreturn
+v4arena6	mapflag	noreturn
+v4arena7	mapflag	noreturn
