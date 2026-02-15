@@ -1,4 +1,4 @@
-izlude,125,145,3	script	Spectator NPC	664,{
+prontera,160,179,3	script	Spectator NPC	664,{
 	// cutin "fenrir_a",2;
 	// mes "temporariamente desativado";
 	// goto finalization;

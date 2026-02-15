@@ -60,6 +60,7 @@ izlude,129,152,4	script	Job Master	650,{
             skill 145,1,SKILL_PERM;
             skill 146,1,SKILL_PERM;
             skill 1001,1,SKILL_PERM;
+            getitem 7831,5;
             break;
 
         case 3:// WL
@@ -139,6 +140,120 @@ izlude,129,152,4	script	Job Master	650,{
             set BaseLevel, 170;
             set JobLevel, 60;
             skill 156,1,SKILL_PERM;
+            //skilltree
+            set SkillPoint, 0;
+            skill 1,9,0; 
+            skill 24,1,0;//revelação
+            skill 26,2,0;//teleporte
+            skill 27,4,0;//portal
+            skill 25,1,0;//pneuma
+            skill 28,3,0;//curar
+            skill 35,1,0;//medicar
+            skill 31,1,0;//holy water
+            skill 29,10,0;//agi up
+            skill 30,10,0;//agi down
+            skill 22,5,0;//proteção divina
+            skill 34,10,0;//bênção
+            skill 33,2,0;//angelus
+            //
+            skill 73,10,0;//KE
+            skill 74,5,0;//mag
+            skill 75,5,0;//glória
+            skill 72,1,0;//reco
+            skill 9,5,0;//reco sp
+            skill 76,5,0;//lex divina
+            skill 78,1,0;//lex aeterna
+            skill 66,5,0;//impo
+            skill 70,3,0;//santuário
+            skill 67,3,0;//suff
+            skill 68,5,0;//aspércio
+            skill 12,10,0;//sw
+            //
+            skill 361,5,0;//assumptio
+            skill 363,5,0;//meditatio
+            //
+            skill 2043,3,0;//sopro divino
+            skill 2050,1,0;//renovatio
+            skill 2051,1,0;//curatio
+            skill 2041,3,0;//clementia
+            skill 2039,1,0;//criar ancilla
+            skill 2044,1,0;//epiclesis
+            skill 2045,8,0;//praefatio
+            skill 2046,5,0;//oratio
+            skill 2054,5,0;//duple light
+            skill 2053,5,0;//expiatio
+            skill 2047,4,0;//lauda agnus
+            skill 2048,4,0;//lauda ramus
+            skill 2052,5,0;//genesis
+            skill 2042,3,0;//canto candidus
+            skill 2515,5,0;//sacramento
+            skill 5072,5,0;//vituperatum
+            //
+            //
+            //skilltree
+            // set SkillPoint, 0;
+            // skill 1,9,0; 
+            //itens
+            // Deletar todos os itens do inventÃ¡rio
+            getinventorylist;
+            for (.@i = 0; .@i < @inventorylist_count; .@i++) {
+                delitem2 @inventorylist_id[.@i], @inventorylist_amount[.@i], 
+                        @inventorylist_identify[.@i], @inventorylist_refine[.@i], 
+                        @inventorylist_attribute[.@i], @inventorylist_card1[.@i], 
+                        @inventorylist_card2[.@i], @inventorylist_card3[.@i], 
+                        @inventorylist_card4[.@i];
+            }
+            getitem2 18959, 1, 1, 0, 0, 4403, 0, 0, 0; // dighi-titica kiel
+            equip 18959;
+            getitem 18894,1;
+            equip 18894;
+            getitem 18670,1;
+            equip 18670;
+            getitem2 15048, 1, 1, 4, 0, 4042, 0, 0, 0; // manto cerco chonchon
+            equip 15048;
+            getitem2 1505, 1, 1, 7, 0, 4002, 4002, 4002, 4002; // maça fabre
+            equip 1505;
+            getitem2 2115, 1, 1, 4, 0, 4058, 0, 0, 0; // vshield thara
+            equip 2115;
+            getitem2 2587, 1, 1, 4, 0, 4359, 0, 0, 0; // peliz cerco noxious
+            equip 2587;
+            getitem2 2485, 1, 1, 4, 0, 4381, 0, 0, 0; // grevas cerco gferus
+            equip 2485;
+            getitem2 22008, 1, 1, 4, 0, 4381, 0, 0, 0; // temporal dex gferus
+            getitem2 2701, 1, 1, 0, 0, 4044, 0, 0, 0; // luva orleans smokie
+            equip 2701;
+            getitem2 2701, 1, 1, 0, 0, 4064, 0, 0, 0; // luva orleans zerom
+            getitem2 2701, 1, 1, 0, 0, 4044, 0, 0, 0; // luva orleans smokie
+            //
+            //build stats
+            set StatusPoint, 0;
+            statusup2 bStr, 50;
+            statusup2 bAgi, 40;
+            statusup2 bVit, 119;
+            statusup2 bInt, 99;
+            statusup2 bDex, 119;
+            statusup2 bLuk, 16;
+            //stuffs
+            getitem 11548,80;//gde branca
+            getitem 12427,65;//gsp
+            getitem 12424,2;//ghp
+            getitem 12436,2;//vitata500
+            getitem 12437,4;//celular
+            getitem 645,4;//aspd concentração
+            getitem 523,11;//água benta holy water
+            getitem 506,11;//poção verde green pot
+            getitem 12114,5;//perga fogo
+            getitem 12118,2;//anti elementais
+            getitem 12119,2;
+            getitem 12120,2;
+            getitem 12121,2;
+            getitem 12429,1;//food str+20
+            getitem 12430,1;//food int+20
+            getitem 12431,1;//food vit+20
+            getitem 12432,1;//food dex+20
+            getitem 12433,1;//food agi+20
+            getitem 12434,1;//food luk+20
+            goto restockagemdajobchanger;
             break;
 
         case 6:// meca
@@ -165,7 +280,87 @@ izlude,129,152,4	script	Job Master	650,{
             set JobLevel, 60;
             skill 155,1,SKILL_PERM;
             skill 153,1,SKILL_PERM;
-            getitem 7831,10;
+            //skilltree
+            // set SkillPoint, 0;
+            // skill 1,9,0; 
+            // skill 1,9,0; 
+            //
+
+            //
+
+            //
+
+            //
+            //
+            //skilltree
+            // set SkillPoint, 0;
+            // skill 1,9,0; 
+            //itens
+            // Deletar todos os itens do inventÃ¡rio
+            getinventorylist;
+            for (.@i = 0; .@i < @inventorylist_count; .@i++) {
+                delitem2 @inventorylist_id[.@i], @inventorylist_amount[.@i], 
+                        @inventorylist_identify[.@i], @inventorylist_refine[.@i], 
+                        @inventorylist_attribute[.@i], @inventorylist_card1[.@i], 
+                        @inventorylist_card2[.@i], @inventorylist_card3[.@i], 
+                        @inventorylist_card4[.@i];
+            }
+            getitem2 18959, 1, 1, 0, 0, 4403, 0, 0, 0; // dighi-titica kiel
+            equip 18959;
+            getitem2 18158, 1, 1, 0, 0, 4403, 0, 0, 0; // angel wings kiel
+            equip 18158;
+            getitem 18670,1;
+            equip 18670;
+            getitem2 2357, 1, 1, 4, 0, 4302, 0, 0, 0; // valk armor tgk
+            equip 2357;
+            getitem2 1505, 1, 1, 7, 0, 4055, 4055, 4055, 4055; // maça marina
+            equip 1505;
+            getitem2 1505, 1, 1, 7, 0, 4522, 4522, 4522, 4522; // maça srophos
+            getitem2 1549, 1, 1, 5, 0, 0, 0, 0, 0; // bate estacas
+
+            getitem2 2124, 1, 1, 4, 0, 4058, 0, 0, 0; // bisão thara
+            equip 2124;
+            getitem2 2589, 1, 1, 4, 0, 0, 0, 0, 0; // faw
+            equip 2589;
+            getitem2 22008, 1, 1, 4, 0, 4107, 0, 0, 0; // temporal dex verit
+            equip 22008;
+            getitem2 2801, 1, 1, 0, 0, 4044, 0, 0, 0; // planador
+            equip 2801;
+            getitem2 2801, 1, 1, 0, 0, 4044, 0, 0, 0; // planador
+            getitem2 2702, 1, 1, 0, 0, 4064, 0, 0, 0; // bisão zerom
+            getitem2 2806, 1, 1, 0, 0, 0, 0, 0, 0; // 
+            getitem2 2805, 1, 1, 0, 0, 0, 0, 0, 0; // 
+            getitem2 2802, 1, 1, 0, 0, 0, 0, 0, 0; // 
+            getitem2 2800, 1, 1, 0, 0, 0, 0, 0, 0; // 
+            getitem2 2808, 1, 1, 0, 0, 0, 0, 0, 0; // 
+            getitem2 2801, 1, 1, 0, 0, 0, 0, 0, 0; // 
+            //
+            //build stats
+            set StatusPoint, 1;
+            statusup2 bStr, 30;
+            statusup2 bAgi, 90;
+            statusup2 bVit, 109;
+            statusup2 bInt, 99;
+            statusup2 bDex, 119;
+            statusup2 bLuk, 4;
+            //stuffs
+            getitem 11548,50;//gde branca
+            getitem 12427,50;//gsp
+            getitem 12424,1;//ghp
+            getitem 12436,1;//vitata500
+            getitem 12437,2;//celular
+            getitem 645,3;//aspd concentração
+            getitem 523,7;//água benta holy water
+            getitem 506,7;//poção verde green pot
+            getitem 12118,2;//anti elementais
+            getitem 12120,2;
+            getitem 12121,2;
+            getitem 12429,1;//food str+20
+            getitem 12430,1;//food int+20
+            getitem 12431,1;//food vit+20
+            getitem 12432,1;//food dex+20
+            getitem 12433,1;//food agi+20
+            getitem 12434,1;//food luk+20
             break;
 
         case 7:// GX
@@ -198,6 +393,7 @@ izlude,129,152,4	script	Job Master	650,{
             skill 152,1,SKILL_PERM;
             skill 1004,1,SKILL_PERM;
             skill 1003,1,SKILL_PERM;
+            getitem 7831,5;
             break;
 
         case 8:// RG
@@ -256,10 +452,10 @@ izlude,129,152,4	script	Job Master	650,{
             getitem2 2483, 1, 1, 4, 0, 4381, 0, 0, 0; // grevas cerco gferus
             equip 2483;
             getitem2 22008, 1, 1, 4, 0, 4381, 0, 0, 0; // temporal dex gferus
-            getitem2 2701, 1, 1, 0, 0, 4044, 0, 0, 0; // luva orleans smokie
-            equip 2701;
-            getitem2 2701, 1, 1, 0, 0, 4064, 0, 0, 0; // luva orleans zerom
-            getitem2 2701, 1, 1, 0, 0, 4044, 0, 0, 0; // luva orleans smokie
+            getitem2 2703, 1, 1, 0, 0, 4044, 0, 0, 0; // especialista smokie
+            equip 2703;
+            getitem2 2703, 1, 1, 0, 0, 4064, 0, 0, 0; // especialista zerom
+            getitem2 2703, 1, 1, 0, 0, 4044, 0, 0, 0; // especialista smokie
             //
             //build stats
             set StatusPoint, 0;
@@ -316,7 +512,134 @@ izlude,129,152,4	script	Job Master	650,{
             set BaseLevel, 170;
             set JobLevel, 60;
             skill 157,1,SKILL_PERM;
-            getitem 7831,2;
+            //
+            //
+            //skilltree
+            set SkillPoint, 0;
+            skill 1,9,0;//
+            skill 16,7,0;//petrificar
+            skill 9,1,0;//rec sp
+            skill 14,5,0;//ice bolt
+            skill 15,10,0;//rajada congelante
+            skill 20,4,0;//
+            skill 21,1,0;//
+            skill 11,7,0;//
+            skill 13,5,0;//
+            skill 12,7,0;//
+            skill 19,1,0;//
+            skill 10,1,0;//
+            //
+            skill 274,9,0;//estudo de livros
+            skill 284,4,0;//draconologia
+            skill 283,1,0;//encantar com terremoto
+            skill 90,5,0;//coluna de pedra
+            skill 91,5,0;//fúria da terra
+            skill 275,5,0;//cancelar magia
+            skill 278,2,0;//conjuração livre
+            skill 276,3,0;//magic rod
+            skill 277,3,0;//spell breaker
+            skill 289,5,0;//dispel
+            skill 281,2,0;//geada
+            skill 286,3,0;//dilúvio
+            skill 282,2,0;//ventania
+            skill 287,4,0;//furacão
+            skill 280,2,0;//chama
+            skill 285,3,0;//vulcão
+            skill 288,5,0;//proteger terreno
+            //
+            skill 405,1,0;//teia
+            skill 374,1,0;//exalar
+            skill 373,3,0;//indulgir
+            skill 375,4,0;//sifão
+            skill 404,1,0;//bruma
+            //
+            skill 2453,5,0;//tornado
+            skill 2449,5,0;//Onda Psíquica
+            skill 2451,5,0;//Encanto de Órion
+            skill 2447,5,0;//Pó de Diamante
+            skill 2462,1,0;//Análise Elemental
+            skill 2456,3,0;//Domínio Elemental
+            skill 2463,3,0;//Empatia Elemental
+            skill 2464,1,0;//Troca Espiritual
+            skill 5008,1,0;//Escudo Elemental
+            skill 2454,3,0;//Lanças dos Aesir
+            skill 2458,1,0;//Invocar Varuna
+            skill 2459,1,0;//Invocar Vayu
+            skill 2450,5,0;//Maldição de Jormungand
+            skill 2452,2,0;//Aquecer Terreno
+            skill 2446,5,0;//Castigo de Nerthus
+            skill 2455,5,0;//Arrullo
+            skill 2460,3,0;//Invocar Chandra
+            skill 2468,1,0;//Insígnia da Terra
+            //itens
+            // Deletar todos os itens do inventÃ¡rio
+            getinventorylist;
+            for (.@i = 0; .@i < @inventorylist_count; .@i++) {
+                delitem2 @inventorylist_id[.@i], @inventorylist_amount[.@i], 
+                        @inventorylist_identify[.@i], @inventorylist_refine[.@i], 
+                        @inventorylist_attribute[.@i], @inventorylist_card1[.@i], 
+                        @inventorylist_card2[.@i], @inventorylist_card3[.@i], 
+                        @inventorylist_card4[.@i];
+            }
+            getitem2 18959, 1, 1, 0, 0, 4198, 0, 0, 0; // dighi-titica mm
+            equip 18959;
+            getitem 18894,1;
+            equip 18894;
+            getitem 18670,1;
+            equip 18670;
+            getitem2 15048, 1, 1, 4, 0, 4042, 0, 0, 0; // manto cerco chonchon
+            equip 15048;
+            getitem2 26151, 1, 1, 4, 0, 4474, 4474, 0, 0; // rutilus 2 zakudam
+            equip 26151;
+            getitem2 1228, 1, 1, 4, 0, 0, 0, 0, 0; // ck
+            getitem2 2115, 1, 1, 4, 0, 4058, 0, 0, 0; // vshield thara
+            equip 2115;
+            getitem2 2587, 1, 1, 4, 0, 4334, 0, 0, 0; // peliz cerco noxious
+            getitem2 2554, 1, 1, 4, 0, 4334, 0, 0, 0; // proxy cerco noxious
+            equip 2554;
+            getitem2 2485, 1, 1, 4, 0, 27152, 0, 0, 0; // grevas cerco cutie
+            getitem2 22008, 1, 1, 4, 0, 27152, 0, 0, 0; // temporal dex cutie
+            equip 22008;
+            getitem2 2701, 1, 1, 0, 0, 4044, 0, 0, 0; // luva orleans smokie
+            equip 2701;
+            getitem2 2701, 1, 1, 0, 0, 4064, 0, 0, 0; // luva orleans zerom
+            getitem2 2701, 1, 1, 0, 0, 4044, 0, 0, 0; // luva orleans smokie
+            //
+            //build stats
+            set StatusPoint, 0;
+            statusup2 bStr, 30;
+            statusup2 bAgi, 40;
+            statusup2 bVit, 99;
+            statusup2 bInt, 114;
+            statusup2 bDex, 128;
+            statusup2 bLuk, 10;
+            //stuffs
+            getitem 11548,120;//gde branca
+            getitem 12427,30;//gsp
+            getitem 11549,3;//gde azul
+            getitem 12424,1;//ghp
+            getitem 12436,1;//vitata500
+            getitem 12437,1;//celular
+            getitem 656,3;//aspd despertar
+            getitem 523,7;//água benta holy water
+            getitem 506,7;//poção verde green pot
+            getitem 12118,1;//anti elementais
+            getitem 12119,1;
+            getitem 12120,1;
+            getitem 12121,1;
+            getitem 12429,1;//food str+20
+            getitem 12430,1;//food int+20
+            getitem 12431,1;//food vit+20
+            getitem 12432,1;//food dex+20
+            getitem 12433,1;//food agi+20
+            getitem 12434,1;//food luk+20
+            getitem 715,90;// gema amarela
+            getitem 717,100;// gema azul
+            getitem 716,20;// gema vermelha
+            getitem 1025,45;//teia
+            getitem 992,9;//frescor vento
+            getitem 991,6;//cristal azul
+            goto restockagemdajobchanger;
             break;
 
         case 10:// minstrel 4069 wanderer 4070
@@ -441,7 +764,7 @@ izlude,129,152,4	script	Job Master	650,{
             skill 151,1,SKILL_PERM;
             skill 152,1,SKILL_PERM;
             skill 1005,1,SKILL_PERM;
-            getitem 7831,5;
+            getitem 7831,10;
             break;
 
         L_RWCROClass:

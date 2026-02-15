@@ -426,7 +426,7 @@ izlude,129,145,4	script	Kafra ROS::kaf_izlude	423,{
 	mes "[Kafra ROS]";
 	mes "Você pode usar o storage manejar seu inventário entre as partidas sem atrasar outras 13 pessoas para ir no mercado.";
 	mes "Assim ninguém fica sabendo que voce tem sobrepeso. Viu como somos inclusivos com os gorduchos?";
-	switch(select("Fechar:Resetar zenys:Pegar Falcão")) {
+	switch(select("Fechar:Resetar zenys:Pegar Falcão:Skills Platina")) {
 			case 1:
 				// callfunc "F_Kafra",5,1,0,0,0;
 				// callfunc "F_KafEnd",0,1,"in the city of Izlude";
@@ -436,6 +436,19 @@ izlude,129,145,4	script	Kafra ROS::kaf_izlude	423,{
 			    if (getskilllv("HT_FALCON")) {
         		atcommand "@option 0 0 16";
     			}
+			case 4:
+				if (Class == 4060) {//rk
+					skill 1001,1,SKILL_PERM;
+					}
+				if (Class == 4062) {//ranger
+					skill 147,1,SKILL_PERM;
+					skill 148,1,SKILL_PERM;
+					skill 1009,1,SKILL_PERM;
+					}
+				if (Class == 4064){//meca mecha
+					skill 155,1,SKILL_PERM;
+					skill 153,1,SKILL_PERM;
+					}
 			break;
 		}
 	cutin "",255;
