@@ -4590,8 +4590,8 @@ static int32 status_get_spbonus(struct block_list *bl, enum e_status_bonus type)
 				bonus += sc->getSCE(SC_LUXANIMA)->val3;
 
 			// Decreasing
-			if (sc->getSCE(SC_MELODYOFSINK))
-				bonus -= sc->getSCE(SC_MELODYOFSINK)->val3;
+			// if (sc->getSCE(SC_MELODYOFSINK))
+			// 	bonus -= sc->getSCE(SC_MELODYOFSINK)->val3;
 		}
 		// Max rate reduce is -100%
 		bonus = cap_value(bonus, -100, INT_MAX);
@@ -8856,7 +8856,7 @@ static uint16 status_calc_int(struct block_list *bl, status_change *sc, int32 in
 	if (sc->getSCE(SC_INSPIRATION))
 		int_ += sc->getSCE(SC_INSPIRATION)->val3;
 	if (sc->getSCE(SC_MELODYOFSINK))
-		int_ -= sc->getSCE(SC_MELODYOFSINK)->val2;
+		int_ -= sc->getSCE(SC_MELODYOFSINK)->val3;
 	if (sc->getSCE(SC_MANDRAGORA))
 		int_ -= 4 * sc->getSCE(SC_MANDRAGORA)->val1;
 	if (sc->getSCE(SC_STOMACHACHE))
@@ -11552,6 +11552,7 @@ static int32 status_get_sc_interval(enum sc_type type)
 	case SC_GRADUAL_GRAVITY:
 	case SC_KILLING_AURA:
 	case SC_BOSSMAPINFO:
+	case SC_MELODYOFSINK:
 		return 1000;
 	case SC_WINKCHARM:
 	case SC_VOICEOFSIREN:
@@ -11695,7 +11696,7 @@ t_tick status_get_sc_def(block_list *src, block_list *bl, sc_type type, int32 ra
 		tick_def2 = status->luk * 10;
 #else
 		sc_def = status->agi * 100 - levelAdv;
-		tick_def2 = -2000;
+		tick_def2 = 0;
 #endif
 		break;
 	case SC_STONEWAIT:
@@ -14471,8 +14472,10 @@ static bool status_change_start_post_delay(block_list *src, block_list *bl, sc_t
 			val3 = 2 + 3 * val1 + min(3 * val2, 25); // MaxHP Increase
 			break;
 		case SC_MELODYOFSINK:
-			val2 = 10 * val1;	 // INT Reduction.
-			val3 = 2 + 2 * val1; // MaxSP reduction
+			// val1 = skill_lv, val2 = WM_LESSON level (passado por sc_start2)
+				val3 = (val1 * 2 + val2) * 5 / 2;        // INT Reduction: [lv + (Lesson/2)] × 5
+				tick_time = status_get_sc_interval(type); // Intervalo de 1 segundo
+				val4 = tick / tick_time;                  // Número de ciclos = duração total / 1s
 			break;
 		case SC_BEYONDOFWARCRY:
 			val2 = 10 + 10 * val1; // STR Reduction
@@ -16947,7 +16950,20 @@ TIMER_FUNC(status_change_timer)
 			status_zap(bl, damage, 0);
 		}
 		break;
-
+	case SC_MELODYOFSINK:
+		if (--(sce->val4) > 0) {
+			// SP drain %/sec = (val1 × 2) + (val2 / 5), recalculado do val1/val2
+			int sp_drain_pct = sce->val1 * 2 + sce->val2 / 5;
+			int sp_drain = status->max_sp * sp_drain_pct / 100;
+			if (sp_drain < 1) sp_drain = 1;
+			// status_zap força o dreno mesmo se SP atual < sp_drain
+			int actual_drain = min((int)status->sp, sp_drain);
+			if (actual_drain > 0)
+				status_zap(bl, 0, actual_drain);
+			sc_timer_next(1000 + tick);
+			return 0;
+		}
+		break;
 	case SC_BURNING:
 		if (sce->val4 >= 0)
 		{
@@ -17493,7 +17509,6 @@ TIMER_FUNC(status_change_timer)
 			return 0;
 		}
 		break;
-
 	case SC_REFLECTDAMAGE:
 		if (--(sce->val4) > 0)
 		{

@@ -90,6 +90,11 @@ Body:
       BossResist: true
       StopAttacking: true
     Fail:
+      Refresh: true
+      Inspiration: true
+      Power_Of_Gaia: true
+      Gvg_Stone: true
+      Protection: true
       Whiteimprison: true
       Freeze: true
       Stun: true
@@ -994,7 +999,7 @@ Body:
     Icon: EFST_AUTOCOUNTER
     DurationLookup: KN_AUTOCOUNTER
     States:
-      NoAttackCond: true  # Permite ataque proativo nos primeiros 400ms (comportamento oficial)
+      # NoAttackCond: true  # Permite ataque proativo nos primeiros 400ms (comportamento oficial)
       NoMove: true
       NoDropItem: true
       NoInteract: true
@@ -4329,7 +4334,6 @@ Body:
     DurationLookup: WM_MELODYOFSINK
     CalcFlags:
       Int: true
-      MaxSp: true
     Flags:
       NoDispell: true
       NoBanishingBuster: true
@@ -4968,6 +4972,8 @@ Body:
     Flags:
       Debuff: true
       NoSave: true
+    Fail:
+      _Feintbomb: true
   - Status: Circle_Of_Fire
     Icon: EFST_CIRCLE_OF_FIRE
     Flags:

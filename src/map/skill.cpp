@@ -8973,10 +8973,12 @@ static int32 skill_castend_song(struct block_list *src, uint16 skill_id, uint16 
 	switch (skill_id)
 	{
 	case BD_ROKISWEIL:
-		flag = BCT_ENEMY | BCT_WOS;
+		flag = BCT_ENEMY | BCT_PARTY | BCT_GUILD | BCT_WOS;
 		break;
 	case BD_LULLABY:
 	case BD_ETERNALCHAOS:
+		flag = BCT_ENEMY | BCT_PARTY | BCT_GUILD;
+		break;
 	case BA_DISSONANCE:
 	case DC_UGLYDANCE:
 	case DC_DONTFORGETME:
@@ -14691,12 +14693,16 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 	case WM_MELODYOFSINK:
 		if (flag & 1)
 		{
-			sc_start(src, bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv));
+			// val1 = skill_lv, val2 = Lesson level (para INT drain e SP drain)
+			int lesson_lv = (sd ? pc_checkskill(sd, WM_LESSON) : 0);
+			sc_start4(src, bl, type, 100, skill_lv, lesson_lv, 0, 0, skill_get_time(skill_id, skill_lv));
 		}
 		else
-		{ // These affect to all targets around the caster.
-			if (rnd() % 100 < 5 + 5 * skill_lv + pc_checkskill(sd, WM_LESSON))
-			{ // !TODO: What's the Lesson bonus?
+		{ // Chance de aplicar baseada na fórmula correta
+			int lesson_lv = (sd ? pc_checkskill(sd, WM_LESSON) : 0);
+			int chance = (skill_lv * 5) + 5 + (lesson_lv / 2); // [(lv×5)+5 + (Lesson/2)]%
+			if (rnd() % 100 < chance)
+			{
 				map_foreachinallrange(skill_area_sub, src, skill_get_splash(skill_id, skill_lv), BL_PC, src, skill_id, skill_lv, tick, flag | BCT_ENEMY | 1, skill_castend_nodamage_id);
 				clif_skill_nodamage(src, *bl, skill_id, skill_lv);
 			}
@@ -27372,7 +27378,8 @@ int32 skill_unit_move_sub(struct block_list *bl, va_list ap)
 		// Special handling for BLOODYLUST and QUAGMIRE when target has FEINTBOMB invisibility
 		// We need to call onout to remove the status when player leaves the area while invisible
 		if ((skill_id == SC_BLOODYLUST && tsc && tsc->getSCE(SC__FEINTBOMB) && tsc->getSCE(SC__BLOODYLUST)) ||
-			(skill_id == WZ_QUAGMIRE && tsc && tsc->getSCE(SC__FEINTBOMB) && tsc->getSCE(SC_QUAGMIRE)))
+			(skill_id == WZ_QUAGMIRE && tsc && tsc->getSCE(SC__FEINTBOMB) && tsc->getSCE(SC_QUAGMIRE) || 
+			 (skill_id == SA_DELUGE && tsc && tsc->getSCE(SC__FEINTBOMB) && tsc->getSCE(SC_DELUGE))))
 		{
 			if (!(flag & 1)) // Only on exit (flag & 1 means entry)
 			{

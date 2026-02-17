@@ -2301,7 +2301,12 @@ void clif_move(struct unit_data &ud)
 
 	status_change *sc = nullptr;
 
-	if ((sc = status_get_sc(bl)) && sc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_INVISIBLE | OPTION_CHASEWALK))
+	// SC__FEINTBOMB: Não enviar movimento para ninguém durante invulnerabilidade
+	// Impede que o balão de skill acompanhe a posição real do jogador
+	if ((sc = status_get_sc(bl)) && sc->getSCE(SC__FEINTBOMB))
+		return;
+
+	if (sc && sc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_INVISIBLE | OPTION_CHASEWALK))
 		clif_ally_only = true;
 
 	clif_set_unit_walking(*bl, nullptr, ud, AREA_WOS);
@@ -2424,6 +2429,26 @@ void clif_blown(struct block_list *bl)
 /// isn't walkable, the char doesn't move at all. If the char is
 /// sitting it will stand up.
 /// 0088 <id>.L <x>.W <y>.W (ZC_STOPMOVE)
+//original
+// void clif_fixpos(block_list &bl)
+// {
+// 	PACKET_ZC_STOPMOVE packet = {};
+
+// 	packet.packetType = HEADER_ZC_STOPMOVE;
+// 	packet.AID = bl.id;
+// 	packet.xPos = bl.x;
+// 	packet.yPos = bl.y;
+
+// 	clif_send(&packet, sizeof(packet), &bl, AREA);
+
+// 	if (disguised(&bl))
+// 	{
+// 		packet.AID = disguised_bl_id(bl.id);
+// 		clif_send(&packet, sizeof(packet), &bl, SELF);
+// 	}
+// }
+//fim do original
+//custom moskaum 15 02 2026 pra feint bomb n ficar atualizando a posição do sc para outras pessoas
 void clif_fixpos(block_list &bl)
 {
 	PACKET_ZC_STOPMOVE packet = {};
@@ -2441,7 +2466,7 @@ void clif_fixpos(block_list &bl)
 		clif_send(&packet, sizeof(packet), &bl, SELF);
 	}
 }
-
+//
 /// Displays the buy/sell dialog of an NPC shop.
 /// 00c4 <shop id>.L (ZC_SELECT_DEALTYPE)
 void clif_npcbuysell(map_session_data &sd, npc_data &nd)
@@ -6406,8 +6431,25 @@ void clif_skillcasting(block_list &src, block_list *dst, uint16 dst_x, uint16 ds
 #if PACKETVER_MAIN_NUM >= 20181212 || PACKETVER_RE_NUM >= 20181212 || PACKETVER_ZERO_NUM >= 20190130
 	p.attackMT = 0;
 #endif
+//original
+// 	if (disguised(&src))
+// 	{
+// 		clif_send(&p, sizeof(p), &src, AREA_WOS);
 
-	if (disguised(&src))
+// 		p.srcId = disguised_bl_id(src.id);
+// 		clif_send(&p, sizeof(p), &src, SELF);
+// 	}
+// 	else
+// 		clif_send(&p, sizeof(p), &src, AREA);
+
+// 	if (skill_get_inf2(skill_id, INF2_SHOWSCALE))
+// 	{
+// 		clif_skill_scale(&src, src.id, src.x, src.y, skill_id, skill_lv, casttime);
+// 	}
+// }
+//fim do original
+//custom moskaum 15 02 2026 pra feint bomb n ficar atualizando a posição de skills usadas para quem n é o próprio sc
+if (disguised(&src))
 	{
 		clif_send(&p, sizeof(p), &src, AREA_WOS);
 
@@ -6422,7 +6464,7 @@ void clif_skillcasting(block_list &src, block_list *dst, uint16 dst_x, uint16 ds
 		clif_skill_scale(&src, src.id, src.x, src.y, skill_id, skill_lv, casttime);
 	}
 }
-
+//fim do custom
 /// Notifies clients in area, that an object canceled casting.
 /// 01b9 <id>.L (ZC_DISPEL)
 void clif_skillcastcancel(block_list &bl)
@@ -6538,7 +6580,7 @@ void clif_skill_damage(block_list &src, block_list &dst, t_tick tick, int32 sdel
 	if (damage != DMGVAL_IGNORE && type == DMG_SINGLE)
 		type = DMG_MULTI_HIT;
 #endif
-	packet.action = static_cast<decltype(packet.action)>(type);
+packet.action = static_cast<decltype(packet.action)>(type);
 
 	if (disguised(&dst))
 	{
@@ -6639,6 +6681,22 @@ bool clif_skill_nodamage(block_list *src, block_list &dst, uint16 skill_id, int3
 	{
 		p.srcAID = 0;
 	}
+
+	// SC__FEINTBOMB: Atualizar posição pontualmente para o balão aparecer no lugar certo
+	if (src != nullptr)
+	{
+		status_change *sc_fb = status_get_sc(src);
+		if (sc_fb && sc_fb->getSCE(SC__FEINTBOMB))
+		{
+			PACKET_ZC_STOPMOVE fix = {};
+			fix.packetType = HEADER_ZC_STOPMOVE;
+			fix.AID = src->id;
+			fix.xPos = src->x;
+			fix.yPos = src->y;
+			clif_send(&fix, sizeof(fix), src, AREA);
+		}
+	}
+
 	if (disguised(&dst))
 	{
 		clif_send(&p, sizeof(p), &dst, AREA_WOS);
@@ -6732,6 +6790,20 @@ void clif_skill_poseffect(block_list &bl, uint16 skill_id, uint16 skill_lv, uint
 	packet.xPos = x;
 	packet.yPos = y;
 	packet.startTime = client_tick(tick);
+
+	// SC__FEINTBOMB: Atualizar posição pontualmente para o balão aparecer no lugar certo
+	{
+		status_change *sc_fb = status_get_sc(&bl);
+		if (sc_fb && sc_fb->getSCE(SC__FEINTBOMB))
+		{
+			PACKET_ZC_STOPMOVE fix = {};
+			fix.packetType = HEADER_ZC_STOPMOVE;
+			fix.AID = bl.id;
+			fix.xPos = bl.x;
+			fix.yPos = bl.y;
+			clif_send(&fix, sizeof(fix), &bl, AREA);
+		}
+	}
 
 	if (disguised(&bl))
 	{
@@ -10854,6 +10926,15 @@ void clif_slide(block_list &bl, int32 x, int32 y)
 	p.srcId = bl.id;
 	p.x = x;
 	p.y = y;
+
+	// SC__FEINTBOMB: Enviar slide apenas para SELF para não revelar posição
+	status_change *sc_fb = status_get_sc(&bl);
+	if (sc_fb && sc_fb->getSCE(SC__FEINTBOMB))
+	{
+		clif_send(&p, sizeof(p), &bl, SELF);
+		return;
+	}
+
 	clif_send(&p, sizeof(p), &bl, AREA);
 
 	if (disguised(&bl))
