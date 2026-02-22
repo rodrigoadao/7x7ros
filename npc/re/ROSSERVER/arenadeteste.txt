@@ -25,13 +25,13 @@ izlude,134,150,4	script	Test Arena	88,{
 	set .@menu$, .@menu$+"^228B22- Arena 5^000000 ^FF0000[ "+getmapusers("v4arena5")+" ]^000000:";
 	set .@menu$, .@menu$+"^228B22- Arena 6^000000 ^FF0000[ "+getmapusers("v4arena6")+" ]^000000:";
 	set .@menu$, .@menu$+"^228B22- Arena 7^000000 ^FF0000[ "+getmapusers("v4arena7")+" ]^000000:";
-	set .@menu$, .@menu$+"^228B22- Arena 8^000000 ^FF0000[ "+getmapusers("arena9")+" ]^000000:";
-	set .@menu$, .@menu$+"^228B22- Arena 9^000000 ^FF0000[ "+getmapusers("arena10")+" ]^000000:";
-	set .@menu$, .@menu$+"^228B22- Arena 10^000000 ^FF0000[ "+getmapusers("arena11")+" ]^000000:";
-	set .@menu$, .@menu$+"^228B22- Arena 11^000000 ^FF0000[ "+getmapusers("arena12")+" ]^000000:";
-	set .@menu$, .@menu$+"^228B22- Arena 12^000000 ^FF0000[ "+getmapusers("arena20")+" ]^000000:";
-	set .@menu$, .@menu$+"^228B22- Arena 13^000000 ^FF0000[ "+getmapusers("arena25")+" ]^000000:";
-	set .@menu$, .@menu$+"^228B22- Arena 14^000000 ^FF0000[ "+getmapusers("arena28")+" ]^000000:";
+	// set .@menu$, .@menu$+"^228B22- Arena 8^000000 ^FF0000[ "+getmapusers("arena9")+" ]^000000:";
+	// set .@menu$, .@menu$+"^228B22- Arena 9^000000 ^FF0000[ "+getmapusers("arena10")+" ]^000000:";
+	// set .@menu$, .@menu$+"^228B22- Arena 10^000000 ^FF0000[ "+getmapusers("arena11")+" ]^000000:";
+	// set .@menu$, .@menu$+"^228B22- Arena 11^000000 ^FF0000[ "+getmapusers("arena12")+" ]^000000:";
+	// set .@menu$, .@menu$+"^228B22- Arena 12^000000 ^FF0000[ "+getmapusers("arena20")+" ]^000000:";
+	// set .@menu$, .@menu$+"^228B22- Arena 13^000000 ^FF0000[ "+getmapusers("arena25")+" ]^000000:";
+	// set .@menu$, .@menu$+"^228B22- Arena 14^000000 ^FF0000[ "+getmapusers("arena28")+" ]^000000:";
 	set .@menu$, .@menu$+"Cancel";
 	//
 	set .@select, select(.@menu$);
@@ -57,25 +57,28 @@ izlude,134,150,4	script	Test Arena	88,{
 		warp "v4arena7",99,76;
 		close;
 	} else if (.@select == 8) {
-		warp "arena9",102,110;
 		close;
-	} else if (.@select == 9) {
-		warp "arena10",122,158;
-		close;
-	} else if (.@select == 10) {
-		warp "arena11",46,79;
-		close;
-	} else if (.@select == 11) {
-		warp "arena12",64,92;
-		close;
-	} else if (.@select == 12) {
-		warp "arena20",56,117;
-		close;
-	} else if (.@select == 13) {
-		warp "arena25",53,128;
-		close;
-	} else if (.@select == 14) {
-		warp "arena28",123,247;
-		close;
-	} 
+	}
+	// else if (.@select == 8) {
+	// 	warp "arena9",102,110;
+	// 	close;
+	// } else if (.@select == 9) {
+	// 	warp "arena10",122,158;
+	// 	close;
+	// } else if (.@select == 10) {
+	// 	warp "arena11",46,79;
+	// 	close;
+	// } else if (.@select == 11) {
+	// 	warp "arena12",64,92;
+	// 	close;
+	// } else if (.@select == 12) {
+	// 	warp "arena20",56,117;
+	// 	close;
+	// } else if (.@select == 13) {
+	// 	warp "arena25",53,128;
+	// 	close;
+	// } else if (.@select == 14) {
+	// 	warp "arena28",123,247;
+	// 	close;
+	// } 
 }

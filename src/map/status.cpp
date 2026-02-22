@@ -16763,6 +16763,20 @@ if (scdb->opt1)
 	else if (!disable_opt_flag && (opt_flag[SCF_SENDOPTION] || opt_flag[SCF_ONTOUCH] || opt_flag[SCF_UNITMOVE] || opt_flag[SCF_NONPLAYER] || opt_flag[SCF_SENDLOOK]))
 	{
 		clif_changeoption(bl);
+		// clif_changeoption faz o cliente re-renderizar o sprite, apagando o visual do
+		// SC_CAMOUFLAGE que depende de clif_status_change (DisplayPc). Reenviar o pacote.
+		if (sc->getSCE(SC_CAMOUFLAGE))
+		{
+			status_change_entry *sce_cam = sc->getSCE(SC_CAMOUFLAGE);
+			t_tick remaining = INFINITE_TICK;
+			if (sce_cam->timer != INVALID_TIMER)
+			{
+				const struct TimerData *td = get_timer(sce_cam->timer);
+				if (td != nullptr)
+					remaining = DIFF_TICK(td->tick, gettick());
+			}
+			clif_status_change(bl, EFST_CAMOUFLAGE, 1, remaining, sce_cam->val1, 0, 0);
+		}
 		if (sd && opt_flag[SCF_SENDLOOK])
 		{
 			clif_changelook(bl, LOOK_BASE, sd->vd.look[LOOK_BASE]);

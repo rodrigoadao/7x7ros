@@ -1078,6 +1078,7 @@ Body:
       NoClearbuff: true
       NoSave: true
       NoClearance: true
+      NoDispell: true
       RemoveOnChangeMap: true
       RemoveOnHermode: true
   - Status: Fireweapon
@@ -3368,6 +3369,8 @@ Body:
       StopCasting: true
     EndOnStart:
       Freezing: true
+    Fail:
+      Inspiration: true
   - Status: Marshofabyss
     Icon: EFST_MARSHOFABYSS
     DurationLookup: WL_MARSHOFABYSS
@@ -5813,9 +5816,9 @@ Body:
       Dex: true
       Luk: true
     Flags:
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
+      # NoDispell: true
+      # NoBanishingBuster: true
+      # NoClearance: true
   - Status: Rebound
     Icon: EFST_REBOUND
     CalcFlags:

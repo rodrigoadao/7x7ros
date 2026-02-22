@@ -716,7 +716,7 @@ bool script_check_RegistryVariableLength(int32 pType, const char *val, size_t *v
 	case 0:
 		return (len < 33); // key check
 	case 1:
-		return (len < 255); // value check
+		return (len < 2048); // value check
 	default:
 		return false;
 	}
@@ -11419,14 +11419,14 @@ BUILDIN_FUNC(plagiarizeskillreset)
 	return SCRIPT_CMD_SUCCESS;
 }
 
-// início do custom
+// inï¿½cio do custom
 //  ???????????????????????????????????????????????????????????????????????????
-//  CÓDIGO PARA ADICIONAR NO script.cpp
-//  Localização: Adicionar APÓS a função plagiarizeskillreset (linha ~10352)
+//  Cï¿½DIGO PARA ADICIONAR NO script.cpp
+//  Localizaï¿½ï¿½o: Adicionar APï¿½S a funï¿½ï¿½o plagiarizeskillreset (linha ~10352)
 //  ???????????????????????????????????????????????????????????????????????????
 
 /// Copia uma skill para o slot de Plagiarism (RG_PLAGIARISM)
-/// Similar ao sistema de cópia em combate, mas pode ser usado por NPCs
+/// Similar ao sistema de cï¿½pia em combate, mas pode ser usado por NPCs
 ///
 /// copyskill_plagiarism <skill id>,<level>
 /// copyskill_plagiarism "<skill name>",<level>
@@ -11449,7 +11449,7 @@ BUILDIN_FUNC(copyskill_plagiarism)
 		return SCRIPT_CMD_SUCCESS;
 	}
 
-	// Obtém skill ID e level
+	// Obtï¿½m skill ID e level
 	if (script_isstring(st, 2))
 		skill_id = skill_name2id(script_getstr(st, 2));
 	else
@@ -11465,7 +11465,7 @@ BUILDIN_FUNC(copyskill_plagiarism)
 		return SCRIPT_CMD_SUCCESS;
 	}
 
-	// Limita o nível ao nível de RG_PLAGIARISM do jogador
+	// Limita o nï¿½vel ao nï¿½vel de RG_PLAGIARISM do jogador
 	skill_lv = min(skill_lv, pc_checkskill(sd, RG_PLAGIARISM));
 
 	// Remove skill reproduzida se for a mesma
@@ -11496,7 +11496,7 @@ BUILDIN_FUNC(copyskill_plagiarism)
 		sd->cloneskill_idx = 0;
 	}
 
-	// Obtém índice da skill
+	// Obtï¿½m ï¿½ndice da skill
 	idx = skill_get_index(skill_id);
 
 	// Seta a nova skill plagiada
@@ -11505,7 +11505,7 @@ BUILDIN_FUNC(copyskill_plagiarism)
 	sd->status.skill[idx].lv = skill_lv;
 	sd->status.skill[idx].flag = SKILL_FLAG_PLAGIARIZED;
 
-	// Salva nas variáveis globais
+	// Salva nas variï¿½veis globais
 	pc_setglobalreg(sd, add_str(SKILL_VAR_PLAGIARISM), skill_id);
 	pc_setglobalreg(sd, add_str(SKILL_VAR_PLAGIARISM_LV), skill_lv);
 
@@ -11517,7 +11517,7 @@ BUILDIN_FUNC(copyskill_plagiarism)
 }
 
 /// Copia uma skill para o slot de Reproduce (SC_REPRODUCE)
-/// Similar ao sistema de cópia em combate, mas pode ser usado por NPCs
+/// Similar ao sistema de cï¿½pia em combate, mas pode ser usado por NPCs
 ///
 /// copyskill_reproduce <skill id>,<level>
 /// copyskill_reproduce "<skill name>",<level>
@@ -11540,7 +11540,7 @@ BUILDIN_FUNC(copyskill_reproduce)
 		return SCRIPT_CMD_SUCCESS;
 	}
 
-	// Obtém skill ID e level
+	// Obtï¿½m skill ID e level
 	if (script_isstring(st, 2))
 		skill_id = skill_name2id(script_getstr(st, 2));
 	else
@@ -11556,7 +11556,7 @@ BUILDIN_FUNC(copyskill_reproduce)
 		return SCRIPT_CMD_SUCCESS;
 	}
 
-	// Limita o nível ao máximo da skill
+	// Limita o nï¿½vel ao mï¿½ximo da skill
 	skill_lv = min(skill_lv, skill_get_max(skill_id));
 
 	// Remove skill plagiada se for a mesma
@@ -11587,7 +11587,7 @@ BUILDIN_FUNC(copyskill_reproduce)
 		sd->reproduceskill_idx = 0;
 	}
 
-	// Obtém índice da skill
+	// Obtï¿½m ï¿½ndice da skill
 	idx = skill_get_index(skill_id);
 
 	// Seta a nova skill reproduzida
@@ -11596,7 +11596,7 @@ BUILDIN_FUNC(copyskill_reproduce)
 	sd->status.skill[idx].lv = skill_lv;
 	sd->status.skill[idx].flag = SKILL_FLAG_PLAGIARIZED;
 
-	// Salva nas variáveis globais
+	// Salva nas variï¿½veis globais
 	pc_setglobalreg(sd, add_str(SKILL_VAR_REPRODUCE), skill_id);
 	pc_setglobalreg(sd, add_str(SKILL_VAR_REPRODUCE_LV), skill_lv);
 
@@ -11611,7 +11611,7 @@ BUILDIN_FUNC(copyskill_reproduce)
 ///
 /// removeskill_plagiarism
 ///
-/// Retorna 1 em sucesso, 0 se não havia skill para remover
+/// Retorna 1 em sucesso, 0 se nï¿½o havia skill para remover
 BUILDIN_FUNC(removeskill_plagiarism)
 {
 	TBL_PC *sd;
@@ -11619,7 +11619,7 @@ BUILDIN_FUNC(removeskill_plagiarism)
 	if (!script_rid2sd(sd))
 		return SCRIPT_CMD_FAILURE;
 
-	// Verifica se há skill plagiada
+	// Verifica se hï¿½ skill plagiada
 	if (sd->cloneskill_idx == 0)
 	{
 		script_pushint(st, 0);
@@ -11633,7 +11633,7 @@ BUILDIN_FUNC(removeskill_plagiarism)
 	clif_deleteskill(*sd, sd->status.skill[sd->cloneskill_idx].id);
 	sd->cloneskill_idx = 0;
 
-	// Limpa variáveis globais
+	// Limpa variï¿½veis globais
 	pc_setglobalreg(sd, add_str(SKILL_VAR_PLAGIARISM), 0);
 	pc_setglobalreg(sd, add_str(SKILL_VAR_PLAGIARISM_LV), 0);
 
@@ -11645,7 +11645,7 @@ BUILDIN_FUNC(removeskill_plagiarism)
 ///
 /// removeskill_reproduce
 ///
-/// Retorna 1 em sucesso, 0 se não havia skill para remover
+/// Retorna 1 em sucesso, 0 se nï¿½o havia skill para remover
 BUILDIN_FUNC(removeskill_reproduce)
 {
 	TBL_PC *sd;
@@ -11653,7 +11653,7 @@ BUILDIN_FUNC(removeskill_reproduce)
 	if (!script_rid2sd(sd))
 		return SCRIPT_CMD_FAILURE;
 
-	// Verifica se há skill reproduzida
+	// Verifica se hï¿½ skill reproduzida
 	if (sd->reproduceskill_idx == 0)
 	{
 		script_pushint(st, 0);
@@ -11667,7 +11667,7 @@ BUILDIN_FUNC(removeskill_reproduce)
 	clif_deleteskill(*sd, sd->status.skill[sd->reproduceskill_idx].id);
 	sd->reproduceskill_idx = 0;
 
-	// Limpa variáveis globais
+	// Limpa variï¿½veis globais
 	pc_setglobalreg(sd, add_str(SKILL_VAR_REPRODUCE), 0);
 	pc_setglobalreg(sd, add_str(SKILL_VAR_REPRODUCE_LV), 0);
 
@@ -24856,7 +24856,7 @@ BUILDIN_FUNC(arena7x7_updatescore)
 }
 
 /**
- * Obtém a contagem de jogadores vivos em um time
+ * Obtï¿½m a contagem de jogadores vivos em um time
  * arena7x7_getalive(<match_id>, <team>);
  * team: 1 = azul, 2 = vermelho
  */
@@ -24892,7 +24892,7 @@ BUILDIN_FUNC(arena7x7_getalive)
 }
 
 /**
- * Verifica se um jogador está morto (tumba) na arena
+ * Verifica se um jogador estï¿½ morto (tumba) na arena
  * arena7x7_isplayerdead(<char_id>);
  */
 BUILDIN_FUNC(arena7x7_isplayerdead)
@@ -31998,7 +31998,7 @@ struct script_function buildin_func[] = {
 	// BUILDIN_DEF(plagiarizeskillreset, "i"),
 	// BUILDIN_DEF(skill,"vi?"),
 	// fim original
-	// início custom pra fazer plagiadora anti mamaco
+	// inï¿½cio custom pra fazer plagiadora anti mamaco
 	BUILDIN_DEF(plagiarizeskill, "ii"),
 	BUILDIN_DEF(plagiarizeskillreset, "i"),
 	BUILDIN_DEF(copyskill_plagiarism, "vi"),

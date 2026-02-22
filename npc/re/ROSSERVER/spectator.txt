@@ -1,4 +1,4 @@
-prontera,160,179,3	script	Spectator NPC	664,{
+izlude,125,145,3	script	Spectator NPC	664,{
 	// cutin "fenrir_a",2;
 	// mes "temporariamente desativado";
 	// goto finalization;
@@ -19,14 +19,14 @@ prontera,160,179,3	script	Spectator NPC	664,{
 	if ($spectator_count14 == 0) set $spectator_count14, 0;
 
 
-	// if (Class >= 1) {{
-	// 	cutin "fenrir_a",2;
-	// 	mes "[ Fenrir ]";
-	// 	mes "Voce precisa ser um ^CC00CCaprendiz^000000 para assistir uma partida: e caridoso da sua parte nao tirar do newbha seboso a oportunidade de ser massacrado de forma justa, por isso voce precisa ser um aprendiz para assistir.";
-	// 	next;
-	// 	goto finalization;
-	// }
-	// }
+	if (Class >= 1) {{
+		cutin "fenrir_a",2;
+		mes "[ Fenrir ]";
+		mes "Voce precisa ser um ^CC00CCaprendiz^000000 para assistir uma partida: e caridoso da sua parte nao tirar do newbha seboso a oportunidade de ser massacrado de forma justa, por isso voce precisa ser um aprendiz para assistir.";
+		next;
+		goto finalization;
+	}
+	}
 
 	cutin "fenrir_a",2;
 	mes "[ Fenrir ]";

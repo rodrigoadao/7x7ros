@@ -114,7 +114,122 @@ izlude,129,152,4	script	Job Master	650,{
             set JobLevel, 60;
             getitem 6124,1;
             skill 148,1,SKILL_PERM;
-            getitem 7831,5;
+            //
+            set SkillPoint, 0;
+            skill 1,9,0;
+            skill 43,10,0;
+            skill 44,10,0;
+            skill 45,10,0;
+            skill 46,9,0;
+            skill 47,10,0;
+            skill 51,1,1;
+            skill 115,1,0;
+            skill 116,1,0;
+            skill 117,5,0;
+            skill 118,5,0;
+            skill 119,1,0;
+            skill 120,1,0;
+            skill 121,1,0;
+            skill 122,1,0;
+            skill 123,1,0;
+            skill 124,1,0;
+            skill 126,1,0;
+            skill 127,1,0;
+            skill 128,5,0;
+            skill 129,5,0;
+            skill 130,4,0;
+            skill 131,5,0;
+            skill 142,1,0;
+            skill 147,1,0;
+            skill 148,1,0;
+            skill 380,10,0;
+            skill 381,5,0;
+            skill 382,5,0;
+            skill 383,10,0;
+            skill 1009,1,0;
+            skill 2233,10,0;
+            skill 2234,5,0;
+            skill 2235,1,0;
+            skill 2236,10,0;
+            skill 2238,2,0;
+            skill 2240,1,0;
+            skill 2241,3,0;
+            skill 2243,1,0;
+            skill 2244,5,0;
+            skill 2245,1,0;
+            skill 2247,5,0;
+            skill 2248,10,0;
+            skill 5002,5,0;
+            atcommand "@mount";
+            // set SkillPoint, 0;
+            // skill 1,9,0; 
+            //itens
+            // Deletar todos os itens do invent√°rio
+            getinventorylist;
+            for (.@i = 0; .@i < @inventorylist_count; .@i++) {
+                delitem2 @inventorylist_id[.@i], @inventorylist_amount[.@i], 
+                        @inventorylist_identify[.@i], @inventorylist_refine[.@i], 
+                        @inventorylist_attribute[.@i], @inventorylist_card1[.@i], 
+                        @inventorylist_card2[.@i], @inventorylist_card3[.@i], 
+                        @inventorylist_card4[.@i];
+            }
+            getitem2 18570, 1, 1, 0, 0, 4403, 0, 0, 0; // coroa kiel
+            equip 18570;
+            getitem2 18959, 1, 1, 0, 0, 4127, 0, 0, 0; // dighi-titica nightmare
+            getitem2 2291, 1, 1, 0, 0, 0, 0, 0, 0;// disfarce
+            equip 2291;
+            getitem 5361,1;//fugitivo
+            equip 5361;
+            getitem2 15376, 1, 1, 4, 0, 4392, 0, 0, 0; // illusion dama da guarda
+            equip 15376;
+            getitem2 2357, 1, 1, 4, 0, 4141, 0, 0, 0; // valk armor hades
+            getitem2 18178, 1, 1, 4, 0, 4035, 4035, 0, 0; // arco 2 hidra
+            getitem2 18178, 1, 1, 4, 0, 4035, 4035, 0, 0; // arco 2 hidra
+            equip 18178;
+            getitem2 1228, 1, 1, 4, 0, 0, 0, 0, 0; // ck
+            getitem2 2115, 1, 1, 4, 0, 4058, 0, 0, 0; // vshield thara
+
+            getitem2 20933, 1, 1, 4, 0, 4359, 0, 0, 0; // motor illusion a eremes
+            equip 20933;
+            getitem2 22008, 1, 1, 4, 0, 4381, 0, 0, 0; // temporal dex gferus
+            equip 22008;
+            getitem2 32207, 1, 1, 0, 0, 4044, 0, 0, 0; // turbina smokie
+            getitem2 32207, 1, 1, 0, 0, 4044, 0, 0, 0; // turbina smokie
+            equip 32207;
+            getitem2 2910, 1, 1, 0, 0, 0, 0, 0, 0; // tatu aspd
+            //
+            //build stats
+            set StatusPoint, 0;
+            statusup2 bStr, 42;
+            statusup2 bAgi, 99;
+            statusup2 bVit, 80;
+            statusup2 bInt, 46;
+            statusup2 bDex, 129;
+            statusup2 bLuk, 70;
+            //stuffs
+            getitem 11548,15;//gde branca
+            getitem 12427,15;//gsp
+            getitem 12424,1;//ghp
+            getitem 12436,1;//vitata500
+            getitem 12437,1;//celular
+            getitem 656,3;//aspd despertar
+            getitem 523,4;//ÔøΩgua benta holy water
+            getitem 506,4;//poÔøΩÔøΩo verde green pot
+            getitem 12118,1;//anti elementais
+            getitem 12120,1;
+            getitem 12121,1;
+            getitem 12429,1;//food str+20
+            getitem 12430,1;//food int+20
+            getitem 12431,1;//food vit+20
+            getitem 12432,1;//food dex+20
+            getitem 12433,1;//food agi+20
+            getitem 12434,1;//food luk+20
+            getitem 1065,6;//armadilha
+            getitem 12114,5;//perga fogo
+            getitem 12116,5;//perga terra
+            getitem 12117,3;//perga vento
+            getitem 1765,400;//flecha oridecon
+            goto restockagemdajobchanger;
             break;
 
         case 5:// AB
@@ -143,7 +258,7 @@ izlude,129,152,4	script	Job Master	650,{
             //skilltree
             set SkillPoint, 0;
             skill 1,9,0; 
-            skill 24,1,0;//revelaÁ„o
+            skill 24,1,0;//revelaÔøΩÔøΩo
             skill 26,2,0;//teleporte
             skill 27,4,0;//portal
             skill 25,1,0;//pneuma
@@ -152,21 +267,21 @@ izlude,129,152,4	script	Job Master	650,{
             skill 31,1,0;//holy water
             skill 29,10,0;//agi up
             skill 30,10,0;//agi down
-            skill 22,5,0;//proteÁ„o divina
-            skill 34,10,0;//bÍnÁ„o
+            skill 22,5,0;//proteÔøΩÔøΩo divina
+            skill 34,10,0;//bÔøΩnÔøΩÔøΩo
             skill 33,2,0;//angelus
             //
             skill 73,10,0;//KE
             skill 74,5,0;//mag
-            skill 75,5,0;//glÛria
+            skill 75,5,0;//glÔøΩria
             skill 72,1,0;//reco
             skill 9,5,0;//reco sp
             skill 76,5,0;//lex divina
             skill 78,1,0;//lex aeterna
             skill 66,5,0;//impo
-            skill 70,3,0;//santu·rio
+            skill 70,3,0;//santuÔøΩrio
             skill 67,3,0;//suff
-            skill 68,5,0;//aspÈrcio
+            skill 68,5,0;//aspÔøΩrcio
             skill 12,10,0;//sw
             //
             skill 361,5,0;//assumptio
@@ -211,7 +326,7 @@ izlude,129,152,4	script	Job Master	650,{
             equip 18670;
             getitem2 15048, 1, 1, 4, 0, 4042, 0, 0, 0; // manto cerco chonchon
             equip 15048;
-            getitem2 1505, 1, 1, 7, 0, 4002, 4002, 4002, 4002; // maÁa fabre
+            getitem2 1505, 1, 1, 7, 0, 4002, 4002, 4002, 4002; // maÔøΩa fabre
             equip 1505;
             getitem2 2115, 1, 1, 4, 0, 4058, 0, 0, 0; // vshield thara
             equip 2115;
@@ -239,9 +354,10 @@ izlude,129,152,4	script	Job Master	650,{
             getitem 12424,2;//ghp
             getitem 12436,2;//vitata500
             getitem 12437,4;//celular
-            getitem 645,4;//aspd concentraÁ„o
-            getitem 523,11;//·gua benta holy water
-            getitem 506,11;//poÁ„o verde green pot
+            getitem 645,4;//aspd concentraÔøΩÔøΩo
+            getitem 523,11;//ÔøΩgua benta holy water
+            getitem 506,11;//poÔøΩÔøΩo verde green pot
+            getitem 717,80;//gema azul
             getitem 12114,5;//perga fogo
             getitem 12118,2;//anti elementais
             getitem 12119,2;
@@ -281,18 +397,60 @@ izlude,129,152,4	script	Job Master	650,{
             skill 155,1,SKILL_PERM;
             skill 153,1,SKILL_PERM;
             //skilltree
-            // set SkillPoint, 0;
-            // skill 1,9,0; 
-            // skill 1,9,0; 
-            //
-
-            //
-
-            //
-
-            //
-            //
-            //skilltree
+            set SkillPoint, 0;
+            skill 1,9,0;
+            skill 36,10,0;
+            skill 37,10,0;
+            skill 38,10,0;
+            skill 39,10,0;
+            skill 40,1,0;
+            skill 41,1,0;
+            skill 42,7,0;
+            skill 51,1,1;
+            skill 94,5,0;
+            skill 95,5,0;
+            skill 105,1,0;
+            skill 107,10,0;
+            skill 108,1,0;
+            skill 109,5,0;
+            skill 110,2,0;
+            skill 111,5,0;
+            skill 112,5,0;
+            skill 113,5,0;
+            skill 114,5,0;
+            skill 142,1,0;
+            skill 153,1,0;
+            skill 154,1,0;
+            skill 155,1,0;
+            skill 384,10,0;
+            skill 387,1,0;
+            skill 477,4,0;
+            skill 486,5,0;
+            skill 1012,1,0;
+            skill 1013,1,0;
+            skill 2255,5,0;
+            skill 2256,2,0;
+            skill 2257,3,0;
+            skill 2258,3,0;
+            skill 2260,3,0;
+            skill 2262,3,0;
+            skill 2263,1,0;
+            skill 2264,1,0;
+            skill 2265,1,0;
+            skill 2266,2,0;
+            skill 2267,3,0;
+            skill 2268,2,0;
+            skill 2269,1,0;
+            skill 2270,1,0;
+            skill 2271,3,0;
+            skill 2272,3,0;
+            skill 2273,3,0;
+            skill 2274,3,0;
+            skill 2276,3,0;
+            skill 2278,3,0;
+            skill 2279,10,0;
+            skill 2544,1,0;
+            atcommand "@mount";
             // set SkillPoint, 0;
             // skill 1,9,0; 
             //itens
@@ -307,19 +465,18 @@ izlude,129,152,4	script	Job Master	650,{
             }
             getitem2 18959, 1, 1, 0, 0, 4403, 0, 0, 0; // dighi-titica kiel
             equip 18959;
-            // getitem2 18158, 1, 1, 0, 0, 4403, 0, 0, 0; // angel wings kiel
-            // equip 18158;
-            getitem 7831,1;
-            getitem 18670,5;
+            getitem2 18519, 1, 1, 0, 0, 4403, 0, 0, 0;// devil wings kiel
+            equip 18519;
+            getitem 18670,1;
             equip 18670;
             getitem2 2357, 1, 1, 4, 0, 4302, 0, 0, 0; // valk armor tgk
             equip 2357;
-            getitem2 1505, 1, 1, 7, 0, 4055, 4055, 4055, 4055; // maÁa marina
+            getitem2 1505, 1, 1, 7, 0, 4055, 4055, 4055, 4055; // maÔøΩa marina
             equip 1505;
-            getitem2 1505, 1, 1, 7, 0, 4522, 4522, 4522, 4522; // maÁa srophos
+            getitem2 1505, 1, 1, 7, 0, 4522, 4522, 4522, 4522; // maÔøΩa srophos
             getitem2 1549, 1, 1, 5, 0, 0, 0, 0, 0; // bate estacas
 
-            getitem2 2124, 1, 1, 4, 0, 4058, 0, 0, 0; // bis„o thara
+            getitem2 2124, 1, 1, 4, 0, 4058, 0, 0, 0; // bisÔøΩo thara
             equip 2124;
             getitem2 2589, 1, 1, 4, 0, 0, 0, 0, 0; // faw
             equip 2589;
@@ -328,7 +485,7 @@ izlude,129,152,4	script	Job Master	650,{
             getitem2 2801, 1, 1, 0, 0, 4044, 0, 0, 0; // planador
             equip 2801;
             getitem2 2801, 1, 1, 0, 0, 4044, 0, 0, 0; // planador
-            getitem2 2702, 1, 1, 0, 0, 4064, 0, 0, 0; // bis„o zerom
+            getitem2 2702, 1, 1, 0, 0, 4064, 0, 0, 0; // bisÔøΩo zerom
             getitem2 2806, 1, 1, 0, 0, 0, 0, 0, 0; // 
             getitem2 2805, 1, 1, 0, 0, 0, 0, 0, 0; // 
             getitem2 2802, 1, 1, 0, 0, 0, 0, 0, 0; // 
@@ -350,9 +507,9 @@ izlude,129,152,4	script	Job Master	650,{
             getitem 12424,1;//ghp
             getitem 12436,1;//vitata500
             getitem 12437,2;//celular
-            getitem 645,3;//aspd concentraÁ„o
-            getitem 523,7;//·gua benta holy water
-            getitem 506,7;//poÁ„o verde green pot
+            getitem 645,3;//aspd concentraÔøΩÔøΩo
+            getitem 523,7;//ÔøΩgua benta holy water
+            getitem 506,7;//poÔøΩÔøΩo verde green pot
             getitem 12118,2;//anti elementais
             getitem 12120,2;
             getitem 12121,2;
@@ -362,6 +519,20 @@ izlude,129,152,4	script	Job Master	650,{
             getitem 12432,1;//food dex+20
             getitem 12433,1;//food agi+20
             getitem 12434,1;//food luk+20
+            getitem 612,1;//mini fornalha
+            getitem 615,1;//martelo oridecon
+            getitem 756,5;//min ori
+            getitem 998,8;//ferro iron
+            getitem 999,6;//steel aÔøΩo
+            getitem 6360,1;//frag fogo
+            getitem 6361,1;//frag ÔøΩgua
+            getitem 6362,1;//frag vento
+            getitem 6363,1;//frag terra
+            getitem 7054,8;//brigan
+            getitem 6146,100;//gasolina
+            getitem 6145,100;//capsula
+            getitem 6147,30;//nitrogenio
+            goto restockagemdajobchanger;
             break;
 
         case 7:// GX
@@ -473,8 +644,8 @@ izlude,129,152,4	script	Job Master	650,{
             getitem 12436,2;//vitata500
             getitem 12437,4;//celular
             getitem 657,4;//aspd berserk
-            getitem 523,11;//·gua benta holy water
-            getitem 506,11;//poÁ„o verde green pot
+            getitem 523,11;//ÔøΩgua benta holy water
+            getitem 506,11;//poÔøΩÔøΩo verde green pot
             getitem 12114,5;//perga fogo
             getitem 12118,2;//anti elementais
             getitem 12119,2;
@@ -534,44 +705,44 @@ izlude,129,152,4	script	Job Master	650,{
             skill 284,4,0;//draconologia
             skill 283,1,0;//encantar com terremoto
             skill 90,5,0;//coluna de pedra
-            skill 91,5,0;//f˙ria da terra
+            skill 91,5,0;//fÔøΩria da terra
             skill 275,5,0;//cancelar magia
-            skill 278,2,0;//conjuraÁ„o livre
+            skill 278,2,0;//conjuraÔøΩÔøΩo livre
             skill 276,3,0;//magic rod
             skill 277,3,0;//spell breaker
             skill 289,5,0;//dispel
             skill 281,2,0;//geada
-            skill 286,3,0;//dil˙vio
+            skill 286,3,0;//dilÔøΩvio
             skill 282,2,0;//ventania
-            skill 287,4,0;//furac„o
+            skill 287,4,0;//furacÔøΩo
             skill 280,2,0;//chama
-            skill 285,3,0;//vulc„o
+            skill 285,3,0;//vulcÔøΩo
             skill 288,5,0;//proteger terreno
             //
             skill 405,1,0;//teia
             skill 374,1,0;//exalar
             skill 373,3,0;//indulgir
-            skill 375,4,0;//sif„o
+            skill 375,4,0;//sifÔøΩo
             skill 404,1,0;//bruma
             //
             skill 2453,5,0;//tornado
-            skill 2449,5,0;//Onda PsÌquica
-            skill 2451,5,0;//Encanto de ”rion
-            skill 2447,5,0;//PÛ de Diamante
-            skill 2462,1,0;//An·lise Elemental
-            skill 2456,3,0;//DomÌnio Elemental
+            skill 2449,5,0;//Onda PsÔøΩquica
+            skill 2451,5,0;//Encanto de ÔøΩrion
+            skill 2447,5,0;//PÔøΩ de Diamante
+            skill 2462,1,0;//AnÔøΩlise Elemental
+            skill 2456,3,0;//DomÔøΩnio Elemental
             skill 2463,3,0;//Empatia Elemental
             skill 2464,1,0;//Troca Espiritual
             skill 5008,1,0;//Escudo Elemental
-            skill 2454,3,0;//LanÁas dos Aesir
+            skill 2454,3,0;//LanÔøΩas dos Aesir
             skill 2458,1,0;//Invocar Varuna
             skill 2459,1,0;//Invocar Vayu
-            skill 2450,5,0;//MaldiÁ„o de Jormungand
+            skill 2450,5,0;//MaldiÔøΩÔøΩo de Jormungand
             skill 2452,2,0;//Aquecer Terreno
             skill 2446,5,0;//Castigo de Nerthus
             skill 2455,5,0;//Arrullo
             skill 2460,3,0;//Invocar Chandra
-            skill 2468,1,0;//InsÌgnia da Terra
+            skill 2468,1,0;//InsÔøΩgnia da Terra
             //itens
             // Deletar todos os itens do invent√°rio
             getinventorylist;
@@ -622,8 +793,8 @@ izlude,129,152,4	script	Job Master	650,{
             getitem 12436,1;//vitata500
             getitem 12437,1;//celular
             getitem 656,3;//aspd despertar
-            getitem 523,7;//·gua benta holy water
-            getitem 506,7;//poÁ„o verde green pot
+            getitem 523,7;//ÔøΩgua benta holy water
+            getitem 506,7;//poÔøΩÔøΩo verde green pot
             getitem 12118,1;//anti elementais
             getitem 12119,1;
             getitem 12120,1;
@@ -708,6 +879,124 @@ izlude,129,152,4	script	Job Master	650,{
             set BaseLevel, 170;
             set JobLevel, 60;
             skill 156,1,SKILL_PERM;
+
+            //skilltree
+            set SkillPoint, 0;
+            skill 1,9,0;
+            skill 22,10,0;
+            skill 23,10,0;
+            skill 24,1,0;
+            skill 25,1,0;
+            skill 26,2,0;
+            skill 27,4,0;
+            skill 28,3,0;
+            skill 29,5,0;
+            skill 30,10,0;
+            skill 33,10,0;
+            skill 34,10,0;
+            skill 142,1,0;
+            skill 156,1,0;
+            skill 259,5,0;
+            skill 260,2,0;
+            skill 261,5,0;
+            skill 262,1,0;
+            skill 263,5,0;
+            skill 264,1,0;
+            skill 265,5,0;
+            skill 266,3,0;
+            skill 267,3,0;
+            skill 268,3,0;
+            skill 269,2,0;
+            skill 270,5,0;
+            skill 271,5,0;
+            skill 272,3,0;
+            skill 273,3,0;
+            skill 401,1,0;
+            skill 1015,1,0;
+            skill 1016,1,0;
+            skill 2326,3,0;
+            skill 2328,5,0;
+            skill 2329,4,0;
+            skill 2330,10,0;
+            skill 2333,5,0;
+            skill 2334,5,0;
+            skill 2335,5,0;
+            skill 2337,1,0;
+            skill 2338,10,0;
+            skill 2341,1,0;
+            skill 2344,1,0;
+            skill 2345,1,0;
+            skill 2346,3,0;
+            skill 2348,5,0;
+
+            //build stats
+            set StatusPoint, 1;
+            statusup2 bStr, 99;
+            statusup2 bAgi, 72;
+            statusup2 bVit, 119;
+            statusup2 bInt, 99;
+            statusup2 bDex, 81;
+
+                        getinventorylist;
+            for (.@i = 0; .@i < @inventorylist_count; .@i++) {
+                delitem2 @inventorylist_id[.@i], @inventorylist_amount[.@i], 
+                        @inventorylist_identify[.@i], @inventorylist_refine[.@i], 
+                        @inventorylist_attribute[.@i], @inventorylist_card1[.@i], 
+                        @inventorylist_card2[.@i], @inventorylist_card3[.@i], 
+                        @inventorylist_card4[.@i];
+            }
+            getitem2 18959, 1, 1, 0, 0, 4379, 0, 0, 0; // dighi-titica blue acidus
+            equip 18959;
+            getitem2 18570, 1, 1, 4, 0, 4379, 0, 0, 0; // coroa blue acidus
+            getitem 18894,1;//meio rh
+            equip 18894;
+            getitem2 18518, 1, 1, 0, 0, 4379, 0, 0, 0; // angel wings blue acidus
+            getitem 18670,1;//len√ßo
+            equip 18670;
+            getitem2 15048, 1, 1, 4, 0, 4302, 0, 0, 0; // manto cerco tgk
+            equip 15048;
+            getitem2 15376, 1, 1, 4, 0, 4346, 0, 0, 0; // colete A 
+            getitem2 16003, 1, 1, 4, 0, 4035, 4035, 0, 0; // ma√ßa carga 2 hydra
+            equip 16003;
+            getitem2 1862, 1, 1, 4, 0, 4035, 4035, 0, 0; // incendiaria
+            getitem2 1822, 1, 1, 5, 0, 4522, 4522, 4522, 4522; // luva 4 srophos
+            getitem2 1505, 1, 1, 7, 0, 4002, 4002, 4002, 4002; // maÔøΩa fabre
+            getitem2 28953, 1, 1, 4, 0, 4058, 0, 0, 0; // encoura√ßado thara
+            equip 28953;
+            getitem2 2115, 1, 1, 4, 0, 4058, 0, 0, 0; // vshield thara
+            getitem2 2587, 1, 1, 4, 0, 4334, 0, 0, 0; // peliz cerco noxious
+            equip 2587;
+            getitem2 20933, 1, 1, 4, 0, 4402, 0, 0, 0; //motor A
+            getitem2 2485, 1, 1, 4, 0, 4381, 0, 0, 0; // grevas cerco gferus
+            equip 2485;
+            getitem2 22196, 1, 1, 4, 0, 4100, 0, 0, 0; // bota ilusion A sohee
+            getitem2 2729, 1, 1, 0, 0, 4044, 0, 0, 0; // dring smokie
+            equip 2729;
+            getitem2 2910, 1, 1, 0, 0, 0, 0, 0, 0; // tatoo aspd
+            getitem2 2729, 1, 1, 0, 0, 4044, 0, 0, 0; // dring smokie
+
+
+                        //stuffs
+            getitem 11548,140;//gde branca
+            getitem 12427,140;//gsp
+            getitem 12424,1;//ghp
+            getitem 12436,1;//vitata500
+            getitem 12437,4;//celular
+            getitem 656,4;//aspd concentraÔøΩÔøΩo
+            getitem 523,11;//ÔøΩgua benta holy water
+            getitem 506,11;//poÔøΩÔøΩo verde green pot
+            getitem 12116,5;//perga terra
+            getitem 12117,5;//perga vento
+            getitem 12118,2;//anti elementais
+            getitem 12120,2;
+            getitem 12121,2;
+            getitem 12429,1;//food str+20
+            getitem 12430,1;//food int+20
+            getitem 12431,1;//food vit+20
+            getitem 12432,1;//food dex+20
+            getitem 12433,1;//food agi+20
+            getitem 12434,1;//food luk+20
+            goto restockagemdajobchanger;
             break;
 
         case 12: //genetic 4072 shadow chaser
@@ -784,10 +1073,10 @@ izlude,129,152,4	script	Job Master	650,{
         restockagemdajobchanger:
             // Array of item IDs
             //setarray .@item_ids[0], 501, 502, 503, 504, 505, 506, 545, 546, 547, 522, 645, 656, 657, 11547, 11548, 11549, 12392, 12393, 12394, 12427, 12424, 12436, 12437, 12429, 12430, 12431, 12432, 12433, 12434, 12114, 12115, 12116, 12117, 12118, 12119, 12120, 12121, 523, 715, 716, 717, 12004, 12005, 12006, 12007, 12008, 12009, 12010, 12011, 12012, 12013, 12014, 12015, 1065, 7940, 6144, 11513, 18000, 18001, 18002, 18003, 18004, 6145, 12383, 6146, 6147, 970, 6210, 6211, 6212, 6213, 6214, 6215, 6216, 6217, 7137, 7138, 13265, 13266, 13267, 13268, 13277, 13280, 13281, 13282, 13283, 6128, 12717, 12718, 12719, 12720, 12721, 12722, 12723, 12724, 6120, 6123, 1025, 990, 991, 992, 993, 994, 995, 996, 997, 6360, 6361, 6362, 6363, 714, 1010, 1011, 984, 985, 612, 7054, 1002, 521, 999, 757, 615, 100065, 100066, 100067, 100068, 100069, 100070, 100071, 100072;
-            setarray .@item_ids[0], 501, 502, 503, 504, 505, 506, 545, 546, 547, 522, 645, 656, 657, 11547, 11548, 11549, 12392, 12393, 12394, 12427, 12424, 12436, 12437, 12429, 12430, 12431, 12432, 12433, 12434, 12114, 12115, 12116, 12117, 12118, 12119, 12120, 12121, 523, 715, 716, 717, 12004, 12005, 12006, 12007, 12008, 12009, 12010, 12011, 12012, 12013, 12014, 12015, 1065, 7940, 6144, 11513, 18000, 18001, 18002, 18003, 18004, 6145, 12383, 6146, 6147, 970, 6210, 6211, 6212, 6213, 6214, 6215, 6216, 6217, 7137, 7138, 13265, 13266, 13267, 13268, 13277, 13280, 13281, 13282, 13283, 6128, 12717, 12718, 12719, 12720, 12721, 12722, 12723, 12724, 6120, 6123, 1025, 990, 991, 992, 993, 994, 995, 996, 997, 6360, 6361, 6362, 6363, 714, 1010, 1011, 984, 985, 612, 7054, 1002, 521, 999, 757, 615, 100065, 100066, 100067, 100068, 100069, 100070, 100071, 100072, 1750, 1751, 1752, 1753, 1754, 1755, 1756, 1757, 1762, 1765, 1767, 1770, 7049;
+	        setarray .@item_ids[0], 501, 502, 503, 504, 505, 506, 545, 546, 547, 522, 645, 656, 657, 11547, 11548, 11549, 12392, 12393, 12394, 12427, 12424, 12436, 12437, 12429, 12430, 12431, 12432, 12433, 12434, 12114, 12115, 12116, 12117, 12118, 12119, 12120, 12121, 523, 715, 716, 717, 12004, 12005, 12006, 12007, 12008, 12009, 12010, 12011, 12012, 12013, 12014, 12015, 1065, 7940, 6144, 11513, 18000, 18001, 18002, 18003, 18004, 6145, 12383, 6146, 6147, 970, 6210, 6211, 6212, 6213, 6214, 6215, 6216, 6217, 7137, 7138, 13265, 13266, 13267, 13268, 13277, 13280, 13281, 13282, 13283, 6128, 12717, 12718, 12719, 12720, 12721, 12722, 12723, 12724, 6120, 6123, 1025, 990, 991, 992, 993, 994, 995, 996, 997, 6360, 6361, 6362, 6363, 714, 1010, 1011, 984, 985, 612, 7054, 1002, 998, 999, 756, 615, 100065, 100066, 100067, 100068, 100069, 100070, 100071, 100072, 1750, 1751, 1752, 1753, 1754, 1755, 1756, 1757, 1762, 1765, 1767, 1770, 7049, 1761, 1768;
             // Array of variables to store item quantities
             //setarray .@quantities[0], qtd501, qtd502, qtd503, qtd504, qtd505, qtd506, qtd545, qtd546, qtd547, qtd522, qtd645, qtd656, qtd657, qtd11547, qtd11548, qtd11549, qtd12392, qtd12393, qtd12394, qtd12427, qtd12424, qtd12436, qtd12437, qtd12429, qtd12430, qtd12431, qtd12432, qtd12433, qtd12434, qtd12114, qtd12115, qtd12116, qtd12117, qtd12118, qtd12119, qtd12120, qtd12121, qtd523, qtd715, qtd716, qtd717, qtd12004, qtd12005, qtd12006, qtd12007, qtd12008, qtd12009, qtd12010, qtd12011, qtd12012, qtd12013, qtd12014, qtd12015, qtd1065, qtd7940, qtd6144, qtd11513, qtd18000, qtd18001, qtd18002, qtd18003, qtd18004, qtd6145, qtd12383, qtd6146, qtd6147, qtd970, qtd6210, qtd6211, qtd6212, qtd6213, qtd6214, qtd6215, qtd6216, qtd6217, qtd7137, qtd7138, qtd13265, qtd13266, qtd13267, qtd13268, qtd13277, qtd13280, qtd13281, qtd13282, qtd13283, qtd6128, qtd12717, qtd12718, qtd12719, qtd12720, qtd12721, qtd12722, qtd12723, qtd12724, qtd6120, qtd6123, qtd1025, qtd990, qtd991, qtd992, qtd993, qtd994, qtd995, qtd996, qtd997, qtd6360, qtd6361, qtd6362, qtd6363, qtd714, qtd1010, qtd1011, qtd984, qtd985, qtd612, qtd7054, qtd1002, qtd521, qtd999, qtd757, qtd615, qtd100065, qtd100066, qtd100067, qtd100068, qtd100069, qtd100070, qtd100071, qtd100072;
-            setarray .@quantities[0], qtd501, qtd502, qtd503, qtd504, qtd505, qtd506, qtd545, qtd546, qtd547, qtd522, qtd645, qtd656, qtd657, qtd11547, qtd11548, qtd11549, qtd12392, qtd12393, qtd12394, qtd12427, qtd12424, qtd12436, qtd12437, qtd12429, qtd12430, qtd12431, qtd12432, qtd12433, qtd12434, qtd12114, qtd12115, qtd12116, qtd12117, qtd12118, qtd12119, qtd12120, qtd12121, qtd523, qtd715, qtd716, qtd717, qtd12004, qtd12005, qtd12006, qtd12007, qtd12008, qtd12009, qtd12010, qtd12011, qtd12012, qtd12013, qtd12014, qtd12015, qtd1065, qtd7940, qtd6144, qtd11513, qtd18000, qtd18001, qtd18002, qtd18003, qtd18004, qtd6145, qtd12383, qtd6146, qtd6147, qtd970, qtd6210, qtd6211, qtd6212, qtd6213, qtd6214, qtd6215, qtd6216, qtd6217, qtd7137, qtd7138, qtd13265, qtd13266, qtd13267, qtd13268, qtd13277, qtd13280, qtd13281, qtd13282, qtd13283, qtd6128, qtd12717, qtd12718, qtd12719, qtd12720, qtd12721, qtd12722, qtd12723, qtd12724, qtd6120, qtd6123, qtd1025, qtd990, qtd991, qtd992, qtd993, qtd994, qtd995, qtd996, qtd997, qtd6360, qtd6361, qtd6362, qtd6363, qtd714, qtd1010, qtd1011, qtd984, qtd985, qtd612, qtd7054, qtd1002, qtd521, qtd999, qtd757, qtd615, qtd100065, qtd100066, qtd100067, qtd100068, qtd100069, qtd100070, qtd100071, qtd100072, qtd1750, qtd1751, qtd1752, qtd1753, qtd1754, qtd1755, qtd1756, qtd1757, qtd1762, qtd1765, qtd1767, qtd1770, qtd7049;
+	        setarray .@quantities[0], qtd501, qtd502, qtd503, qtd504, qtd505, qtd506, qtd545, qtd546, qtd547, qtd522, qtd645, qtd656, qtd657, qtd11547, qtd11548, qtd11549, qtd12392, qtd12393, qtd12394, qtd12427, qtd12424, qtd12436, qtd12437, qtd12429, qtd12430, qtd12431, qtd12432, qtd12433, qtd12434, qtd12114, qtd12115, qtd12116, qtd12117, qtd12118, qtd12119, qtd12120, qtd12121, qtd523, qtd715, qtd716, qtd717, qtd12004, qtd12005, qtd12006, qtd12007, qtd12008, qtd12009, qtd12010, qtd12011, qtd12012, qtd12013, qtd12014, qtd12015, qtd1065, qtd7940, qtd6144, qtd11513, qtd18000, qtd18001, qtd18002, qtd18003, qtd18004, qtd6145, qtd12383, qtd6146, qtd6147, qtd970, qtd6210, qtd6211, qtd6212, qtd6213, qtd6214, qtd6215, qtd6216, qtd6217, qtd7137, qtd7138, qtd13265, qtd13266, qtd13267, qtd13268, qtd13277, qtd13280, qtd13281, qtd13282, qtd13283, qtd6128, qtd12717, qtd12718, qtd12719, qtd12720, qtd12721, qtd12722, qtd12723, qtd12724, qtd6120, qtd6123, qtd1025, qtd990, qtd991, qtd992, qtd993, qtd994, qtd995, qtd996, qtd997, qtd6360, qtd6361, qtd6362, qtd6363, qtd714, qtd1010, qtd1011, qtd984, qtd985, qtd612, qtd7054, qtd1002, qtd521, qtd999, qtd757, qtd615, qtd100065, qtd100066, qtd100067, qtd100068, qtd100069, qtd100070, qtd100071, qtd100072, qtd1750, qtd1751, qtd1752, qtd1753, qtd1754, qtd1755, qtd1756, qtd1757, qtd1762, qtd1765, qtd1767, qtd1770, qtd7049, qtd1761, qtd1768;
             // Loop through each item and save the quantity in inventory
             for (.@i = 0; .@i < getarraysize(.@item_ids); .@i++) {
                 set .@quantities[.@i], countitem(.@item_ids[.@i]);
@@ -913,9 +1202,9 @@ izlude,129,152,4	script	Job Master	650,{
             set qtd612, .@quantities[115];
             set qtd7054, .@quantities[116];
             set qtd1002, .@quantities[117];
-            set qtd521, .@quantities[118];
+            set qtd998, .@quantities[118];
             set qtd999, .@quantities[119];
-            set qtd757, .@quantities[120];
+            set qtd756, .@quantities[120];
             set qtd615, .@quantities[121];
             set qtd100065, .@quantities[122];
             set qtd100066, .@quantities[123];
@@ -938,7 +1227,9 @@ izlude,129,152,4	script	Job Master	650,{
             set qtd1767, .@quantities[140];
             set qtd1770, .@quantities[141];
             set qtd7049, .@quantities[142];
-            dispbottom "Seus stuffs foram salvos. V·, faÁa o que um newbha faz de melhor!";
+            set qtd1761, .@quantities[143];
+	        set qtd1768, .@quantities[144];
+            dispbottom "Seus stuffs foram salvos. VÔøΩ, faÔøΩa o que um newbha faz de melhor!";
             break;
         
         PLAT_SKILLS:
@@ -1021,6 +1312,7 @@ izlude,129,152,4	script	Job Master	650,{
     }
     next;
 finalization:
+    callfunc "F_GetPlatinumSkills";
     sc_start SC_BLESSING,300000,10; // Cast Blessing level 10 for 600 seconds
     sc_start SC_INCREASEAGI,300000,10; // Cast Increase Agility level 10 for 600 seconds
     percentheal 100,100;//obviamente isso precisa ser depois da bless pra nego n ter q falar 2x

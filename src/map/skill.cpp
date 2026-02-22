@@ -8028,6 +8028,9 @@ int32 skill_castend_damage_id(struct block_list *src, struct block_list *bl, uin
 		{
 			clif_blown(src);
 			skill_attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
+			// Reset Rolling Cutter counter when Cross Impact is used
+			if (sc && sc->getSCE(SC_ROLLINGCUTTER))
+				status_change_end(src, SC_ROLLINGCUTTER);
 		}
 		else
 		{
@@ -9149,6 +9152,8 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 		}
 		if (skill_id == AL_HEAL)
 			status_change_end(bl, SC_BITESCAR);
+		if (skill_id == AL_HEAL || skill_id == AB_HIGHNESSHEAL)
+			status_change_end(bl, SC_DARKCROW);
 		clif_skill_nodamage(src, *bl, skill_id, heal, !(flag & 2)); // Don't show title if requirements failed
 		if (tsc && tsc->getSCE(SC_AKAITSUKI) && heal && skill_id != HLIF_HEAL)
 			heal = ~heal + 1;
@@ -13728,6 +13733,7 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 				if (tsc && tsc->getSCE(SC_AKAITSUKI) && i)
 					i = ~i + 1;
 				status_heal(bl, i, 0, 0);
+				status_change_end(bl, SC_DARKCROW);
 			}
 		}
 		else if (sd)
@@ -14662,10 +14668,10 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 		}
 		else if (sd)
 		{
+			clif_skill_nodamage(src, *bl, skill_id, skill_lv);
 			if (rnd() % 100 < sstatus->int_ / 6 + sd->status.job_level / 5 + skill_lv * 4 + pc_checkskill(sd, WM_LESSON))
 			{ // !TODO: What's the Lesson bonus?
 				map_foreachinallrange(skill_area_sub, src, skill_get_splash(skill_id, skill_lv), BL_PC, src, skill_id, skill_lv, tick, flag | BCT_ENEMY | 1, skill_castend_nodamage_id);
-				clif_skill_nodamage(src, *bl, skill_id, skill_lv);
 			}
 		}
 		break;
@@ -14701,10 +14707,10 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 		{ // Chance de aplicar baseada na fórmula correta
 			int lesson_lv = (sd ? pc_checkskill(sd, WM_LESSON) : 0);
 			int chance = (skill_lv * 5) + 5 + (lesson_lv / 2); // [(lv×5)+5 + (Lesson/2)]%
+			clif_skill_nodamage(src, *bl, skill_id, skill_lv);
 			if (rnd() % 100 < chance)
 			{
 				map_foreachinallrange(skill_area_sub, src, skill_get_splash(skill_id, skill_lv), BL_PC, src, skill_id, skill_lv, tick, flag | BCT_ENEMY | 1, skill_castend_nodamage_id);
-				clif_skill_nodamage(src, *bl, skill_id, skill_lv);
 			}
 		}
 		break;
@@ -14716,10 +14722,10 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 		}
 		else
 		{ // These affect to all targets around the caster.
+			clif_skill_nodamage(src, *bl, skill_id, skill_lv);
 			if (rnd() % 100 < 12 + 3 * skill_lv + (sd ? pc_checkskill(sd, WM_LESSON) : 0))
 			{ // !TODO: What's the Lesson bonus?
 				map_foreachinallrange(skill_area_sub, src, skill_get_splash(skill_id, skill_lv), BL_PC, src, skill_id, skill_lv, tick, flag | BCT_ENEMY | 1, skill_castend_nodamage_id);
-				clif_skill_nodamage(src, *bl, skill_id, skill_lv);
 			}
 		}
 		break;
@@ -17225,7 +17231,7 @@ TIMER_FUNC(skill_castend_pos)
 				ud->skill_id == SO_DIAMONDDUST || ud->skill_id == SO_CLOUD_KILL ||
 				ud->skill_id == SO_VACUUM_EXTREME || ud->skill_id == SO_ARRULLO ||
 				ud->skill_id == SO_FIRE_INSIGNIA || ud->skill_id == SO_WATER_INSIGNIA ||
-				ud->skill_id == SO_WIND_INSIGNIA ||ud->skill_id == SO_EARTH_INSIGNIA))
+				ud->skill_id == SO_WIND_INSIGNIA || ud->skill_id == SO_EARTH_INSIGNIA || ud->skill_id == GN_CRAZYWEED))
 		{
 			if (map_getcell(src->m, ud->skillx, ud->skilly, CELL_CHKLANDPROTECTOR))
 			{
@@ -21715,6 +21721,21 @@ int32 skill_unit_onleft(uint16 skill_id, struct block_list *bl, t_tick tick)
 		break;
 	}
 
+	// SC_CAMOUFLAGE tem DisplayPc: o visual depende de clif_status_change ser reenviado
+	// após qualquer skill_unit_onleft que possa ter triggerado um clif_changeoption.
+	if (sc && sc->getSCE(SC_CAMOUFLAGE) && bl->type == BL_PC)
+	{
+		status_change_entry *sce_cam = sc->getSCE(SC_CAMOUFLAGE);
+		t_tick remaining = INFINITE_TICK;
+		if (sce_cam->timer != INVALID_TIMER)
+		{
+			const struct TimerData *td = get_timer(sce_cam->timer);
+			if (td != nullptr)
+				remaining = DIFF_TICK(td->tick, gettick());
+		}
+		clif_status_change(bl, EFST_CAMOUFLAGE, 1, remaining, sce_cam->val1, 0, 0);
+	}
+
 	return skill_id;
 }
 
@@ -25289,8 +25310,8 @@ int32 skill_frostjoke_scream(struct block_list *bl, va_list ap)
 	if (bl->type == BL_PC)
 	{
 		map_session_data *sd = (map_session_data *)bl;
-		if (sd && sd->sc.option & (OPTION_INVISIBLE | OPTION_MADOGEAR))
-			return 0; // Frost Joke / Scream cannot target invisible or MADO Gear characters [Ind]
+		if (sd && sd->sc.option & OPTION_INVISIBLE)
+			return 0; // Frost Joke / Scream cannot target invisible characters
 	}
 	// It has been reported that Scream/Joke works the same regardless of woe-setting. [Skotlex]
 	if (battle_check_target(src, bl, BCT_ENEMY | BCT_PARTY) > 0)

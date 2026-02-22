@@ -1417,7 +1417,10 @@ bool battle_status_block_damage(struct block_list *src, struct block_list *targe
 		if (flag & BF_WEAPON || skill_id == TF_THROWSTONE)
 		{
 			if (sce->val2 >= 0)
+			{
 				damage = 0;
+				d->dmg_lv = ATK_BLOCK; // Kyrie absorveu tudo: sinaliza para skill_additional_effect
+			}
 			else
 				damage = -sce->val2;
 		}
@@ -2031,6 +2034,13 @@ if (damage)
 			if (skill_id == WM_METALICSOUND)
 				damage += damage / 2; // Additional 50% bonus on top of Deep Sleep bonus (1.5 * 1.5 = 2.25 total)
 			
+			// CUSTOM: Don't remove SC_DEEPSLEEP if damage will be absorbed by Safetywall or Kyrie
+			bool protected_by_block = false;
+			if ((flag & BF_SHORT) && !(flag & BF_MAGIC) && tsc->getSCE(SC_SAFETYWALL))
+				protected_by_block = true; // Safetywall absorve ataques curtos físicos
+			if ((flag & BF_WEAPON) && tsc->getSCE(SC_KYRIE) && tsc->getSCE(SC_KYRIE)->val2 >= damage)
+				protected_by_block = true; // Kyrie absorve o dano inteiro
+
 			// CUSTOM: Don't remove SC_DEEPSLEEP if damage will be transferred via Devotion
 			bool protected_by_devotion = false;
 			if (tsc->getSCE(SC_DEVOTION) && tsc->getSCE(SC_DEVOTION)->val1)
@@ -2040,7 +2050,7 @@ if (damage)
 					protected_by_devotion = true;
 			}
 			
-			if (!protected_by_devotion)
+			if (!protected_by_devotion && !protected_by_block)
 				status_change_end(bl, SC_DEEPSLEEP);
 		}
 			if (tsd && sd && tsc->getSCE(SC_CRYSTALIZE) && flag & BF_WEAPON)
@@ -4192,7 +4202,8 @@ int32 battle_get_magic_element(struct block_list *src, struct block_list *target
 
 	switch (skill_id)
 	{
-	case NPC_EARTHQUAKE:
+case NPC_EARTHQUAKE:
+	case WM_METALICSOUND:
 		element = ELE_NEUTRAL;
 		break;
 	case WL_HELLINFERNO:
@@ -8293,7 +8304,60 @@ static void battle_calc_attack_gvg_bg(struct Damage *wd, struct block_list *src,
 }
 
 /*==========================================
- * Apply reflection damage after GVG/BG reductions
+ * Apply item-based reflection BEFORE GVG/BG reductions
+ * Uses raw damage (pre-mapflag). Triggers even when wd->damage==0 (safetywall/autoguard/kaupe
+ * block in battle_status_block_damage which runs AFTER this point).
+ *------------------------------------------
+ */
+static void battle_calc_attack_reflect_item(struct Damage *wd, struct block_list *src, struct block_list *target,
+	uint16 skill_id, uint16 skill_lv, int64 raw_damage)
+{
+	if (src == target)
+		return;
+	if (!(wd->flag & BF_WEAPON))
+		return;
+	if (raw_damage <= 0 && (wd->damage + wd->damage2) <= 0)
+		return;
+
+	int64 damage = raw_damage > 0 ? raw_damage : (wd->damage + wd->damage2);
+
+	status_change *tsc = status_get_sc(target);
+	if (tsc && tsc->getSCE(SC_WHITEIMPRISON))
+		return;
+	// Kyrie Eleison absorbe o dano antes do reflect chegar — se absorver tudo, não refletir
+	if (tsc && tsc->getSCE(SC_KYRIE) && (wd->flag & BF_WEAPON || skill_id == TF_THROWSTONE))
+	{
+		status_change_entry *sce_kyrie = tsc->getSCE(SC_KYRIE);
+		if (damage <= sce_kyrie->val2) // Kyrie absorve o dano inteiro
+			return;
+	}
+
+	map_session_data *tsd = BL_CAST(BL_PC, target);
+	if (!tsd)
+		return;
+
+	int64 rdamage = battle_calc_return_damage(target, src, &damage, wd->flag, skill_id, false, true);
+	if (rdamage <= 0)
+		return;
+
+	status_data *sstatus = status_get_status_data(*src);
+	t_tick tick = gettick();
+	struct block_list *d_bl = battle_check_devotion(src);
+
+	status_change *sc = status_get_sc(src);
+	if (sc && sc->getSCE(SC_VITALITYACTIVATION))
+		rdamage /= 2;
+
+	clif_damage(*src, (d_bl == nullptr) ? *src : *d_bl, tick, wd->amotion, sstatus->dmotion, rdamage, 1, DMG_ENDURE, 0, false);
+	if (tsd)
+		battle_drain(tsd, src, rdamage, rdamage, sstatus->race, sstatus->class_);
+	battle_delay_damage(tick, wd->amotion, target, (!d_bl) ? src : d_bl, 0, CR_REFLECTSHIELD, 0, rdamage, ATK_DEF, 1, true, false);
+	skill_additional_effect(target, (!d_bl) ? src : d_bl, CR_REFLECTSHIELD, 1, BF_WEAPON | BF_SHORT | BF_NORMAL, ATK_DEF, tick);
+}
+
+/*==========================================
+ * Apply reflection damage (SC_REFLECTSHIELD) after GVG/BG reductions
+ * Only triggers when there is actual damage (post-reduction).
  *------------------------------------------
  */
 static void battle_calc_attack_reflect_gvg_bg(struct Damage *wd, struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv)
@@ -9162,6 +9226,11 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 
 	battle_calc_attack_left_right_hands(&wd, src, target, skill_id, skill_lv);
 
+	// Captura dano ANTES das reduções de mapflag para o reflect de item.
+	// safetywall/autoguard/kaupe bloqueiam em battle_status_block_damage (depois deste ponto),
+	// então raw_damage já tem o valor correto para esses casos.
+	int64 raw_damage_for_item_reflect = wd.damage + wd.damage2;
+
 #ifdef RENEWAL
 	switch (skill_id)
 	{
@@ -9181,6 +9250,10 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 
 	battle_absorb_damage(target, &wd);
 
+	// Item reflect: dano pré-mapflag, funciona mesmo quando safetywall/autoguard/kaupe bloquearem depois
+	battle_calc_attack_reflect_item(&wd, src, target, skill_id, skill_lv, raw_damage_for_item_reflect);
+
+	// Status reflect (SC_REFLECTSHIELD): dano pós-mapflag
 	battle_calc_attack_reflect_gvg_bg(&wd, src, target, skill_id, skill_lv);
 
 	battle_do_reflect(BF_WEAPON, &wd, src, target, skill_id, skill_lv); // WIP [lighta]
@@ -11345,7 +11418,7 @@ struct Damage battle_calc_attack(int32 attack_type, struct block_list *bl, struc
  *	Initial refactoring by Baalberith
  *	Refined and optimized by helvetica
  */
-int64 battle_calc_return_damage(struct block_list *tbl, struct block_list *src, int64 *dmg, int32 flag, uint16 skill_id, bool status_reflect)
+int64 battle_calc_return_damage(struct block_list *tbl, struct block_list *src, int64 *dmg, int32 flag, uint16 skill_id, bool status_reflect, bool skip_mapflag_reduction)
 {
 	status_change *tsc = status_get_sc(tbl);
 
@@ -11368,11 +11441,13 @@ int64 battle_calc_return_damage(struct block_list *tbl, struct block_list *src, 
 
 	if (flag & BF_SHORT)
 	{ // Bounces back part of the damage.
-		if ((skill_get_inf2(skill_id, INF2_ISTRAP) || !status_reflect) && tsd && tsd->bonus.short_weapon_damage_return)
+		// Item reflect: só quando status_reflect=false (dano pré-mapflag). Traps nunca trigam.
+		if (!status_reflect && !skill_get_inf2(skill_id, INF2_ISTRAP) && tsd && tsd->bonus.short_weapon_damage_return)
 		{
 			rdamage += damage * tsd->bonus.short_weapon_damage_return / 100;
 		}
-else if (status_reflect && tsc != nullptr && !tsc->empty() && tsc->getSCE(SC_REFLECTSHIELD) && skill_id != WS_CARTTERMINATION && skill_id != NPC_MAXPAIN_ATK)
+		// Status reflect: só quando status_reflect=true (dano pós-mapflag).
+		if (status_reflect && tsc != nullptr && !tsc->empty() && tsc->getSCE(SC_REFLECTSHIELD) && skill_id != WS_CARTTERMINATION && skill_id != NPC_MAXPAIN_ATK)
 		{
 			status_change_entry *sce_d = tsc->getSCE(SC_DEVOTION);
 			block_list *d_bl = nullptr; // Ponteiro para o Paladino
@@ -11447,6 +11522,7 @@ else if (status_reflect && tsc != nullptr && !tsc->empty() && tsc->getSCE(SC_REF
 	}
 	else
 	{
+		// Item reflect (bLongWeaponDamageReturn): calculado quando status_reflect=false (dano pré-mapflag).
 		if (!status_reflect && tsd && tsd->bonus.long_weapon_damage_return)
 		{
 			rdamage += damage * tsd->bonus.long_weapon_damage_return / 100;
@@ -11454,7 +11530,8 @@ else if (status_reflect && tsc != nullptr && !tsc->empty() && tsc->getSCE(SC_REF
 	}
 
 	// Config damage adjustment - Skip for status_reflect as GVG/BG reduction was already applied to input damage
-	if (!status_reflect)
+	// Also skip if skip_mapflag_reduction is true (used by item reflect to use pre-mapflag damage)
+	if (!status_reflect && !skip_mapflag_reduction)
 	{
 		map_data *mapdata = map_getmapdata(src->m);
 
@@ -12299,10 +12376,13 @@ enum damage_lv battle_weapon_attack(struct block_list *src, struct block_list *t
 	// 	//
 	map_freeblock_lock();
 
+	// Efeitos de carta (addeff: curse, sleep, etc.) aplicados mesmo com Kyrie/Safetywall.
+	// skill_check_shadowform retorna false quando damage==0, mas o ataque acertou.
+	if (!status_isdead(*target) && wd.dmg_lv >= ATK_BLOCK && !(tsc && tsc->getSCE(SC_DEVOTION)) && !vellum_damage)
+		skill_additional_effect(src, target, 0, 0, wd.flag, wd.dmg_lv, tick);
+
 	if (!(tsc && tsc->getSCE(SC_DEVOTION)) && !vellum_damage && skill_check_shadowform(target, damage, wd.div_))
 	{
-		if (!status_isdead(*target))
-			skill_additional_effect(src, target, 0, 0, wd.flag, wd.dmg_lv, tick);
 		if (wd.dmg_lv > ATK_BLOCK)
 			skill_counter_additional_effect(src, target, 0, 0, wd.flag, tick);
 	}

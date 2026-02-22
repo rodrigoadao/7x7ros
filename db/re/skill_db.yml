@@ -1400,6 +1400,8 @@ Body:
       TargetType: Support
       DamageFlags:
           NoDamage: true
+      Flags:
+          TargetHidden: true
       Range: 9
       Hit: Single
       HitCount: 1
@@ -1459,6 +1461,8 @@ Body:
       TargetType: Attack
       DamageFlags:
           NoDamage: true
+      Flags:
+          TargetHidden: true
       Range: 9
       Hit: Single
       HitCount: 1
@@ -2590,6 +2594,8 @@ Body:
       TargetType: Support
       DamageFlags:
           NoDamage: true
+      Flags:
+          TargetHidden: true
       Range: 9
       Hit: Single
       HitCount: 1
@@ -9785,7 +9791,7 @@ Body:
       DamageFlags:
           NoDamage: true
       Flags:
-        TargetHidden: true
+          TargetHidden: true
       Range: 9
       Hit: Single
       HitCount: 1
@@ -21391,6 +21397,8 @@ Body:
       TargetType: Support
       DamageFlags:
           NoDamage: true
+      Flags:
+        TargetHidden: true
       Range: 11
       Hit: Single
       HitCount: 1
@@ -21565,6 +21573,8 @@ Body:
       TargetType: Support
       DamageFlags:
           NoDamage: true
+      Flags:
+          TargetHidden: true
       Range: 11
       Hit: Single
       HitCount: 1
@@ -21762,7 +21772,7 @@ Body:
           Splash: true
       Flags:
           IsTrap: true
-          IgnoreHovering: true
+          # IgnoreHovering: true
           AllowOnWarg: true
       Range: 3
       Hit: Single
@@ -21808,7 +21818,7 @@ Body:
       Flags:
           IsTrap: true
           AlterRangeResearchTrap: true
-          IgnoreHovering: true
+          # IgnoreHovering: true
           AllowOnWarg: true
       Range: 3
       Hit: Single
@@ -22028,7 +22038,7 @@ Body:
           IgnoreFlee: true
       Flags:
           IsTrap: true
-          IgnoreHovering: true
+          # IgnoreHovering: true
           AllowOnWarg: true
       Range: 3
       Hit: Single
@@ -22067,7 +22077,7 @@ Body:
           IgnoreFlee: true
       Flags:
           IsTrap: true
-          IgnoreHovering: true
+          # IgnoreHovering: true
           AllowOnWarg: true
       Range: 3
       Hit: Single
@@ -22106,7 +22116,7 @@ Body:
           IgnoreFlee: true
       Flags:
           IsTrap: true
-          IgnoreHovering: true
+          # IgnoreHovering: true
           AllowOnWarg: true
       Range: 3
       Hit: Single
@@ -22145,7 +22155,7 @@ Body:
           IgnoreFlee: true
       Flags:
           IsTrap: true
-          IgnoreHovering: true
+          # IgnoreHovering: true
           AllowOnWarg: true
       Range: 3
       Hit: Single
@@ -22185,7 +22195,7 @@ Body:
           IsTrap: true
           TargetTrap: true
           AlterRangeResearchTrap: true
-          IgnoreHovering: true
+          # IgnoreHovering: true
           AllowOnWarg: true
       Range: 3
       Hit: Single
@@ -22225,7 +22235,7 @@ Body:
           IsTrap: true
           TargetTrap: true
           AlterRangeResearchTrap: true
-          IgnoreHovering: true
+          # IgnoreHovering: true
           AllowOnWarg: true
       Range: 3
       Hit: Single
@@ -24085,11 +24095,11 @@ Body:
       AfterCastActDelay: 2000
       Duration1:
           - Level: 1
-            Time: 10000
+            Time: 5000
           - Level: 2
-            Time: 20000
+            Time: 10000
           - Level: 3
-            Time: 30000
+            Time: 15000
       Cooldown: 180000
       FixedCastTime: 1000
       CustomCastTime: 2000
@@ -26133,7 +26143,7 @@ Body:
       Range: 9
       Hit: Multi_Hit
       HitCount: 2
-      Element: Weapon
+      Element: Neutral
       CopyFlags:
           Skill:
               Reproduce: true
@@ -33116,17 +33126,17 @@ Body:
       HitCount: 1
       Knockback:
           - Level: 1
-            Amount: 4
-          - Level: 2
             Amount: 5
-          - Level: 3
+          - Level: 2
             Amount: 6
-          - Level: 4
+          - Level: 3
             Amount: 7
-          - Level: 5
+          - Level: 4
             Amount: 8
-          - Level: 6
+          - Level: 5
             Amount: 9
+          - Level: 6
+            Amount: 10
       AfterCastActDelay: 500
       Duration1: 50000
       Duration2: 20000

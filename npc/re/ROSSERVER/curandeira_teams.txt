@@ -509,17 +509,17 @@ if (qtd1002 > 0) {
     set .qtd, qtd1002;
     getitem 1002, .qtd - countitem(1002);
 }
-if (qtd521 > 0) {
-    set .qtd, qtd521;
-    getitem 521, .qtd - countitem(521);
+if (qtd998 > 0) {
+    set .qtd, qtd998;
+    getitem 998, .qtd - countitem(998);
 }
 if (qtd999 > 0) {
     set .qtd, qtd999;
     getitem 999, .qtd - countitem(999);
 }
-if (qtd757 > 0) {
+if (qtd756 > 0) {
     set .qtd, qtd757;
-    getitem 757, .qtd - countitem(757);
+    getitem 756, .qtd - countitem(756);
 }
 if (qtd615 > 0) {
     set .qtd, qtd615;
@@ -609,6 +609,14 @@ if (qtd1770 > 0) {
 if (qtd7049 > 0) {
     set .qtd, qtd7049;
     getitem 7049, .qtd - countitem(7049);
+}
+if (qtd1761 > 0) {
+    set .qtd, qtd1761;
+    getitem  1761, .qtd - countitem(1761);
+}
+if (qtd1768 > 0) {
+    set .qtd, qtd1768;
+    getitem 1768, .qtd - countitem(1768);
 }
 	// Set cart, falcon or riding
     if (getskilllv("MC_PUSHCART")) {
