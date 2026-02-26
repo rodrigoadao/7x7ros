@@ -1714,8 +1714,16 @@ void arena7x7_transform_to_tombstone(map_session_data *sd)
 	status_change_end(sd, SC_SUHIDE);
 	status_change_end(sd, SC__INVISIBILITY);
 
+	// // IMPORTANTE: Remover TODOS os status/buffs do jogador ao morrer na arena
+	// // Isso é mais limpo e evita comportamentos estranhos (jogador morto com buffs)
+	// status_change_clear(sd, 3); // 3 = clear all (equivalente a morte)
+
+	// Remover SC_CURSEDCIRCLE_TARGET explicitamente ANTES do clear
+	// pois NoClearbuff impede que status_change_clear(3) o remova,
+	// o que deixaria o Shura preso com SC_CURSEDCIRCLE_ATKER indefinidamente
+	status_change_end(sd, SC_CURSEDCIRCLE_TARGET);
+
 	// IMPORTANTE: Remover TODOS os status/buffs do jogador ao morrer na arena
-	// Isso é mais limpo e evita comportamentos estranhos (jogador morto com buffs)
 	status_change_clear(sd, 3); // 3 = clear all (equivalente a morte)
 
 	// IMPORTANTE: Garantir que jogador est� MORTO e DEITADO

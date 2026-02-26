@@ -59,6 +59,16 @@ izlude,47,161,5	script	Market#2	723,{
 //
 	switch(select("City Center","Exit")) {
 		case 1:
+			sc_end SC_ALL;
+			sc_end SC_SAVAGE_STEAK;
+			sc_end SC_COCKTAIL_WARG_BLOOD;
+			sc_end SC_MINOR_BBQ;
+			sc_end SC_SIROMA_ICE_TEA;
+			sc_end SC_DROCERA_HERB_STEAMED;
+			sc_end SC_PUTTI_TAILS_NOODLES;
+			sc_end SC_STOMACHACHE;
+			sc_end SC_VITATA_500;
+			sc_end SC_EXTRACT_SALAMINE_JUICE;
 			warp "izlude",128,141;
 			close;
 			break;
@@ -74,6 +84,16 @@ izlude,118,139,5	script	Market	723,{
 
 	switch(select("Market","Exit")) {
 		case 1:
+			sc_end SC_ALL;
+			sc_end SC_SAVAGE_STEAK;
+			sc_end SC_COCKTAIL_WARG_BLOOD;
+			sc_end SC_MINOR_BBQ;
+			sc_end SC_SIROMA_ICE_TEA;
+			sc_end SC_DROCERA_HERB_STEAMED;
+			sc_end SC_PUTTI_TAILS_NOODLES;
+			sc_end SC_STOMACHACHE;
+			sc_end SC_VITATA_500;
+			sc_end SC_EXTRACT_SALAMINE_JUICE;
 			warp "izlude",57,163;
 			close;
 			break;

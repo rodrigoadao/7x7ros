@@ -2958,18 +2958,19 @@ if (!ud->state.running)
     // Custom MoskaumRO: Skills que não devem parar o walking
     switch (skill_id)
     {
-        case MO_EXPLOSIONSPIRITS:
-        case MO_ABSORBSPIRITS:
-        case CH_SOULCOLLECT:
-        case SR_CRESCENTELBOW:
-        case SR_RAISINGDRAGON:
-        case SR_LIGHTNINGWALK:
             skip_stop_walk = true;
             break;
     }
     
     if (!skip_stop_walk)
-        unit_stop_walking(src, (src->type == BL_PC) ? USW_NONE : USW_FIXPOS);
+    {
+        // USW_NONE para PCs apenas em skills instantâneas (sem casttime)
+        // Skills com casttime precisam de USW_FIXPOS para evitar bug visual de andar durante o cast
+        if (src->type == BL_PC && casttime <= 0)
+            unit_stop_walking(src, USW_NONE);
+        else
+            unit_stop_walking(src, USW_FIXPOS);
+    }
 }
 //fim do custom
 	// SC_MAGICPOWER needs to switch states at start of cast

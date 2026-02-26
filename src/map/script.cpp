@@ -27591,7 +27591,7 @@ BUILDIN_FUNC(getguildmember)
 BUILDIN_FUNC(addspiritball)
 {
 	uint8 i, count;
-	uint16 duration;
+	int32 duration;
 	map_session_data *sd = nullptr;
 
 	if (script_hasdata(st, 4))
@@ -27614,7 +27614,7 @@ BUILDIN_FUNC(addspiritball)
 	duration = script_getnum(st, 3);
 
 	for (i = 0; i < count; i++)
-		pc_addspiritball(sd, duration, 10);
+		pc_addspiritball(sd, duration, count);
 	return SCRIPT_CMD_SUCCESS;
 }
 
@@ -27647,6 +27647,83 @@ BUILDIN_FUNC(delspiritball)
 		count = 1;
 
 	pc_delspiritball(sd, count, 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/** Summons an elemental for the player and sets its mode
+ * summonelemental <elemental_type>,<skill_lv>,<duration>,<mode>{,<char_id>};
+ * elemental_type: "AGNI", "AQUA", "VENTUS", "TERA"
+ * mode: 1=Passive, 2=Assist, 3=Aggressive
+ */
+BUILDIN_FUNC(summonelemental)
+{
+	map_session_data *sd = nullptr;
+
+	if (script_hasdata(st, 6))
+	{
+		if (!script_isstring(st, 6))
+			sd = map_charid2sd(script_getnum(st, 6));
+		else
+			sd = map_nick2sd(script_getstr(st, 6), false);
+	}
+	else
+		script_rid2sd(sd);
+	if (!sd)
+		return SCRIPT_CMD_FAILURE;
+
+	const char *type_str = script_getstr(st, 2);
+	int32 skill_lv       = script_getnum(st, 3);
+	int32 duration       = script_getnum(st, 4);
+	int32 mode_lv        = script_getnum(st, 5);
+
+	uint16 skill_id = 0;
+	if      (strcmpi(type_str, "AGNI")   == 0) skill_id = SO_SUMMON_AGNI;
+	else if (strcmpi(type_str, "AQUA")   == 0) skill_id = SO_SUMMON_AQUA;
+	else if (strcmpi(type_str, "VENTUS") == 0) skill_id = SO_SUMMON_VENTUS;
+	else if (strcmpi(type_str, "TERA")   == 0) skill_id = SO_SUMMON_TERA;
+	else
+	{
+		ShowError("buildin_summonelemental: Unknown elemental type '%s'\n", type_str);
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	int32 elemental_class = skill_get_elemental_type(skill_id, skill_lv);
+
+	if (sd->ed)
+		elemental_delete(sd->ed);
+
+	if (!elemental_create(sd, elemental_class, duration))
+		return SCRIPT_CMD_FAILURE;
+
+	// Store desired mode for elemental_data_received to apply after async creation
+	sd->elem_pending_mode = mode_lv;
+	sd->elem_pending_skilllv = skill_lv;
+
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/** Deletes the elemental of the player
+ * deleteelemental {<char_id>};
+ */
+BUILDIN_FUNC(deleteelemental)
+{
+	map_session_data *sd = nullptr;
+
+	if (script_hasdata(st, 2))
+	{
+		if (!script_isstring(st, 2))
+			sd = map_charid2sd(script_getnum(st, 2));
+		else
+			sd = map_nick2sd(script_getstr(st, 2), false);
+	}
+	else
+		script_rid2sd(sd);
+	if (!sd)
+		return SCRIPT_CMD_FAILURE;
+
+	if (sd->ed)
+		elemental_delete(sd->ed);
+
 	return SCRIPT_CMD_SUCCESS;
 }
 
@@ -32474,6 +32551,8 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(addspiritball, "ii?"),
 	BUILDIN_DEF(delspiritball, "i?"),
 	BUILDIN_DEF(countspiritball, "?"),
+	BUILDIN_DEF(summonelemental, "siii?"),
+	BUILDIN_DEF(deleteelemental, "?"),
 	BUILDIN_DEF(mergeitem, "?"),
 	BUILDIN_DEF(mergeitem2, "??"),
 	BUILDIN_DEF(npcshopupdate, "sii?"),

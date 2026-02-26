@@ -77,12 +77,12 @@ int16 current_equip_opt_index; /// Contains random option index of an equipped i
 
 uint16 SCDisabled[SC_MAX]; ///< List of disabled SC on map zones. [Cydh]
 
-static uint16 status_calc_str(struct block_list *, status_change *, int32);
-static uint16 status_calc_agi(struct block_list *, status_change *, int32);
-static uint16 status_calc_vit(struct block_list *, status_change *, int32);
-static uint16 status_calc_int(struct block_list *, status_change *, int32);
-static uint16 status_calc_dex(struct block_list *, status_change *, int32);
-static uint16 status_calc_luk(struct block_list *, status_change *, int32);
+static int16 status_calc_str(struct block_list *, status_change *, int32);
+static int16 status_calc_agi(struct block_list *, status_change *, int32);
+static int16 status_calc_vit(struct block_list *, status_change *, int32);
+static int16 status_calc_int(struct block_list *, status_change *, int32);
+static int16 status_calc_dex(struct block_list *, status_change *, int32);
+static int16 status_calc_luk(struct block_list *, status_change *, int32);
 static uint16 status_calc_pow(struct block_list *, status_change *, int32);
 static uint16 status_calc_sta(struct block_list *, status_change *, int32);
 static uint16 status_calc_wis(struct block_list *, status_change *, int32);
@@ -120,8 +120,8 @@ static int32 status_calc_mode(struct block_list *bl, status_change *sc, int32 mo
 static int32 status_get_hpbonus(struct block_list *bl, enum e_status_bonus type);
 static int32 status_get_spbonus(struct block_list *bl, enum e_status_bonus type);
 static int32 status_get_apbonus(struct block_list *bl, enum e_status_bonus type);
-static uint32 status_calc_maxhp_pc(map_session_data &sd, uint32 vit);
-static uint32 status_calc_maxsp_pc(map_session_data &sd, uint32 int_);
+static uint32 status_calc_maxhp_pc(map_session_data &sd, int32 vit);
+static uint32 status_calc_maxsp_pc(map_session_data &sd, int32 int_);
 static uint32 status_calc_maxap_pc(map_session_data &sd);
 static int32 status_get_sc_interval(enum sc_type type);
 static bool status_change_start_post_delay(block_list *src, block_list *bl, sc_type type, int32 val1, int32 val2, int32 val3, int32 val4, int32 tick, uint8 flag);
@@ -4736,7 +4736,7 @@ static int32 status_get_apbonus_item(block_list *bl)
  */
 
 // custom moskaum pra resolver hierarquia de modificadores (flat, %, de equip e de buff) de hp e sp
-static uint32 status_calc_maxhp_pc(map_session_data &sd, uint32 vit)
+static uint32 status_calc_maxhp_pc(map_session_data &sd, int32 vit)
 {
 	std::shared_ptr<s_job_info> job = job_db.find(sd.status.class_);
 
@@ -4872,7 +4872,7 @@ static uint32 status_calc_maxhp_pc(map_session_data &sd, uint32 vit)
  * @return max The max value of HP
  */
 //novo calculo
-static uint32 status_calc_maxsp_pc(map_session_data &sd, uint32 int_)
+static uint32 status_calc_maxsp_pc(map_session_data &sd, int32 int_)
 {
     std::shared_ptr<s_job_info> job = job_db.find(sd.status.class_);
 
@@ -8606,10 +8606,10 @@ void status_calc_bl_(struct block_list *bl, std::bitset<SCB_MAX> flag, uint8 opt
  * @param str: Initial str
  * @return modified str with cap_value(str,0,USHRT_MAX)
  */
-static uint16 status_calc_str(struct block_list *bl, status_change *sc, int32 str)
+static int16 status_calc_str(struct block_list *bl, status_change *sc, int32 str)
 {
 	if (sc == nullptr || sc->empty())
-		return cap_value(str, -999, USHRT_MAX);
+		return (int16)cap_value(str, -999, SHRT_MAX);
 
 	if (sc->getSCE(SC_HARMONIZE))
 	//comentando pra harmonizar fazer status ir para menor do que 0
@@ -8673,8 +8673,8 @@ static uint16 status_calc_str(struct block_list *bl, status_change *sc, int32 st
 	if (sc->getSCE(SC_ALL_STAT_DOWN))
 		str -= sc->getSCE(SC_ALL_STAT_DOWN)->val2;
 
-	// TODO: Stat points should be able to be decreased below 0
-	return (uint16)cap_value(str, -999, USHRT_MAX);
+	// Permite negativos com limite razoável; resistências já clampam sc_def >= 0 internamente.
+	return (int16)cap_value(str, -999, SHRT_MAX);
 }
 
 /**
@@ -8684,10 +8684,10 @@ static uint16 status_calc_str(struct block_list *bl, status_change *sc, int32 st
  * @param agi: Initial agi
  * @return modified agi with cap_value(agi,0,USHRT_MAX)
  */
-static uint16 status_calc_agi(struct block_list *bl, status_change *sc, int32 agi)
+static int16 status_calc_agi(struct block_list *bl, status_change *sc, int32 agi)
 {
 	if (sc == nullptr || sc->empty())
-		return cap_value(agi, -999, USHRT_MAX);
+		return (int16)cap_value(agi, -999, SHRT_MAX);
 
 	if (sc->getSCE(SC_HARMONIZE))
 	// {
@@ -8747,8 +8747,8 @@ static uint16 status_calc_agi(struct block_list *bl, status_change *sc, int32 ag
 	if (sc->getSCE(SC_ALL_STAT_DOWN))
 		agi -= sc->getSCE(SC_ALL_STAT_DOWN)->val2;
 
-	// TODO: Stat points should be able to be decreased below 0
-	return (uint16)cap_value(agi, 0, USHRT_MAX);
+	// Permite negativos; sc_def já é clampado a 0 em status_get_sc_def.
+	return (int16)cap_value(agi, -999, SHRT_MAX);
 }
 
 /**
@@ -8758,10 +8758,10 @@ static uint16 status_calc_agi(struct block_list *bl, status_change *sc, int32 ag
  * @param vit: Initial vit
  * @return modified vit with cap_value(vit,0,USHRT_MAX)
  */
-static uint16 status_calc_vit(struct block_list *bl, status_change *sc, int32 vit)
+static int16 status_calc_vit(struct block_list *bl, status_change *sc, int32 vit)
 {
 	if (sc == nullptr || sc->empty())
-		return cap_value(vit, 0, USHRT_MAX);
+		return (int16)cap_value(vit, -999, SHRT_MAX);
 
 	if (sc->getSCE(SC_HARMONIZE))
 	// {
@@ -8809,8 +8809,8 @@ static uint16 status_calc_vit(struct block_list *bl, status_change *sc, int32 vi
 	if (sc->getSCE(SC_ALL_STAT_DOWN))
 		vit -= sc->getSCE(SC_ALL_STAT_DOWN)->val2;
 
-	// TODO: Stat points should be able to be decreased below 0
-	return (uint16)cap_value(vit, -999, USHRT_MAX);
+	// Permite negativos (int16); status_calc_maxhp_pc usa int32 e verifica vit > 0.
+	return (int16)cap_value(vit, -999, SHRT_MAX);
 }
 
 /**
@@ -8820,10 +8820,10 @@ static uint16 status_calc_vit(struct block_list *bl, status_change *sc, int32 vi
  * @param int_: Initial int32
  * @return modified int32 with cap_value(int_,0,USHRT_MAX)
  */
-static uint16 status_calc_int(struct block_list *bl, status_change *sc, int32 int_)
+static int16 status_calc_int(struct block_list *bl, status_change *sc, int32 int_)
 {
 	if (sc == nullptr || sc->empty())
-		return cap_value(int_, 0, USHRT_MAX);
+		return (int16)cap_value(int_, -999, SHRT_MAX);
 
 	if (sc->getSCE(SC_HARMONIZE))
 	// {
@@ -8890,8 +8890,8 @@ static uint16 status_calc_int(struct block_list *bl, status_change *sc, int32 in
 	if (sc->getSCE(SC_ALL_STAT_DOWN))
 		int_ -= sc->getSCE(SC_ALL_STAT_DOWN)->val2;
 
-	// TODO: Stat points should be able to be decreased below 0
-	return (uint16)cap_value(int_, -999, USHRT_MAX);
+	// Permite negativos (int16); status_calc_maxsp_pc usa int32 e verifica int_ > 0.
+	return (int16)cap_value(int_, -999, SHRT_MAX);
 }
 
 /**
@@ -8901,10 +8901,10 @@ static uint16 status_calc_int(struct block_list *bl, status_change *sc, int32 in
  * @param dex: Initial dex
  * @return modified dex with cap_value(dex,0,USHRT_MAX)
  */
-static uint16 status_calc_dex(struct block_list *bl, status_change *sc, int32 dex)
+static int16 status_calc_dex(struct block_list *bl, status_change *sc, int32 dex)
 {
 	if (sc == nullptr || sc->empty())
-		return cap_value(dex, 0, USHRT_MAX);
+		return (int16)cap_value(dex, -999, SHRT_MAX);
 
 	if (sc->getSCE(SC_HARMONIZE))
 	// {
@@ -8967,8 +8967,8 @@ static uint16 status_calc_dex(struct block_list *bl, status_change *sc, int32 de
 	if (sc->getSCE(SC_ALL_STAT_DOWN))
 		dex -= sc->getSCE(SC_ALL_STAT_DOWN)->val2;
 
-	// TODO: Stat points should be able to be decreased below 0
-	return (uint16)cap_value(dex, -999, USHRT_MAX);
+	// Permite negativos; sc_def já é clampado a 0 em status_get_sc_def.
+	return (int16)cap_value(dex, -999, SHRT_MAX);
 }
 
 /**
@@ -8978,10 +8978,10 @@ static uint16 status_calc_dex(struct block_list *bl, status_change *sc, int32 de
  * @param luk: Initial luk
  * @return modified luk with cap_value(luk,0,USHRT_MAX)
  */
-static uint16 status_calc_luk(struct block_list *bl, status_change *sc, int32 luk)
+static int16 status_calc_luk(struct block_list *bl, status_change *sc, int32 luk)
 {
 	if (sc == nullptr || sc->empty())
-		return cap_value(luk, 0, USHRT_MAX);
+		return (int16)cap_value(luk, -999, SHRT_MAX);
 
 	if (sc->getSCE(SC_HARMONIZE))
 	// {
@@ -9029,8 +9029,8 @@ static uint16 status_calc_luk(struct block_list *bl, status_change *sc, int32 lu
 	if (sc->getSCE(SC_ALL_STAT_DOWN))
 		luk -= sc->getSCE(SC_ALL_STAT_DOWN)->val2;
 
-	// TODO: Stat points should be able to be decreased below 0
-	return (uint16)cap_value(luk, -999, USHRT_MAX);
+	// Permite negativos; sc_def já é clampado a 0 em status_get_sc_def.
+	return (int16)cap_value(luk, -999, SHRT_MAX);
 }
 
 /**
@@ -10041,11 +10041,14 @@ static uint16 status_calc_speed(struct block_list *bl, status_change *sc, int32 
 		if (sc->getSCE(SC_MARSHOFABYSS) && speed_rate > 150)
 			speed_rate = 150;
 
-		// GetMoveHasteValue1()
-		if (sc->getSCE(SC_AGIUP))
-			val = max(val, sc->getSCE(SC_AGIUP)->val1);
-		if (sc->getSCE(SC_INCREASEAGI))
-			val = max(val, 25);
+		// SC_MARSHOFABYSS fixa o speed_rate — nenhum buff de velocidade pode reduzir abaixo de 150
+		if (!sc->getSCE(SC_MARSHOFABYSS))
+		{
+			// GetMoveHasteValue1()
+			if (sc->getSCE(SC_AGIUP))
+				val = max(val, sc->getSCE(SC_AGIUP)->val1);
+			if (sc->getSCE(SC_INCREASEAGI))
+				val = max(val, 25);
 		if (sc->getSCE(SC_WINDWALK))
 			val = max(val, 2 * sc->getSCE(SC_WINDWALK)->val1);
 		if (sc->getSCE(SC_CARTBOOST))
@@ -10092,10 +10095,11 @@ static uint16 status_calc_speed(struct block_list *bl, status_change *sc, int32 
 			val = max(val, sc->getSCE(SC_WILD_WALK)->val2);
 
 		// !FIXME: official items use a single bonus for this [ultramage]
-		if (sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate < 0) // Permanent item-based speedup
-			val = max(val, -(sd->bonus.speed_rate + sd->bonus.speed_add_rate));
+			if (sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate < 0) // Permanent item-based speedup
+				val = max(val, -(sd->bonus.speed_rate + sd->bonus.speed_add_rate));
 
-		speed_rate -= val;
+			speed_rate -= val;
+		}
 
 		if (speed_rate < 40)
 			speed_rate = 40;
@@ -15957,6 +15961,16 @@ int32 status_change_end(struct block_list *bl, enum sc_type type, int32 tid)
 		val3 = sce->val3;
 		val4 = sce->val4;
 
+		// Cancel any pending periodic timer before erasing the entry.
+		// Without this, periodic SCs (e.g. SC_DEEPSLEEP) leave an orphaned
+		// timer that fires after external removal (e.g. AB_LAUDARAMUS),
+		// causing ShowError "Mismatch" if the status is re-applied in the meantime.
+		if (tid == INVALID_TIMER && sce->timer != INVALID_TIMER)
+		{
+			delete_timer(sce->timer, status_change_timer);
+			sce->timer = INVALID_TIMER;
+		}
+
 		sc->deleteSCE(type);
 	}
 	else
@@ -16489,9 +16503,13 @@ case SC_WHITEIMPRISON:
 				skill_delunitgroup(group);
 		}
 		break;
+	// case SC_CURSEDCIRCLE_ATKER:
+	// 	if (val2) // Used the default area size cause there is a chance the caster could knock back and can't clear the target.
+	// 		map_foreachinallrange(status_change_timer_sub, bl, AREA_SIZE + 3, BL_CHAR, bl, nullptr, SC_CURSEDCIRCLE_TARGET, gettick());
+	// 	break;
 	case SC_CURSEDCIRCLE_ATKER:
-		if (val2) // Used the default area size cause there is a chance the caster could knock back and can't clear the target.
-			map_foreachinallrange(status_change_timer_sub, bl, AREA_SIZE + 3, BL_CHAR, bl, nullptr, SC_CURSEDCIRCLE_TARGET, gettick());
+		if (val2) // Use map-wide search to handle cases where caster teleported far (e.g. Snap)
+			map_foreachinmap(status_change_timer_sub, bl->m, BL_CHAR, bl, nullptr, SC_CURSEDCIRCLE_TARGET, gettick());
 		break;
 	case SC_RAISINGDRAGON:
 		if (sd && !pc_isdead(sd))

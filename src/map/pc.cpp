@@ -2112,6 +2112,8 @@ bool pc_authok(map_session_data *sd, uint32 login_id2, time_t expiration_time, i
 	t_tick tick = gettick();
 	uint32 ip = session[sd->fd]->client_addr;
 
+	sd->elem_pending_mode = 0;
+	sd->elem_pending_skilllv = 0;
 	sd->login_id2 = login_id2;
 	sd->group_id = group_id;
 

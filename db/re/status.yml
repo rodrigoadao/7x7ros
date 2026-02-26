@@ -3367,10 +3367,13 @@ Body:
       StopWalking: true
       StopAttacking: true
       StopCasting: true
+      RemoveOnRefresh: true
     EndOnStart:
       Freezing: true
+      Refresh: true
     Fail:
       Inspiration: true
+      Refresh: true
   - Status: Marshofabyss
     Icon: EFST_MARSHOFABYSS
     DurationLookup: WL_MARSHOFABYSS
@@ -3383,7 +3386,7 @@ Body:
       Def2: true
       Mdef2: true
     Flags:
-      RemoveOnRefresh: true
+      # RemoveOnRefresh: true
       RemoveOnLuxAnima: true
       BossResist: true
       NoDispell: true
@@ -3391,7 +3394,7 @@ Body:
       Debuff: true
     MinDuration: 5000
     Fail:
-      Refresh: true
+      # Refresh: true
     EndOnStart:
       Increaseagi: true
       Windwalk: true

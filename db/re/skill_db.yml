@@ -2997,22 +2997,22 @@ Body:
             Time: 48
       Requires:
           SpCost: 75
-          ItemCost:
-              - Item: Blue_Gemstone
-                Amount: 1
-                Level: 6
-              - Item: Blue_Gemstone
-                Amount: 1
-                Level: 7
-              - Item: Blue_Gemstone
-                Amount: 1
-                Level: 8
-              - Item: Blue_Gemstone
-                Amount: 1
-                Level: 9
-              - Item: Blue_Gemstone
-                Amount: 1
-                Level: 10
+          # ItemCost:
+          #     - Item: Blue_Gemstone
+          #       Amount: 1
+          #       Level: 6
+          #     - Item: Blue_Gemstone
+          #       Amount: 1
+          #       Level: 7
+          #     - Item: Blue_Gemstone
+          #       Amount: 1
+          #       Level: 8
+          #     - Item: Blue_Gemstone
+          #       Amount: 1
+          #       Level: 9
+          #     - Item: Blue_Gemstone
+          #       Amount: 1
+          #       Level: 10
       Unit:
           Id: Firepillar_Waiting
           AlternateId: Firepillar_Active
@@ -9917,7 +9917,7 @@ Body:
           NoDamage: true
       Hit: Single
       HitCount: 1
-      CastTime: 700
+      # CastTime: 700
       Duration1: 60000
       FixedCastTime: 700
       CastTimeFlags:
@@ -23648,6 +23648,8 @@ Body:
       TargetType: Attack
       DamageFlags:
           NoDamage: true
+      # Flags:
+      #     TargetHidden: true
       Range: 3
       Hit: Single
       HitCount: 1
@@ -23682,6 +23684,8 @@ Body:
       TargetType: Attack
       DamageFlags:
           NoDamage: true
+      # Flags:
+      #     TargetHidden: true
       Range: 3
       Hit: Single
       HitCount: 1
@@ -23716,6 +23720,8 @@ Body:
       TargetType: Attack
       DamageFlags:
           NoDamage: true
+      # Flags:
+      #     TargetHidden: true
       Range: 3
       Hit: Single
       HitCount: 1
@@ -23750,6 +23756,8 @@ Body:
       TargetType: Attack
       DamageFlags:
           NoDamage: true
+      # Flags:
+      #     TargetHidden: true
       Range: 3
       Hit: Single
       HitCount: 1
@@ -23784,6 +23792,8 @@ Body:
       TargetType: Attack
       DamageFlags:
           NoDamage: true
+      # Flags:
+      #     TargetHidden: true
       Range: 3
       Hit: Single
       HitCount: 1
@@ -23818,6 +23828,8 @@ Body:
       TargetType: Attack
       DamageFlags:
           NoDamage: true
+      # Flags:
+      #     TargetHidden: true
       Range: 3
       Hit: Single
       HitCount: 1

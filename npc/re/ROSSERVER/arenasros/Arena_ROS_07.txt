@@ -202,6 +202,39 @@ OnStart:
 	// Criar partida no sistema de ranking ANTES do warp (para rastrear desertores durante preparo)
 	donpcevent "Arena7x7_Ranking_07_Hook::OnMatchCreate";
 	
+	// Remover buffs de todos em quiz_02 antes de teleportar
+	getmapunits BL_PC, "quiz_02", .@units;
+	for (set .@i, 0; .@i < getarraysize(.@units); set .@i, .@i + 1) {
+		if (isloggedin(.@units[.@i])) {
+			attachrid .@units[.@i];
+			sc_end SC_ALL;
+			setoption 0x40 | Option_Invisible | Option_Xmas, 0;
+			sc_end SC_FIGHTINGSPIRIT;
+			sc_end SC_LUXANIMA;
+			sc_end SC_GIANTGROWTH;
+			sc_end SC_STONEHARDSKIN;
+			sc_end SC_VITALITYACTIVATION;
+			sc_end SC_ABUNDANCE;
+			sc_end SC_CRUSHSTRIKE;
+			sc_end SC_REFRESH;
+			sc_end SC_MILLENNIUMSHIELD;
+			delspiritball 15;
+			deleteelemental;
+			sc_end SC_ALL;
+			sc_end SC_SAVAGE_STEAK;
+			sc_end SC_COCKTAIL_WARG_BLOOD;
+			sc_end SC_MINOR_BBQ;
+			sc_end SC_SIROMA_ICE_TEA;
+			sc_end SC_DROCERA_HERB_STEAMED;
+			sc_end SC_PUTTI_TAILS_NOODLES;
+			sc_end SC_STOMACHACHE;
+			sc_end SC_VITATA_500;
+			sc_end SC_EXTRACT_SALAMINE_JUICE;
+		}
+	}
+	
+	donpcevent "Arena_AutoRestock::OnRestock";
+	atcommand "@repairall";
 	// Warp Teams
 	bg_warp $@KvM86BG_id1,"ros2025_6",49,80;
 	bg_warp $@KvM86BG_id2,"ros2025_6",152,80;
@@ -406,6 +439,7 @@ OnStop:
 	if ($@arena7_match_id > 0) {
 		arena7x7_restoreall($@arena7_match_id);
 	}
+	donpcevent "Arena_AutoRestock::OnRestock7";
 	sleep 500;
 	// Teleportar membros do BG (vivos)
 	if ($@KvM86BG_id1) bg_warp $@KvM86BG_id1,"izlude",128,135;

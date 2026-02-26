@@ -4224,6 +4224,7 @@ Body:
       Duration: 1000
     Script: |
       itemheal 1800,0;
+      addspiritball 5, 60000;
   - Id: 11624
     AegisName: High_BluePotion
     Name: Blue Syrup

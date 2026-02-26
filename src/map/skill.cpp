@@ -1877,8 +1877,8 @@ int32 skill_additional_effect(struct block_list *src, struct block_list *bl, uin
 			rate += 100; // DC_SCREAM has a 10% higher base chance
 		if (battle_check_target(src, bl, BCT_PARTY) > 0)
 		{
-			// On party members: Chance is divided by 4 and BA_FROSTJOKER duration is fixed to 15000ms
-			rate /= 4;
+			// On party members: fixed 1% chance, duration fixed to skill_get_time
+			rate = 10; // 10 * 10 = 100 em base 10000 = 1%
 			duration = skill_get_time(skill_id, skill_lv);
 		}
 		status_change_start(src, bl, skill_get_sc(skill_id), rate * 10, skill_lv, 0, 0, 0, duration, SCSTART_NONE);
@@ -13811,6 +13811,9 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 				status_change_end(bl, SC_MANDRAGORA);
 				status_change_end(bl, SC_SILENCE);
 				status_change_end(bl, SC_DEEPSLEEP);
+				// CUSTOM moskaum: aplica buff de crítico mesmo após curar debuffs
+				clif_skill_nodamage(bl, *bl, skill_id, skill_lv,
+									sc_start(src, bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv)));
 			}
 			else // Success rate only applies to the curing effect and not stat bonus. Bonus status only applies to non infected targets
 				clif_skill_nodamage(bl, *bl, skill_id, skill_lv,
@@ -13958,33 +13961,38 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 		map_foreachinrange(skill_area_sub, bl, skill_get_splash(skill_id, skill_lv), BL_CHAR | BL_SKILL, src, skill_id, skill_lv, tick, flag | BCT_ENEMY | 1, skill_castend_damage_id);
 		break;
 
-	case WL_SIENNAEXECRATE:
-		if (status_isimmune(bl) || !tsc)
+case WL_SIENNAEXECRATE:
+		if (!tsc)
 			break;
 
-		if (flag & 1)
-		{
-			if (bl->id == skill_area_temp[1])
-				break; // Already work on this target
-
-			status_change_start(src, bl, type, 10000, skill_lv, src->id, 0, 0, skill_get_time2(skill_id, skill_lv), SCSTART_NOTICKDEF, skill_get_time(skill_id, skill_lv));
-		}
-		else
 		{
 			int32 rate = 45 + 5 * skill_lv + (sd ? sd->status.job_level : 50) / 4;
-			// IroWiki says Rate should be reduced by target stats, but currently unknown
-			if (rnd() % 100 < rate)
-			{ // Success on First Target
-				if (status_change_start(src, bl, type, 10000, skill_lv, src->id, 0, 0, skill_get_time2(skill_id, skill_lv), SCSTART_NOTICKDEF, skill_get_time(skill_id, skill_lv)))
-				{
-					clif_skill_nodamage(src, *bl, skill_id, skill_lv);
-					skill_area_temp[1] = bl->id;
-					map_foreachinallrange(skill_area_sub, bl, skill_get_splash(skill_id, skill_lv), BL_CHAR, src, skill_id, skill_lv, tick, flag | BCT_ENEMY | 1, skill_castend_nodamage_id);
-				}
-				// Doesn't send failure packet if it fails on defense.
+
+			if (flag & 1)
+			{
+				// Chance individual por target na area, ignorando imunidade do target inicial
+				if (bl->id == skill_area_temp[1])
+					break; // Already processed main target
+				if (status_isimmune(bl))
+					break;
+				if (rnd() % 100 < rate)
+					status_change_start(src, bl, type, 10000, skill_lv, src->id, 0, 0, skill_get_time2(skill_id, skill_lv), SCSTART_NOTICKDEF, skill_get_time(skill_id, skill_lv));
 			}
-			else if (sd) // Failure on Rate
-				clif_skill_fail(*sd, skill_id);
+			else
+			{
+				// Tenta no target inicial mas SEMPRE espalha para a area
+				if (rnd() % 100 < rate)
+				{
+					if (!status_isimmune(bl))
+						status_change_start(src, bl, type, 10000, skill_lv, src->id, 0, 0, skill_get_time2(skill_id, skill_lv), SCSTART_NOTICKDEF, skill_get_time(skill_id, skill_lv));
+				}
+				else if (sd)
+					clif_skill_fail(*sd, skill_id);
+
+				clif_skill_nodamage(src, *bl, skill_id, skill_lv);
+				skill_area_temp[1] = bl->id;
+				map_foreachinallrange(skill_area_sub, bl, skill_get_splash(skill_id, skill_lv), BL_CHAR, src, skill_id, skill_lv, tick, flag | BCT_ENEMY | 1, skill_castend_nodamage_id);
+			}
 		}
 		break;
 
@@ -15157,7 +15165,7 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 	case EM_EL_STRONG_PROTECTION:
 	case EM_EL_DEEP_POISONING:
 	case EM_EL_POISON_SHIELD:
-	{
+		{
 		s_elemental_data *ele = BL_CAST(BL_ELEM, src);
 		if (ele)
 		{
@@ -15174,8 +15182,6 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 				clif_skill_nodamage(src, *src, skill_id, skill_lv);
 				if (!(skill_id >= EM_EL_FLAMETECHNIC && skill_id <= EM_EL_DEADLY_POISON))
 					clif_skill_damage(*src, (skill_id == EL_GUST || skill_id == EL_BLAST || skill_id == EL_WILD_STORM) ? *src : *bl, tick, status_get_amotion(src), 0, DMGVAL_IGNORE, 1, skill_id, skill_lv, DMG_SINGLE);
-				if (skill_id == EL_WIND_STEP) // There aren't teleport, just push the master away.
-					skill_blown(src, bl, (rnd() % skill_get_blewcount(skill_id, skill_lv)) + 1, rnd() % 8, BLOWN_NONE);
 				sc_start(src, src, type2, 100, skill_lv, skill_get_time(skill_id, skill_lv));
 				sc_start(src, bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv));
 			}
@@ -17224,7 +17230,7 @@ TIMER_FUNC(skill_castend_pos)
 					 src->type, src->id, ud->skill_id, ud->skill_lv, ud->skillx, ud->skilly);
 
 		if (ud->walktimer != INVALID_TIMER)
-			unit_stop_walking(src, USW_FIXPOS);
+			unit_stop_walking(src, (src->type == BL_PC) ? USW_NONE : USW_FIXPOS);
 		//CUSTOM MOSKaum
 		// Check for Land Protector before applying cooldown for these specific skills
 		if (sd && (ud->skill_id == SO_PSYCHIC_WAVE || ud->skill_id == SO_EARTHGRAVE || 
@@ -20308,8 +20314,18 @@ static int32 skill_unit_onplace(struct skill_unit *unit, struct block_list *bl, 
 		break;
 
 	case UNT_WARMER:
-		if (!sce && bl->type == BL_PC && !battle_check_undead(tstatus->race, tstatus->def_ele) && tstatus->race != RC_DEMON)
-			sc_start2(ss, bl, type, 100, sg->skill_lv, ss->id, skill_get_time(sg->skill_id, sg->skill_lv));
+		if (bl->type == BL_PC && !battle_check_undead(tstatus->race, tstatus->def_ele) && tstatus->race != RC_DEMON) {
+			if (!sce)
+				sc_start2(ss, bl, type, 100, sg->skill_lv, ss->id, skill_get_time(sg->skill_id, sg->skill_lv));
+			else {
+				if (sc->getSCE(SC_FREEZING))
+					status_change_end(bl, SC_FREEZING);
+				if (sc->getSCE(SC_CRYSTALIZE))
+					status_change_end(bl, SC_CRYSTALIZE);
+				if (sc->getSCE(SC_FREEZE))
+					status_change_end(bl, SC_FREEZE);
+			}
+		}
 		break;
 
 	case UNT_CATNIPPOWDER:
@@ -22344,10 +22360,10 @@ bool skill_check_condition_castbegin(map_session_data &sd, uint16 skill_id, uint
 		}
 	}
 
-	// perform skill-group checks
+// perform skill-group checks
 	if (skill_id != WM_GREAT_ECHO && inf2[INF2_ISCHORUS])
 	{
-		if (skill_check_pc_partner(&sd, skill_id, &skill_lv, 5,0) < 1 && !(sc != nullptr && sc->hasSCE(SC_KVASIR_SONATA)))
+		if (skill_check_pc_partner(&sd, skill_id, &skill_lv, 7,0) < 1 && !(sc != nullptr && sc->hasSCE(SC_KVASIR_SONATA)))
 		{
 			clif_skill_fail(sd, skill_id);
 			return false;
@@ -23443,8 +23459,10 @@ bool skill_check_condition_castbegin(map_session_data &sd, uint16 skill_id, uint
 		}
 	}
 
-	// Special check for SA_DISPELL: Cannot cast on hidden targets
-	if (skill_id == SA_DISPELL)
+		// Special check for Masquerade skills: Cannot cast on hidden targets
+	if (skill_id == RA_ARROWSTORM || skill_id == SA_DISPELL || 
+		skill_id == SC_ENERVATION || skill_id == SC_GROOMY || skill_id == SC_LAZINESS ||
+	    skill_id == SC_UNLUCKY || skill_id == SC_WEAKNESS || skill_id == SC_IGNORANCE)
 	{
 		struct block_list *target = NULL;
 		if (sd.ud.target > 0)
@@ -24592,6 +24610,13 @@ int32 skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint1
 				break;
 			}
 		}
+	}
+
+	// Item-specific cast override (bypasses IgnoreItemBonus)
+	if (sd && skill_id == HW_MAGICPOWER) {
+		int16 idx = pc_checkequip(sd, EQP_WEAPON);
+		if (idx >= 0 && sd->inventory.u.items_inventory[idx].nameid == 2000)
+			fixcast_r = max(fixcast_r, 50);
 	}
 
 	// Adjusted by active statuses

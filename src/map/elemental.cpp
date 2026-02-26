@@ -290,6 +290,33 @@ int32 elemental_data_received(s_elemental *ele, bool flag) {
 		clif_elemental_updatestatus(*sd, SP_SP);
 	}
 
+	// Apply pending mode from summonelemental script command
+	if (sd->elem_pending_mode > 0 && ed != nullptr)
+	{
+		int32 mode;
+		switch (sd->elem_pending_mode)
+		{
+		case 3:  mode = EL_MODE_AGGRESSIVE; break;
+		case 2:  mode = EL_MODE_ASSIST;     break;
+		default: mode = EL_MODE_PASSIVE;    break;
+		}
+		elemental_change_mode(ed, mode);
+
+		// For Ventus Assist: apply Wind Step directly
+		if (sd->elem_pending_mode == 2)
+		{
+			uint16 el_class = (uint16)ed->db->class_;
+			if (el_class >= ELEMENTALID_VENTUS_S && el_class <= ELEMENTALID_VENTUS_L)
+			{
+				sc_start(sd, sd, SC_WIND_STEP, 100, sd->elem_pending_skilllv, skill_get_time(EL_WIND_STEP, sd->elem_pending_skilllv));
+				sc_start(sd, ed, SC_WIND_STEP_OPTION, 100, sd->elem_pending_skilllv, skill_get_time(EL_WIND_STEP, sd->elem_pending_skilllv));
+			}
+		}
+
+		sd->elem_pending_mode = 0;
+		sd->elem_pending_skilllv = 0;
+	}
+
 	return 1;
 }
 

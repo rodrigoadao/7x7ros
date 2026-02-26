@@ -171,15 +171,28 @@ OnTeleport:
             if (strcharinfo(3) == "izlude" || strcharinfo(3) == "lhz_dun03") {
                 sc_end SC_ALL;
                 setoption 0x40 | Option_Invisible | Option_Xmas, 0;
-sc_end SC_FIGHTINGSPIRIT;
-sc_end SC_LUXANIMA;
-sc_end SC_GIANTGROWTH;
-sc_end SC_STONEHARDSKIN;
-sc_end SC_VITALITYACTIVATION;
-sc_end SC_ABUNDANCE;
-sc_end SC_CRUSHSTRIKE;
-sc_end SC_REFRESH;
-sc_end SC_MILLENNIUMSHIELD;
+                sc_end SC_FIGHTINGSPIRIT;
+                sc_end SC_LUXANIMA;
+                sc_end SC_GIANTGROWTH;
+                sc_end SC_STONEHARDSKIN;
+                sc_end SC_VITALITYACTIVATION;
+                sc_end SC_ABUNDANCE;
+                sc_end SC_CRUSHSTRIKE;
+                sc_end SC_REFRESH;
+                sc_end SC_MILLENNIUMSHIELD;
+                delspiritball 15;
+                deleteelemental;
+                sc_end SC_ALL;
+                sc_end SC_SAVAGE_STEAK;
+                sc_end SC_COCKTAIL_WARG_BLOOD;
+                sc_end SC_MINOR_BBQ;
+                sc_end SC_SIROMA_ICE_TEA;
+                sc_end SC_DROCERA_HERB_STEAMED;
+                sc_end SC_PUTTI_TAILS_NOODLES;
+                sc_end SC_STOMACHACHE;
+                sc_end SC_VITATA_500;
+                sc_end SC_EXTRACT_SALAMINE_JUICE;
+                atcommand "@repairall";
             }
         }
     }
@@ -197,7 +210,7 @@ OnPCLogoutEvent:
     // Check if the player is the guild leader and is logging out from the arena
     if (strcharinfo(3) == "quiz_02" && getcharid(0) == getguildmasterid(getcharid(2))) {
         // Teleport the entire guild out of the arena
-        warpguild "izlude",128,105,getcharid(2);
+        warpguild "izlude",128,141,getcharid(2);
     }
     end;
 }

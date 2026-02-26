@@ -753,6 +753,8 @@ public:
 	struct homun_data *hd;	// [blackhole89]
 	s_mercenary_data *md;
 	s_elemental_data *ed;
+	int32 elem_pending_mode;   // mode requested by summonelemental script command (0 = none)
+	int32 elem_pending_skilllv; // skill_lv requested by summonelemental
 
 	struct s_hate_mob {
 		int32  m; //-1 - none, other: map index corresponding to map name.

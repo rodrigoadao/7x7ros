@@ -265476,3 +265476,12 @@ Body:
       bonus bMaxHP,.@r*10;
       bonus2 bSkillAtk,"SOA_EXORCISM_OF_MALICIOUS_SOUL",5+(.@r/3);
       bonus bMatk,10*(.@r/2);
+  - Id: 1300001
+    AegisName: C_Qualifier_1st
+    Name: "[Visual] Espada Lendária I"
+    Type: Shadowgear
+    ViewID: 3000
+    Locations:
+      Shadow_Armor: true
+    EquipLevelMin: 1
+    Refineable: false
