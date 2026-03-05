@@ -4186,6 +4186,7 @@ Body:
     Flags:
       BlEffect: true
       DisplayPc: true
+      SendOption: true
       RemoveOnRefresh: true
       RemoveOnLuxAnima: true
       BossResist: true
@@ -4202,6 +4203,7 @@ Body:
       Inspiration: true
       Deepsleep: true
     EndOnStart:
+      Sleep: true
       Dancing: true
       Voiceofsiren: true
       # Songofmana: true

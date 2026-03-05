@@ -2563,6 +2563,20 @@ int32 unit_skilluse_id2(struct block_list *src, int32 target_id, uint16 skill_id
 			}
 			break;
 			//fim custom
+		// Custom MoskaumRO: Strip skills não iniciam cast em alvos hidden
+		case RG_STRIPWEAPON:
+		case RG_STRIPSHIELD:
+		case RG_STRIPARMOR:
+		case RG_STRIPHELM:
+		{
+			status_change *target_sc = status_get_sc(target);
+			if (target_sc && (target_sc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK)))
+			{
+				clif_skill_fail(*sd, skill_id, USESKILL_FAIL_TOTARGET);
+				return 0;
+			}
+			break;
+		}
 		//custom moskaum avanço ofensivo charge atack
 		case KN_CHARGEATK:
 		{
@@ -2947,12 +2961,16 @@ if (!ud->state.running)
 {
     bool skip_stop_walk = false;
     
-    // Custom MoskaumRO: Não parar walking ao usar TF_HIDING/ST_CHASEWALK/KO_YAMIKUMO para sair do hide
-    if (sc && (skill_id == TF_HIDING || skill_id == ST_CHASEWALK || skill_id == KO_YAMIKUMO))
+// Custom MoskaumRO: Não parar walking ao sair do hide (apenas skills instantâneas)
+    // Skills com casttime precisam parar normalmente para evitar bug de posição
+    if (sc && casttime <= 0 && (skill_id == TF_HIDING || skill_id == ST_CHASEWALK || skill_id == KO_YAMIKUMO))
     {
         sc_type toggle_sc = skill_get_sc(skill_id);
         if (toggle_sc != SC_NONE && sc->getSCE(toggle_sc))
+        {
+            clif_fixpos(*src);
             skip_stop_walk = true;
+        }
     }
     
     // Custom MoskaumRO: Skills que não devem parar o walking
@@ -2964,9 +2982,38 @@ if (!ud->state.running)
     
     if (!skip_stop_walk)
     {
-        // USW_NONE para PCs apenas em skills instantâneas (sem casttime)
-        // Skills com casttime precisam de USW_FIXPOS para evitar bug visual de andar durante o cast
-        if (src->type == BL_PC && casttime <= 0)
+        bool needs_fixpos = false;
+        
+        switch (skill_id)
+        {
+            // Skills de visibilidade
+            case TF_HIDING:
+            case AS_CLOAKING:
+            case ST_CHASEWALK:
+            case KO_YAMIKUMO:
+            case GC_CLOAKINGEXCEED:
+            case RA_CAMOUFLAGE:
+            case SC_INVISIBILITY:
+            // Skills que devem ter fixpos
+            case SR_GATEOFHELL:
+            case SR_GENTLETOUCH_REVITALIZE:
+            case SR_GENTLETOUCH_ENERGYGAIN:
+            case SR_GENTLETOUCH_CHANGE:
+            case SR_TIGERCANNON:
+            case SR_POWERVELOCITY:
+            case SR_RIDEINLIGHTNING:
+            case SR_EARTHSHAKER:
+            case NC_HOVERING:
+            case NC_SELFDESTRUCTION:
+            case RA_WUGMASTERY:
+            case RA_WUGRIDER:
+                needs_fixpos = true;
+                break;
+        }
+        
+        if (needs_fixpos)
+            unit_stop_walking(src, USW_FIXPOS);
+        else if (src->type == BL_PC)
             unit_stop_walking(src, USW_NONE);
         else
             unit_stop_walking(src, USW_FIXPOS);
@@ -3385,10 +3432,38 @@ int32 unit_skilluse_pos2(struct block_list *src, int16 skill_x, int16 skill_y, u
 
 			if (!src->prev)
 				return 0;
-		}
-	}
+}
+ }
 
-	unit_stop_walking(src, USW_FIXPOS);
+// Custom MoskaumRO: Safety Wall e Pneuma
+// Sem fixpos se a skill será executada com sucesso
+// Com fixpos se vai falhar (overlap com SW/Pneuma/LP, ou cell inválida)
+switch (skill_id)
+{
+    case MG_SAFETYWALL:
+    case AL_PNEUMA:
+    {
+        bool will_fail = false;
+        
+        // Verificar se cell center é walkable
+        if (!map_getcell(src->m, skill_x, skill_y, CELL_CHKREACH))
+            will_fail = true;
+        
+        // Verificar Land Protector
+        if (!will_fail && map_getcell(src->m, skill_x, skill_y, CELL_CHKLANDPROTECTOR))
+            will_fail = true;
+        
+        // Verificar overlap com SW/Pneuma/Steinwand no center cell
+        if (!will_fail && skill_check_sw_pneuma_overlap(src, skill_x, skill_y, skill_id))
+            will_fail = true;
+        
+        unit_stop_walking(src, will_fail ? USW_FIXPOS : USW_NONE);
+        break;
+    }
+    default:
+        unit_stop_walking(src, USW_FIXPOS);
+        break;
+}
 
 	// SC_MAGICPOWER needs to switch states at start of cast
 #ifndef RENEWAL

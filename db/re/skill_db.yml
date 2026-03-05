@@ -26523,6 +26523,8 @@ Body:
       Description: Deep Sleep Lullaby
       MaxLevel: 5
       TargetType: Attack
+      # Flags:
+      #     TargetHidden: true 
       DamageFlags:
           NoDamage: true
           Splash: true

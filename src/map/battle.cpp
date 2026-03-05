@@ -3521,7 +3521,7 @@ static bool is_attack_critical(struct Damage *wd, struct block_list *src, struct
 				status_change_entry *sce = sc->getSCE(SC_AUTOCOUNTER);
 				t_tick elapsed = DIFF_TICK(gettick(), (t_tick)sce->val2);
 				
-				if (elapsed <= 400)
+				if (elapsed <= 1000)
 				{
 					// Verificar se o alvo está na frente do jogador
 					uint8 dir = map_calc_dir(src, target->x, target->y);

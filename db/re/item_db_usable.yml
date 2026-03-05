@@ -9822,7 +9822,6 @@ Body:
       BuyingStore: true
     Script: |
       sc_start2 SC_VITATA_500,500000,20,5;
-      itemheal 0,200;
   - Id: 12437
     AegisName: Enrich_Celermine_Juice
     Name: Concentrated Ceromain Soup

@@ -6477,7 +6477,8 @@ bool pc_isUseitem(map_session_data *sd,int32 n)
 	if (!pc_job_can_use_item(sd,item))
 		return false;
 	
-	if (sd->sc.cant.consume)
+	// Custom MoskaumRO: Permitir Nauthiz Rune (RK_REFRESH) durante Deep Sleep
+	if (sd->sc.cant.consume && nameid != ITEMID_NAUTHIZ)
 		return false;
 	
 	if (!pc_isItemClass(sd,item))

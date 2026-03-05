@@ -2624,7 +2624,15 @@ bool status_check_skilluse(struct block_list *src, struct block_list *target, ui
 				return false;
 			}
 			if (sc->option & OPTION_CHASEWALK && skill_id != ST_CHASEWALK)
-				return false;
+			{
+				// Custom MoskaumRO: Permitir conversores elementais durante Chase Walk
+				if (skill_id == ITEM_ENCHANTARMS)
+				{
+					status_change_end(src, SC_CHASEWALK);
+				}
+				else
+					return false;
+			}
 		}
 	}
 
@@ -12745,6 +12753,10 @@ static bool status_change_start_post_delay(block_list *src, block_list *bl, sc_t
 			if ((type == SC_STONEWAIT && opt1_type == SC_DEEPSLEEP) ||
 			    (type == SC_DEEPSLEEP && opt1_type == SC_STONEWAIT))
 				continue;
+			// Custom MoskaumRO: Allow Whiteimprison and Deepsleep to coexist
+			if ((type == SC_WHITEIMPRISON && opt1_type == SC_DEEPSLEEP) ||
+			    (type == SC_DEEPSLEEP && opt1_type == SC_WHITEIMPRISON))
+				continue;
 			if (sc->getSCE(opt1_type) && status_it.second->opt1 > OPT1_NONE)
 				status_change_end(bl, opt1_type);
 		}
@@ -16718,32 +16730,18 @@ case SC_WHITEIMPRISON:
 
 if (scdb->opt1)
 	{
-		// Check if another coexisting OPT1 status is still active and restore its opt1
+		// Check if any other active status has opt1 and restore it
 		uint16 remaining_opt1 = OPT1_NONE;
 
-		if (type == SC_DEEPSLEEP || type == SC_STONE || type == SC_STONEWAIT || type == SC_FREEZE)
+		for (const auto &it : *sc)
 		{
-			// List of status pairs that can coexist
-			struct { sc_type a; sc_type b; } coexist_pairs[] = {
-				{ SC_FREEZE, SC_DEEPSLEEP },
-				{ SC_DEEPSLEEP, SC_FREEZE },
-				{ SC_STONE, SC_DEEPSLEEP },
-				{ SC_DEEPSLEEP, SC_STONE },
-				{ SC_STONEWAIT, SC_DEEPSLEEP },
-				{ SC_DEEPSLEEP, SC_STONEWAIT },
-			};
-
-			for (const auto &pair : coexist_pairs)
+			if (it.first == type)
+				continue; // Skip the status being removed
+			std::shared_ptr<s_status_change_db> other_scdb = status_db.find(it.first);
+			if (other_scdb && other_scdb->opt1 > OPT1_NONE)
 			{
-				if (type == pair.a && sc->getSCE(pair.b))
-				{
-					std::shared_ptr<s_status_change_db> other_scdb = status_db.find(pair.b);
-					if (other_scdb && other_scdb->opt1 > OPT1_NONE)
-					{
-						remaining_opt1 = other_scdb->opt1;
-						break;
-					}
-				}
+				remaining_opt1 = other_scdb->opt1;
+				break;
 			}
 		}
 
@@ -16778,9 +16776,27 @@ if (scdb->opt1)
 
 	if (opt_flag[SCF_NONPLAYER]) // bugreport:681
 		clif_changeoption2(*bl);
-	else if (!disable_opt_flag && (opt_flag[SCF_SENDOPTION] || opt_flag[SCF_ONTOUCH] || opt_flag[SCF_UNITMOVE] || opt_flag[SCF_NONPLAYER] || opt_flag[SCF_SENDLOOK]))
+	else if (!disable_opt_flag && (opt_flag[SCF_SENDOPTION] || opt_flag[SCF_ONTOUCH] || opt_flag[SCF_UNITMOVE] || opt_flag[SCF_NONPLAYER] || opt_flag[SCF_SENDLOOK] || scdb->opt1 != OPT1_NONE))
 	{
+		// Custom MoskaumRO: Se outro status com opt1 está ativo e usa DisplayPc,
+		// limpar opt1 temporariamente para evitar que clif_changeoption envie visual errado
+		uint16 saved_opt1 = sc->opt1;
+		if (sc->opt1 != OPT1_NONE && scdb->opt1 == OPT1_NONE)
+		{
+			// O status sendo removido não tem opt1, mas outro ativo tem.
+			// Verificar se esse outro status usa DisplayPc (controla visual próprio)
+			for (const auto &it : *sc)
+			{
+				std::shared_ptr<s_status_change_db> other_scdb = status_db.find(it.first);
+				if (other_scdb && other_scdb->opt1 == sc->opt1 && other_scdb->flag[SCF_DISPLAYPC])
+				{
+					sc->opt1 = OPT1_NONE; // Suprimir opt1 visual duplicado
+					break;
+				}
+			}
+		}
 		clif_changeoption(bl);
+		sc->opt1 = saved_opt1; // Restaurar opt1 real
 		// clif_changeoption faz o cliente re-renderizar o sprite, apagando o visual do
 		// SC_CAMOUFLAGE que depende de clif_status_change (DisplayPc). Reenviar o pacote.
 		if (sc->getSCE(SC_CAMOUFLAGE))

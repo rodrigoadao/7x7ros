@@ -10249,7 +10249,7 @@ Body:
       BuyingStore: true
       DropEffect: CLIENT
     Script: |
-      bonus4 bAddEff,Eff_Crystalize,500,ATF_SHORT,8000;
+      bonus4 bAddEff,Eff_Crystalize,500,ATF_SHORT,7000;
   - Id: 4523
     AegisName: Pot_Dofle_Card
     Name: Pot Dofle Card

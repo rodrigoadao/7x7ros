@@ -65,10 +65,12 @@ static std::unordered_map<int32, int64> nc_selfdestruction_rg_damage;			 // RG I
 
 // WL_EARTHSTRAIN: Store blocked positions by LP for each caster
 struct earthstrain_lp_data {
-	t_tick first_wave_tick;
+	uint8 cast_dir;
 	std::unordered_map<uint32, bool> blocked_positions;
 };
 static std::unordered_map<int32, earthstrain_lp_data> earthstrain_lp_blocked; // caster_id -> lp_data
+static s_skill_unit_layout earthstrain_wave_layout; // dynamic layout built per wave
+static bool earthstrain_use_wave_layout = false;    // flag: use wave layout in skill_get_unit_layout
 
 // Function to pre-scan NC_SELFDESTRUCTION targets for Devotion (simplified - just mark protected targets)
 static int32 nc_selfdestruction_scan_devotion(struct block_list *bl, va_list ap)
@@ -1444,7 +1446,14 @@ struct s_skill_unit_layout *skill_get_unit_layout(uint16 skill_id, uint16 skill_
 	else if (skill_id == WZ_ICEWALL)
 		return &skill_unit_layout[icewall_unit_pos + dir];
 	else if (skill_id == WL_EARTHSTRAIN)
+	{
+		if (earthstrain_use_wave_layout)
+			return &earthstrain_wave_layout;
+		auto it = earthstrain_lp_blocked.find(src->id);
+		if (it != earthstrain_lp_blocked.end())
+			return &skill_unit_layout[earthstrain_unit_pos + it->second.cast_dir];
 		return &skill_unit_layout[earthstrain_unit_pos + dir];
+	}
 	else if (skill_id == RL_FIRE_RAIN)
 		return &skill_unit_layout[firerain_unit_pos + dir];
 	else if (skill_id == GN_WALLOFTHORN)
@@ -3390,15 +3399,15 @@ bool skill_strip_equip(struct block_list *src, struct block_list *target, uint16
 		rate = sstatus->dex / (4 * (7 - skill_lv)) + sstatus->luk / (4 * (6 - skill_lv));
 		rate = rate + status_get_lv(src) - (tstatus->agi * rate / 100) - tstatus->luk - status_get_lv(target);
 		break;
-	case WL_EARTHSTRAIN:
-	{
-		int32 job_lv = 0;
+	// case WL_EARTHSTRAIN:
+	// {
+	// 	int32 job_lv = 0;
 
-		if (src->type == BL_PC)
-			job_lv = ((TBL_PC *)src)->status.job_level;
-		rate = 6 * skill_lv + job_lv / 4 + sstatus->dex / 10;
-		break;
-	}
+	// 	if (src->type == BL_PC)
+	// 		job_lv = ((TBL_PC *)src)->status.job_level;
+	// 	rate = 6 * skill_lv + job_lv / 4 + sstatus->dex / 10;
+	// 	break;
+	// }
 	case SC_STRIPACCESSARY:
 		rate = 12 + 2 * skill_lv;
 		break;
@@ -3427,9 +3436,9 @@ bool skill_strip_equip(struct block_list *src, struct block_list *target, uint16
 	case GC_WEAPONCRUSH:
 	case ST_FULLSTRIP:
 	case ABC_STRIP_SHADOW:
-		if (skill_id == WL_EARTHSTRAIN)
-			time = skill_get_time2(skill_id, skill_lv);
-		else
+		// if (skill_id == WL_EARTHSTRAIN)
+		// 	time = skill_get_time2(skill_id, skill_lv);
+		// else
 			time = skill_get_time(skill_id, skill_lv);
 
 		if (target->type == BL_PC)
@@ -5708,53 +5717,33 @@ static TIMER_FUNC(skill_timerskill)
 					[[fallthrough]];
 			case WL_EARTHSTRAIN:
 				{
-					uint32 pos_hash = (skl->x << 16) | skl->y;
-					t_tick current_tick = gettick();
-					
-					// Check if we have data for this caster
 					auto caster_it = earthstrain_lp_blocked.find(src->id);
-					bool is_first_wave = false;
-					
-					if (caster_it == earthstrain_lp_blocked.end())
+					bool is_vert = (skl->type == 2 || skl->type == 6);
+					int32 count = 0;
+					for (int16 offset = -7; offset <= 7; offset++)
 					{
-						// No data yet - this is the first wave
-						is_first_wave = true;
-						earthstrain_lp_data new_data;
-						new_data.first_wave_tick = current_tick;
-						earthstrain_lp_blocked[src->id] = new_data;
-						caster_it = earthstrain_lp_blocked.find(src->id);
-					}
-					else
-					{
-						// Check if this execution is part of the first wave (within 200ms of first execution)
-						is_first_wave = (DIFF_TICK(current_tick, caster_it->second.first_wave_tick) < 200);
-					}
-					
-					if (is_first_wave)
-					{
-						// First wave - check and store if this position has LP
-						bool has_lp = map_getcell(src->m, skl->x, skl->y, CELL_CHKLANDPROTECTOR);
-						caster_it->second.blocked_positions[pos_hash] = has_lp;
-						
-						if (has_lp)
+						int16 perp = is_vert ? (int16)(skl->y + offset) : (int16)(skl->x + offset);
+						bool blocked = false;
+						if (caster_it != earthstrain_lp_blocked.end())
 						{
-							// Position blocked by LP on first wave, skip it
-							break;
+							auto pos_it = caster_it->second.blocked_positions.find((uint32)(uint16)perp);
+							if (pos_it != caster_it->second.blocked_positions.end() && pos_it->second)
+								blocked = true;
+						}
+						if (!blocked)
+						{
+							earthstrain_wave_layout.dx[count] = is_vert ? 0 : (int32)offset;
+							earthstrain_wave_layout.dy[count] = is_vert ? (int32)offset : 0;
+							count++;
 						}
 					}
-					else
+					if (count > 0)
 					{
-						// Not first wave - check stored data from first wave
-						auto pos_it = caster_it->second.blocked_positions.find(pos_hash);
-						if (pos_it != caster_it->second.blocked_positions.end() && pos_it->second)
-						{
-							// This position was blocked by LP on first wave, skip it
-							break;
-						}
-						// If position not in map, it means it wasn't blocked on first wave, allow execution
+						earthstrain_wave_layout.count = count;
+						earthstrain_use_wave_layout = true;
+						skill_unitsetting(src, skl->skill_id, skl->skill_lv, skl->x, skl->y, (skl->type << 16) | skl->flag);
+						earthstrain_use_wave_layout = false;
 					}
-					
-					skill_unitsetting(src, skl->skill_id, skl->skill_lv, skl->x, skl->y, (skl->type << 16) | skl->flag);
 				}
 					break;
 			case RL_FIRE_RAIN:
@@ -8240,6 +8229,9 @@ int32 skill_castend_damage_id(struct block_list *src, struct block_list *bl, uin
 		}
 		break;
 	case WL_FROSTMISTY:
+		// Custom MoskaumRO: Não afeta alvos dentro de Land Protector
+		if (map_getcell(bl->m, bl->x, bl->y, CELL_CHKLANDPROTECTOR))
+			break;
 		// Causes Freezing status through walls.
 		sc_start(src, bl, SC_FREEZING, 25 + 5 * skill_lv, skill_lv, skill_get_time(skill_id, skill_lv));
 		sc_start(src, bl, SC_MISTY_FROST, 100, skill_lv, skill_get_time2(skill_id, skill_lv));
@@ -9118,8 +9110,9 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 	if (src != bl && type > SC_NONE &&
 		CHK_ELEMENT((i = skill_get_ele(skill_id, skill_lv))) && i > ELE_NEUTRAL &&
 		skill_get_inf(skill_id) != INF_SUPPORT_SKILL &&
+		skill_id != AB_LAUDARAMUS && skill_id != AB_LAUDAAGNUS &&  // cure ignora elemento
 		battle_attr_fix(nullptr, nullptr, 100, i, tstatus->def_ele, tstatus->ele_lv) <= 0)
-		return 1; // Skills that cause an status should be blocked if the target element blocks its element.
+		return 1;
 
 	map_freeblock_lock();
 	switch (skill_id)
@@ -10087,10 +10080,18 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 		break;
 
 	case KN_AUTOCOUNTER:
+	{
 		// val1 = skill_lv, val2 = tick de início (para permitir ataque proativo nos primeiros 400ms)
 		sc_start2(src, bl, type, 100, skill_lv, (int32)tick, skill_get_time(skill_id, skill_lv));
 		skill_addtimerskill(src, tick + 100, bl->id, 0, 0, skill_id, skill_lv, BF_WEAPON, flag);
+		// Custom MoskaumRO: Liberar attackabletime para permitir autoataque proativo imediato
+		struct unit_data *ud_ac = unit_bl2ud(src);
+		if (ud_ac) {
+			ud_ac->attackabletime = tick;
+			ud_ac->canact_tick = tick;
+		}
 		break;
+	}
 
 	case SO_STRIKING:
 		if (battle_check_target(src, bl, BCT_SELF | BCT_PARTY) > 0)
@@ -13573,7 +13574,30 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 			if (pc_checkskill(sd, RK_RUNEMASTERY) >= rune_level)
 			{
 				if (sc_start(src, bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv)))
+				{
 					clif_skill_nodamage(src, *bl, skill_id, skill_lv);
+					// Custom MoskaumRO: RK_REFRESH remove status que previne mas não remove automaticamente
+					if (skill_id == RK_REFRESH)
+					{
+						status_change_end(bl, SC_STUN);
+						status_change_end(bl, SC_SLEEP);
+						status_change_end(bl, SC_CURSE);
+						status_change_end(bl, SC_STONE);
+						status_change_end(bl, SC_STONEWAIT);
+						status_change_end(bl, SC_POISON);
+						status_change_end(bl, SC_BLIND);
+						status_change_end(bl, SC_SILENCE);
+						status_change_end(bl, SC_BLEEDING);
+						status_change_end(bl, SC_CONFUSION);
+						status_change_end(bl, SC_FREEZE);
+						status_change_end(bl, SC_DEEPSLEEP);
+						status_change_end(bl, SC_BURNING);
+						status_change_end(bl, SC_FREEZING);
+						status_change_end(bl, SC_CRYSTALIZE);
+						status_change_end(bl, SC_MARSHOFABYSS);
+						status_change_end(bl, SC_MANDRAGORA);
+					}
+				}
 				else if (skill_id == RK_STONEHARDSKIN)
 					clif_skill_fail(*sd, skill_id, USESKILL_FAIL_HP_INSUFFICIENT);
 			}
@@ -13811,9 +13835,6 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 				status_change_end(bl, SC_MANDRAGORA);
 				status_change_end(bl, SC_SILENCE);
 				status_change_end(bl, SC_DEEPSLEEP);
-				// CUSTOM moskaum: aplica buff de crítico mesmo após curar debuffs
-				clif_skill_nodamage(bl, *bl, skill_id, skill_lv,
-									sc_start(src, bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv)));
 			}
 			else // Success rate only applies to the curing effect and not stat bonus. Bonus status only applies to non infected targets
 				clif_skill_nodamage(bl, *bl, skill_id, skill_lv,
@@ -16791,6 +16812,7 @@ TIMER_FUNC(skill_castend_id)
 		case WL_FROSTMISTY:
 		case SU_CN_POWDERING:
 		case AG_RAIN_OF_CRYSTAL:
+		case WM_LULLABY_DEEPSLEEP:
 			ud->skillx = target->x;
 			ud->skilly = target->y;
 			ud->skilltimer = tid;
@@ -16802,7 +16824,8 @@ TIMER_FUNC(skill_castend_id)
 		{
 			// Special case: Arrow Storm should continue as ground-targeted
 			// even if the original target becomes invalid (hidden, etc.)
-			if (ud->skill_id == RA_ARROWSTORM || ud->skill_id == NPC_ARROWSTORM)
+			if (ud->skill_id == RA_ARROWSTORM || ud->skill_id == NPC_ARROWSTORM ||
+		    ud->skill_id == WM_LULLABY_DEEPSLEEP)
 			{
 				// Convert to position-based skill using target's last known coordinates
 				ud->skillx = target->x;
@@ -16914,7 +16937,24 @@ TIMER_FUNC(skill_castend_id)
 		}
 
 		if (ud->walktimer != INVALID_TIMER && ud->skill_id != TK_RUN && ud->skill_id != RA_WUGDASH)
-			unit_stop_walking(src, (src->type == BL_PC) ? USW_NONE : USW_FIXPOS);
+			{
+				// Skills de visibilidade precisam de fixpos para evitar bug de posição
+				switch (ud->skill_id)
+				{
+					case TF_HIDING:
+					case AS_CLOAKING:
+					case ST_CHASEWALK:
+					case KO_YAMIKUMO:
+					case GC_CLOAKINGEXCEED:
+					case RA_CAMOUFLAGE:
+					case SC_INVISIBILITY:
+						unit_stop_walking(src, USW_FIXPOS);
+						break;
+					default:
+						unit_stop_walking(src, (src->type == BL_PC) ? USW_NONE : USW_FIXPOS);
+						break;
+				}
+			}
 
 
 		if ((!sd || sd->skillitem != ud->skill_id || skill_get_delay(ud->skill_id, ud->skill_lv)) &&
@@ -17233,11 +17273,15 @@ TIMER_FUNC(skill_castend_pos)
 			unit_stop_walking(src, (src->type == BL_PC) ? USW_NONE : USW_FIXPOS);
 		//CUSTOM MOSKaum
 		// Check for Land Protector before applying cooldown for these specific skills
-		if (sd && (ud->skill_id == SO_PSYCHIC_WAVE || ud->skill_id == SO_EARTHGRAVE || 
+		if (sd && (
+				ud->skill_id == SO_PSYCHIC_WAVE || ud->skill_id == SO_EARTHGRAVE || 
 				ud->skill_id == SO_DIAMONDDUST || ud->skill_id == SO_CLOUD_KILL ||
 				ud->skill_id == SO_VACUUM_EXTREME || ud->skill_id == SO_ARRULLO ||
 				ud->skill_id == SO_FIRE_INSIGNIA || ud->skill_id == SO_WATER_INSIGNIA ||
-				ud->skill_id == SO_WIND_INSIGNIA || ud->skill_id == SO_EARTH_INSIGNIA || ud->skill_id == GN_CRAZYWEED))
+				ud->skill_id == SO_WIND_INSIGNIA || ud->skill_id == SO_EARTH_INSIGNIA || 
+				ud->skill_id == GN_CRAZYWEED || 
+			 	ud->skill_id == WL_EARTHSTRAIN || ud->skill_id == WL_FROSTMISTY
+				))
 		{
 			if (map_getcell(src->m, ud->skillx, ud->skilly, CELL_CHKLANDPROTECTOR))
 			{
@@ -17460,7 +17504,10 @@ int32 skill_castend_pos2(struct block_list *src, int32 x, int32 y, uint16 skill_
 		// Only check for overlap if there's no Bloody Lust
 		if (!has_bloodylust && map_foreachincell(skill_cell_overlap, src->m, x, y, BL_SKILL, skill_id, &dummy, src))
 		{
-			return 0; // Don't consume gems if cast on Land Protector
+			clif_fixpos(*src); // Fixar posição na falha
+			if (sd)
+				clif_skill_fail(*sd, skill_id, USESKILL_FAIL);
+			return 0;
 		}
 		// If there's Bloody Lust, skip the overlap check and continue normally
 	}
@@ -17594,9 +17641,29 @@ int32 skill_castend_pos2(struct block_list *src, int32 x, int32 y, uint16 skill_
 	case GN_WALLOFTHORN:
 	case GN_DEMONIC_FIRE:
 	case SS_FUUMASHOUAKU:
-		if (sd && (skill_id == MG_SAFETYWALL || skill_id == AL_PNEUMA))
-		{
-		}
+		if (skill_id == MG_SAFETYWALL || skill_id == AL_PNEUMA)
+			{
+				// Pneuma: verificar overlap antes de tentar colocar
+				// Se qualquer cell do centro sobrepõe com SW/Pneuma/Steinwand, falhar inteiramente
+				if (skill_id == AL_PNEUMA)
+				{
+					int32 dummy = 1;
+					if (map_foreachincell(skill_cell_overlap, src->m, x, y, BL_SKILL, skill_id, &dummy, src))
+					{
+						clif_fixpos(*src);
+						if (sd)
+							clif_skill_fail(*sd, skill_id, USESKILL_FAIL);
+						break;
+					}
+				}
+				std::shared_ptr<s_skill_unit_group> group = skill_unitsetting(src, skill_id, skill_lv, x, y, 0);
+				if (!group && sd)
+				{
+					clif_fixpos(*src);
+					clif_skill_fail(*sd, skill_id, USESKILL_FAIL);
+				}
+				break;
+			}
 		skill_unitsetting(src, skill_id, skill_lv, x, y, 0);
 		break;
 
@@ -18149,6 +18216,12 @@ int32 skill_castend_pos2(struct block_list *src, int32 x, int32 y, uint16 skill_
 		}
 		break;
 
+	case WM_LULLABY_DEEPSLEEP:
+		i = skill_get_splash(skill_id, skill_lv);
+		map_foreachinallarea(skill_area_sub, src->m, x - i, y - i, x + i, y + i, BL_CHAR,
+				src, skill_id, skill_lv, tick, flag | BCT_ENEMY | 1, skill_castend_nodamage_id);
+		break;
+
 	case GC_POISONSMOKE:
 		if (!(sc && sc->getSCE(SC_POISONINGWEAPON)))
 		{
@@ -18170,8 +18243,31 @@ int32 skill_castend_pos2(struct block_list *src, int32 x, int32 y, uint16 skill_
 
 	case WL_EARTHSTRAIN:
 	{
-		int32 w, wave = skill_lv + 4, dir = map_calc_dir(src, x, y);
+		int32 w, wave = skill_lv + 4, dir = (src->x == x && src->y == y) ? 4 : map_calc_dir(src, x, y);
 		int32 sx = x = src->x, sy = y = src->y; // Store first caster's location to avoid glitch on unit setting
+
+		// Snapshot LP state at cast time, per perpendicular slot of wave 1
+		earthstrain_lp_data snap;
+		snap.cast_dir = (uint8)dir;
+		{
+			bool is_vert = (dir == 2 || dir == 6);
+			int32 w1_sx = sx, w1_sy = sy;
+			switch (dir)
+			{
+			case 0: case 1: case 7: w1_sy = sy + 1; break;
+			case 3: case 4: case 5: w1_sy = sy - 1; break;
+			case 2: w1_sx = sx - 1; break;
+			case 6: w1_sx = sx + 1; break;
+			}
+			for (int16 offset = -7; offset <= 7; offset++)
+			{
+				int16 ux = is_vert ? (int16)w1_sx : (int16)(w1_sx + offset);
+				int16 uy = is_vert ? (int16)(w1_sy + offset) : (int16)w1_sy;
+				int16 perp = is_vert ? uy : ux;
+				snap.blocked_positions[(uint32)(uint16)perp] = map_getcell(src->m, ux, uy, CELL_CHKLANDPROTECTOR) != 0;
+			}
+		}
+		earthstrain_lp_blocked[src->id] = std::move(snap);
 
 		for (w = 1; w <= wave; w++)
 		{
@@ -23462,7 +23558,9 @@ bool skill_check_condition_castbegin(map_session_data &sd, uint16 skill_id, uint
 		// Special check for Masquerade skills: Cannot cast on hidden targets
 	if (skill_id == RA_ARROWSTORM || skill_id == SA_DISPELL || 
 		skill_id == SC_ENERVATION || skill_id == SC_GROOMY || skill_id == SC_LAZINESS ||
-	    skill_id == SC_UNLUCKY || skill_id == SC_WEAKNESS || skill_id == SC_IGNORANCE)
+	    skill_id == SC_UNLUCKY || skill_id == SC_WEAKNESS || skill_id == SC_IGNORANCE || 
+		skill_id == WM_LULLABY_DEEPSLEEP ||
+		skill_id == RG_STRIPWEAPON || skill_id == RG_STRIPARMOR || skill_id == RG_STRIPHELM || skill_id == RG_STRIPSHIELD)
 	{
 		struct block_list *target = NULL;
 		if (sd.ud.target > 0)
@@ -26061,13 +26159,47 @@ static int32 skill_cell_overlap(struct block_list *bl, va_list ap)
 
 	std::bitset<INF2_MAX> inf2 = skill_db.find(skill_id)->inf2;
 
-	if (unit->group->skill_id == SA_LANDPROTECTOR && !inf2[INF2_ISTRAP] && !inf2[INF2_IGNORELANDPROTECTOR])
+	if (unit->group->skill_id == SA_LANDPROTECTOR && !inf2[INF2_ISTRAP] && !inf2[INF2_IGNORELANDPROTECTOR] && skill_id != WL_EARTHSTRAIN)
 	{ // It deletes everything except traps and barriers
 		(*alive) = 0;
 		return 1;
 	}
 
+return 0;
+}
+
+// Custom MoskaumRO: Verifica se SW/Pneuma teria overlap no cell alvo
+// Retorna true se há overlap (skill vai falhar)
+// Checa se existe SW, Pneuma ou Steinwand em qualquer cell do layout
+static int32 skill_check_sw_pneuma_sub(struct block_list *bl, va_list ap)
+{
+	struct skill_unit *su = (struct skill_unit *)bl;
+	if (su == nullptr || su->group == nullptr || !su->alive)
+		return 0;
+	switch (su->group->skill_id)
+	{
+		case MG_SAFETYWALL:
+		case AL_PNEUMA:
+		case MH_STEINWAND:
+			return 1;
+	}
 	return 0;
+}
+
+bool skill_check_sw_pneuma_overlap(struct block_list *src, int16 x, int16 y, uint16 skill_id)
+{
+	struct s_skill_unit_layout *layout = skill_get_unit_layout(skill_id, 1, src, x, y);
+	if (layout != nullptr)
+	{
+		for (int i = 0; i < layout->count; i++)
+		{
+			int16 ux = x + layout->dx[i];
+			int16 uy = y + layout->dy[i];
+			if (map_foreachincell(skill_check_sw_pneuma_sub, src->m, ux, uy, BL_SKILL) != 0)
+				return true;
+		}
+	}
+	return false;
 }
 
 /*==========================================
@@ -27032,7 +27164,7 @@ int32 skill_unit_timer_sub_onplace(struct block_list *bl, va_list ap)
 	std::shared_ptr<s_skill_db> skill = skill_db.find(group->skill_id);
 
 	//if (!(skill->inf2[INF2_ISSONG] || skill->inf2[INF2_ISTRAP]) && !skill->inf2[INF2_IGNORELANDPROTECTOR] && group->skill_id != NC_NEUTRALBARRIER && group->skill_id != SC_BLOODYLUST && group->skill_id != SC_CHAOSPANIC && group->skill_id != SO_WARMER && group->skill_id != SO_ARRULLO && (battle_config.land_protector_behavior ? map_getcell(bl->m, bl->x, bl->y, CELL_CHKLANDPROTECTOR) : map_getcell(unit->m, unit->x, unit->y, CELL_CHKLANDPROTECTOR)))
-	if (!(skill->inf2[INF2_ISSONG] || skill->inf2[INF2_ISTRAP]) && !skill->inf2[INF2_IGNORELANDPROTECTOR] && group->skill_id != NC_NEUTRALBARRIER && group->skill_id != SC_BLOODYLUST && group->skill_id != SC_CHAOSPANIC && group->skill_id != SO_WARMER && group->skill_id != SO_ARRULLO && group->skill_id != WM_SEVERE_RAINSTORM && (battle_config.land_protector_behavior ? map_getcell(bl->m, bl->x, bl->y, CELL_CHKLANDPROTECTOR) : map_getcell(unit->m, unit->x, unit->y, CELL_CHKLANDPROTECTOR)))
+	if (!(skill->inf2[INF2_ISSONG] || skill->inf2[INF2_ISTRAP]) && !skill->inf2[INF2_IGNORELANDPROTECTOR] && group->skill_id != NC_NEUTRALBARRIER && group->skill_id != SC_BLOODYLUST && group->skill_id != SC_CHAOSPANIC && group->skill_id != SO_WARMER && group->skill_id != SO_ARRULLO && group->skill_id != WM_SEVERE_RAINSTORM && group->skill_id != WL_EARTHSTRAIN && (battle_config.land_protector_behavior ? map_getcell(bl->m, bl->x, bl->y, CELL_CHKLANDPROTECTOR) : map_getcell(unit->m, unit->x, unit->y, CELL_CHKLANDPROTECTOR)))
 		return 0; // AoE skills are ineffective. [Skotlex]
 
 #ifdef RENEWAL

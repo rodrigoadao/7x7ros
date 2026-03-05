@@ -6697,6 +6697,15 @@ bool clif_skill_nodamage(block_list *src, block_list &dst, uint16 skill_id, int3
 		}
 	}
 
+	// custom moskaum: se o alvo está em hide, cloak ou chase walk, não emite ZC_USE_SKILL
+	// para ninguém — evita título flutuante revelar posição.
+	{
+		status_change *dst_sc = status_get_sc(&dst);
+		if (dst_sc && (dst_sc->option & (OPTION_HIDE | OPTION_CLOAK | OPTION_CHASEWALK)))
+			return success;
+	}
+	// fim custom moskaum
+
 	if (disguised(&dst))
 	{
 		clif_send(&p, sizeof(p), &dst, AREA_WOS);

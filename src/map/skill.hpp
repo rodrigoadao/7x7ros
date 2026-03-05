@@ -2933,4 +2933,7 @@ int32 skill_get_time3(struct map_data *mapdata, uint16 skill_id, uint16 skill_lv
 #define SKILL_CHK_ABR(skill_id) ((skill_id) >= ABR_SKILLBASE && (skill_id) < ABR_SKILLBASE + MAX_ABRSKILL)
 #define SKILL_CHK_GUILD(skill_id) ((skill_id) >= GD_SKILLBASE && (skill_id) < GD_SKILLBASE + MAX_GUILDSKILL)
 
+// Custom MoskaumRO: Verifica se SW/Pneuma teria overlap no cell alvo
+bool skill_check_sw_pneuma_overlap(struct block_list *src, int16 x, int16 y, uint16 skill_id);
+
 #endif /* SKILL_HPP */
