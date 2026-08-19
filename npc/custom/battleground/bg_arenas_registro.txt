@@ -1,0 +1,90 @@
+//===== rAthena Script =======================================
+//= Battleground: Registro compartilhado das arenas NxN
+//===== Description: =========================================
+//= Arquivo BASE usado por bg_2v2.txt, bg_3v3.txt, bg_4v4.txt,
+//= bg_5v5.txt, bg_6v6.txt e bg_7v7.txt. Precisa estar carregado
+//= (linha ativa no scripts_custom.conf) ANTES desses arquivos
+//= funcionarem, ja que eles leem os arrays globais definidos aqui.
+//=
+//= Guarda a lista das 7 arenas de teste (v4arena1~7, mesmas do NPC
+//= "Arena de Testes" em arenas_ros2025_teste.txt) com as coordenadas
+//= dos dois lados (mapeadas manualmente in-game), aplica as mapflags
+//= (pvp/battleground/etc) nelas uma unica vez, e mantem o array
+//= global $@bg3v3_arena_busy[] que as filas usam pra saber quais
+//= arenas estao livres/ocupadas no momento (varias partidas de
+//= tamanhos diferentes podem rolar ao mesmo tempo, uma por arena).
+//=
+//= Tambem cuida do NPC "Arena de Testes" nessas mesmas 7 arenas:
+//= 1) OnPCDieEvent: como o mapflag battleground fica ligado nos 7
+//=    mapas o tempo todo, quem entra la pelo NPC de teste (warp
+//=    livre, sem time de battleground) fica sem saida automatica ao
+//=    morrer. Esse handler detecta o caso (morreu numa das 7 arenas
+//=    e NAO esta em nenhum time - getcharid(4)==0) e manda pro save
+//=    point, igual o comportamento de antes das mapflags.
+//= 2) OnPCLoadMapEvent: barra a entrada de quem chegar (por qualquer
+//=    meio, inclusive o NPC de teste) numa arena marcada como
+//=    ocupada, a nao ser que a pessoa esteja mesmo no time da
+//=    partida (getcharid(4) != 0).
+//=
+//= Aviso: essas 7 arenas foram sinalizadas em
+//= npc/re/ROSSERVER/arenas_individuais.txt como possivelmente
+//= faltando no GRF do client.
+//=
+//= Arquivo NOVO e independente: nao altera bg_pvp.txt, bg_emp.txt,
+//= arenas_ros2025_teste.txt nem o sistema Arena7x7 (ROSSERVER) ja
+//= existentes.
+//============================================================
+
+-	script	bg_arenas#registro	-1,{
+OnInit:
+	setarray $@bg3v3_arena_map$[0], "v4arena1","v4arena2","v4arena3","v4arena4","v4arena5","v4arena6","v4arena7";
+	setarray $@bg3v3_arena_redx[0],   64,121, 45, 39,105, 29, 47;
+	setarray $@bg3v3_arena_redy[0],   91,156, 80, 99,155, 79, 80;
+	setarray $@bg3v3_arena_bluex[0], 196,236,153,159,251,167,152;
+	setarray $@bg3v3_arena_bluey[0],  92,156, 80,100,155, 80, 80;
+	$@bg3v3_arena_count = getarraysize($@bg3v3_arena_map$);
+	deletearray $@bg3v3_arena_busy[0], $@bg3v3_arena_count; // tudo livre no boot
+
+	for ( .@i = 0; .@i < $@bg3v3_arena_count; ++.@i ) {
+		setmapflag $@bg3v3_arena_map$[.@i], mf_pvp;
+		setmapflag $@bg3v3_arena_map$[.@i], mf_battleground, 2;
+		setmapflag $@bg3v3_arena_map$[.@i], mf_nosave;
+		setmapflag $@bg3v3_arena_map$[.@i], mf_nowarp;
+		setmapflag $@bg3v3_arena_map$[.@i], mf_nowarpto;
+		setmapflag $@bg3v3_arena_map$[.@i], mf_noteleport;
+		setmapflag $@bg3v3_arena_map$[.@i], mf_nomemo;
+		setmapflag $@bg3v3_arena_map$[.@i], mf_nopenalty;
+		setmapflag $@bg3v3_arena_map$[.@i], mf_nobranch;
+		setmapflag $@bg3v3_arena_map$[.@i], mf_noicewall;
+		setmapflag $@bg3v3_arena_map$[.@i], mf_hidemobhpbar;
+	}
+	end;
+}
+
+-	script	bg_3v3_testarena_fix	-1,{
+OnPCDieEvent:
+	if ( getcharid(4) )
+		end;
+
+	for ( .@i = 0; .@i < $@bg3v3_arena_count; ++.@i ) {
+		if ( strcharinfo(3) == $@bg3v3_arena_map$[.@i] ) {
+			warp "SavePoint",0,0;
+			percentheal 100,100;
+			break;
+		}
+	}
+	end;
+
+OnPCLoadMapEvent:
+	if ( getcharid(4) )
+		end;
+
+	for ( .@i = 0; .@i < $@bg3v3_arena_count; ++.@i ) {
+		if ( strcharinfo(3) == $@bg3v3_arena_map$[.@i] && $@bg3v3_arena_busy[.@i] ) {
+			dispbottom "Tem uma partida acontecendo nessa arena agora. Tente outra ou aguarde terminar.";
+			warp "SavePoint",0,0;
+			break;
+		}
+	}
+	end;
+}

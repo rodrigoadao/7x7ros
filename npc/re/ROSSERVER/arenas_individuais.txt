@@ -1,0 +1,157 @@
+//===== rAthena Script =======================================
+//= Arenas de Teste - NPCs Individuais
+//= Baseado em npc/re/ROSSERVER/arenadeteste.txt
+//= Um NPC separado para cada arena (v4arena1 a v4arena7)
+//===== Description: =========================================
+//= Cada NPC leva direto para sua respectiva arena, sem menu.
+//=============================================================
+
+izlude,134,150,4	script	Arena 1	88,{
+	mes "[ ^0000ffArena 1^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("v4arena1")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena1",132,79;
+		close;
+	}
+	close;
+}
+
+izlude,136,150,4	script	Arena 2	88,{
+	mes "[ ^0000ffArena 2^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("v4arena2")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena2",177,142;
+		close;
+	}
+	close;
+}
+
+izlude,138,150,4	script	Arena 3	88,{
+	mes "[ ^0000ffArena 3^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("v4arena3")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena3",100,69;
+		close;
+	}
+	close;
+}
+
+izlude,140,150,4	script	Arena 4	88,{
+	mes "[ ^0000ffArena 4^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("v4arena4")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena4",67,101;
+		close;
+	}
+	close;
+}
+
+izlude,142,150,4	script	Arena 5	88,{
+	mes "[ ^0000ffArena 5^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("v4arena5")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena5",178,134;
+		close;
+	}
+	close;
+}
+
+izlude,144,150,4	script	Arena 6	88,{
+	mes "[ ^0000ffArena 6^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("v4arena6")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena6",98,70;
+		close;
+	}
+	close;
+}
+
+izlude,146,150,4	script	Arena 7	88,{
+	mes "[ ^0000ffArena 7^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("v4arena7")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena7",99,76;
+		close;
+	}
+	close;
+}
+
+//===== 2025arena1~6 ==========================================
+//= Mapas confirmados presentes no GRF do client (diferente dos
+//= v4arena, que estavam faltando). Coordenada de warp usa 0,0
+//= (celula andavel aleatoria) por nao haver coordenada testada
+//= documentada em nenhum script existente - ajuste se precisar.
+//=============================================================
+
+izlude,134,152,4	script	Arena 2025-1	88,{
+	mes "[ ^0000ffArena 2025-1^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("2025arena1")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "2025arena1",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,136,152,4	script	Arena 2025-2	88,{
+	mes "[ ^0000ffArena 2025-2^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("2025arena2")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "2025arena2",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,138,152,4	script	Arena 2025-3	88,{
+	mes "[ ^0000ffArena 2025-3^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("2025arena3")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "2025arena3",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,140,152,4	script	Arena 2025-4	88,{
+	mes "[ ^0000ffArena 2025-4^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("2025arena4")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "2025arena4",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,142,152,4	script	Arena 2025-5	88,{
+	mes "[ ^0000ffArena 2025-5^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("2025arena5")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "2025arena5",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,144,152,4	script	Arena 2025-6	88,{
+	mes "[ ^0000ffArena 2025-6^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("2025arena6")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "2025arena6",0,0;
+		close;
+	}
+	close;
+}

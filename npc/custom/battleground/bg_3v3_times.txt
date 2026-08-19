@@ -1,0 +1,119 @@
+//===== rAthena Script =======================================
+//= Battleground: Times 3v3 (escolha de lado)
+//===== Description: =========================================
+//= Depende de bg_arenas_registro.txt. Igual bg_2v2_times.txt, so
+//= que 3 por time, com escolha de lado (Time Vermelho / Time Azul).
+//============================================================
+
+-	script	bg_3v3_times#control	-1,{
+OnInit:
+	.teamsize     = 3;
+	.eventlasting = 10*60;
+	setarray .rewarditem[0], 501, 10;
+	end;
+
+OnStart:
+	if ( getwaitingroomstate( 0, .rednpcname$ ) < .teamsize || getwaitingroomstate( 0, .bluenpcname$ ) < .teamsize )
+		end;
+
+	.@free = 0;
+	while ( .@free == 0 ) {
+		for ( .@i = 0; .@i < $@bg3v3_arena_count; ++.@i ) {
+			if ( !$@bg3v3_arena_busy[.@i] ) {
+				.@freeidx[.@free] = .@i;
+				.@free = .@free +1;
+			}
+		}
+		if ( .@free == 0 )
+			sleep 3000;
+	}
+	.@aidx = .@freeidx[ rand(0, .@free -1) ];
+	$@bg3v3_arena_busy[.@aidx] = 1;
+
+	.arenaname$ = $@bg3v3_arena_map$[.@aidx];
+	.redx  = $@bg3v3_arena_redx[.@aidx];
+	.redy  = $@bg3v3_arena_redy[.@aidx];
+	.bluex = $@bg3v3_arena_bluex[.@aidx];
+	.bluey = $@bg3v3_arena_bluey[.@aidx];
+
+	.red  = waitingroom2bg( .arenaname$, .redx,  .redy,  strnpcinfo(0)+"::OnRedQuit",  strnpcinfo(0)+"::OnRedDead",  .rednpcname$ );
+	.blue = waitingroom2bg( .arenaname$, .bluex, .bluey, strnpcinfo(0)+"::OnBlueQuit", strnpcinfo(0)+"::OnBlueDead", .bluenpcname$ );
+	delwaitingroom .rednpcname$;
+	delwaitingroom .bluenpcname$;
+	bg_warp .red,  .arenaname$, .redx,  .redy;
+	bg_warp .blue, .arenaname$, .bluex, .bluey;
+	.red_score = .blue_score = .teamsize;
+	bg_updatescore .arenaname$, .red_score, .blue_score;
+
+	mapannounce .arenaname$, "- As duas equipes entraram na Arena 3v3 (" + .arenaname$ + ")! -", bc_map;
+
+	sleep .eventlasting * 1000;
+
+	if ( .red_score > .blue_score ) {
+		mapannounce .arenaname$, "- Time Vermelho venceu! -", bc_map;
+		callsub L_Reward, .red;
+	}
+	else if ( .blue_score > .red_score ) {
+		mapannounce .arenaname$, "- Time Azul venceu! -", bc_map;
+		callsub L_Reward, .blue;
+	}
+	else
+		mapannounce .arenaname$, "- A partida terminou empatada! -", bc_map;
+
+	bg_warp .red,  "izlude",125,164;
+	bg_warp .blue, "izlude",129,164;
+	bg_destroy .red;
+	bg_destroy .blue;
+	$@bg3v3_arena_busy[.@aidx] = 0;
+	donpcevent .rednpcname$ +"::OnStart";
+	donpcevent .bluenpcname$ +"::OnStart";
+	end;
+
+L_Reward:
+	bg_get_data getarg(0), 1;
+	for ( .@i = 0; .@i < $@arenamemberscount; ++.@i )
+		getitem .rewarditem[0], .rewarditem[1], $@arenamembers[.@i];
+	return;
+
+OnRedDead:  callsub L_Dead, .red_score;
+OnBlueDead: callsub L_Dead, .blue_score;
+L_Dead:
+	set getarg(0), getarg(0) -1;
+	bg_updatescore .arenaname$, .red_score, .blue_score;
+	bg_leave;
+	if ( !getarg(0) )
+		awake strnpcinfo(0);
+	sleep2 1250;
+	percentheal 100,100;
+	end;
+
+OnRedQuit:  callsub L_Quit, .red_score;
+OnBlueQuit: callsub L_Quit, .blue_score;
+L_Quit:
+	set getarg(0), getarg(0) -1;
+	bg_updatescore .arenaname$, .red_score, .blue_score;
+	percentheal 100, 100;
+	if ( !getarg(0) )
+		awake strnpcinfo(0);
+	end;
+}
+
+izlude,147,131,5	script	Time Vermelho 3v3#bg_3v3t	733,{
+	end;
+OnInit:
+	sleep 1;
+	set getvariableofnpc( .rednpcname$, "bg_3v3_times#control" ), strnpcinfo(0);
+OnStart:
+	waitingroom "Time Vermelho 3v3", getvariableofnpc( .teamsize, "bg_3v3_times#control" ) +1, "bg_3v3_times#control::OnStart", getvariableofnpc( .teamsize, "bg_3v3_times#control" );
+	end;
+}
+
+izlude,150,131,5	script	Time Azul 3v3#bg_3v3t	734,{
+	end;
+OnInit:
+	sleep 1;
+	set getvariableofnpc( .bluenpcname$, "bg_3v3_times#control" ), strnpcinfo(0);
+OnStart:
+	waitingroom "Time Azul 3v3", getvariableofnpc( .teamsize, "bg_3v3_times#control" ) +1, "bg_3v3_times#control::OnStart", getvariableofnpc( .teamsize, "bg_3v3_times#control" );
+	end;
+}

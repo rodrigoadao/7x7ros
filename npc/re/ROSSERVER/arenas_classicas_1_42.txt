@@ -1,0 +1,467 @@
+//===== rAthena Script =======================================
+//= Arenas classicas (arena1 ~ arena42) - NPCs individuais
+//= Mapas padrao do rAthena, coordenada 0,0 = celula aleatoria
+//= andavel (nao ha coordenada testada documentada).
+//=============================================================
+
+izlude,134,160,4	script	ArenaClassica 1	88,{
+	mes "[ ^0000ffArena Classica 1^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena1")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena1",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,136,160,4	script	ArenaClassica 2	88,{
+	mes "[ ^0000ffArena Classica 2^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena2")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena2",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,138,160,4	script	ArenaClassica 3	88,{
+	mes "[ ^0000ffArena Classica 3^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena3")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena3",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,140,160,4	script	ArenaClassica 4	88,{
+	mes "[ ^0000ffArena Classica 4^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena4")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena4",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,142,160,4	script	ArenaClassica 5	88,{
+	mes "[ ^0000ffArena Classica 5^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena5")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena5",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,144,160,4	script	ArenaClassica 6	88,{
+	mes "[ ^0000ffArena Classica 6^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena6")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena6",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,146,160,4	script	ArenaClassica 7	88,{
+	mes "[ ^0000ffArena Classica 7^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena7")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena7",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,148,160,4	script	ArenaClassica 8	88,{
+	mes "[ ^0000ffArena Classica 8^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena8")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena8",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,150,160,4	script	ArenaClassica 9	88,{
+	mes "[ ^0000ffArena Classica 9^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena9")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena9",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,152,160,4	script	ArenaClassica 10	88,{
+	mes "[ ^0000ffArena Classica 10^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena10")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena10",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,154,160,4	script	ArenaClassica 11	88,{
+	mes "[ ^0000ffArena Classica 11^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena11")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena11",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,156,160,4	script	ArenaClassica 12	88,{
+	mes "[ ^0000ffArena Classica 12^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena12")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena12",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,158,160,4	script	ArenaClassica 13	88,{
+	mes "[ ^0000ffArena Classica 13^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena13")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena13",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,160,160,4	script	ArenaClassica 14	88,{
+	mes "[ ^0000ffArena Classica 14^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena14")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena14",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,134,162,4	script	ArenaClassica 15	88,{
+	mes "[ ^0000ffArena Classica 15^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena15")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena15",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,136,162,4	script	ArenaClassica 16	88,{
+	mes "[ ^0000ffArena Classica 16^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena16")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena16",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,138,162,4	script	ArenaClassica 17	88,{
+	mes "[ ^0000ffArena Classica 17^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena17")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena17",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,140,162,4	script	ArenaClassica 18	88,{
+	mes "[ ^0000ffArena Classica 18^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena18")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena18",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,142,162,4	script	ArenaClassica 19	88,{
+	mes "[ ^0000ffArena Classica 19^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena19")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena19",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,144,162,4	script	ArenaClassica 20	88,{
+	mes "[ ^0000ffArena Classica 20^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena20")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena20",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,146,162,4	script	ArenaClassica 21	88,{
+	mes "[ ^0000ffArena Classica 21^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena21")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena21",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,148,162,4	script	ArenaClassica 22	88,{
+	mes "[ ^0000ffArena Classica 22^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena22")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena22",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,150,162,4	script	ArenaClassica 23	88,{
+	mes "[ ^0000ffArena Classica 23^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena23")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena23",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,152,162,4	script	ArenaClassica 24	88,{
+	mes "[ ^0000ffArena Classica 24^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena24")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena24",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,154,162,4	script	ArenaClassica 25	88,{
+	mes "[ ^0000ffArena Classica 25^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena25")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena25",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,156,162,4	script	ArenaClassica 26	88,{
+	mes "[ ^0000ffArena Classica 26^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena26")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena26",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,158,162,4	script	ArenaClassica 27	88,{
+	mes "[ ^0000ffArena Classica 27^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena27")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena27",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,160,162,4	script	ArenaClassica 28	88,{
+	mes "[ ^0000ffArena Classica 28^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena28")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena28",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,134,164,4	script	ArenaClassica 29	88,{
+	mes "[ ^0000ffArena Classica 29^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena29")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena29",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,136,164,4	script	ArenaClassica 30	88,{
+	mes "[ ^0000ffArena Classica 30^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena30")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena30",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,138,164,4	script	ArenaClassica 31	88,{
+	mes "[ ^0000ffArena Classica 31^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena31")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena31",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,140,164,4	script	ArenaClassica 32	88,{
+	mes "[ ^0000ffArena Classica 32^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena32")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena32",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,142,164,4	script	ArenaClassica 33	88,{
+	mes "[ ^0000ffArena Classica 33^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena33")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena33",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,144,164,4	script	ArenaClassica 34	88,{
+	mes "[ ^0000ffArena Classica 34^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena34")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena34",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,146,164,4	script	ArenaClassica 35	88,{
+	mes "[ ^0000ffArena Classica 35^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena35")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena35",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,148,164,4	script	ArenaClassica 36	88,{
+	mes "[ ^0000ffArena Classica 36^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena36")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena36",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,150,164,4	script	ArenaClassica 37	88,{
+	mes "[ ^0000ffArena Classica 37^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena37")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena37",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,152,164,4	script	ArenaClassica 38	88,{
+	mes "[ ^0000ffArena Classica 38^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena38")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena38",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,154,164,4	script	ArenaClassica 39	88,{
+	mes "[ ^0000ffArena Classica 39^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena39")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena39",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,156,164,4	script	ArenaClassica 40	88,{
+	mes "[ ^0000ffArena Classica 40^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena40")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena40",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,158,164,4	script	ArenaClassica 41	88,{
+	mes "[ ^0000ffArena Classica 41^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena41")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena41",0,0;
+		close;
+	}
+	close;
+}
+
+izlude,160,164,4	script	ArenaClassica 42	88,{
+	mes "[ ^0000ffArena Classica 42^000000 ]";
+	mes "Jogadores na arena agora: ^FF0000"+getmapusers("arena42")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "arena42",0,0;
+		close;
+	}
+	close;
+}

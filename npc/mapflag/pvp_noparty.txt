@@ -12,3 +12,12 @@
 //= 1.0 Initial script.
 //============================================================
 //2009rwc_01	mapflag	pvp_noparty
+
+// Arenas de teste (v4arena1-7)
+v4arena1	mapflag	pvp_noparty
+v4arena2	mapflag	pvp_noparty
+v4arena3	mapflag	pvp_noparty
+v4arena4	mapflag	pvp_noparty
+v4arena5	mapflag	pvp_noparty
+v4arena6	mapflag	pvp_noparty
+v4arena7	mapflag	pvp_noparty

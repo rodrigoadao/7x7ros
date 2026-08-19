@@ -137,10 +137,12 @@ arena40	mapflag	gvg
 arena41	mapflag	gvg
 arena42	mapflag	gvg
 //
-v4arena1	mapflag	gvg
-v4arena2	mapflag	gvg
-v4arena3	mapflag	gvg
-v4arena4	mapflag	gvg
-v4arena5	mapflag	gvg
-v4arena6	mapflag	gvg
-v4arena7	mapflag	gvg
+// v4arena1-7: movido para mapflag battleground (npc/re/mapflag/battleground.txt)
+// para nao precisar de guild em guerra pra atacar (nao precisar de shift+click).
+// v4arena1	mapflag	gvg
+// v4arena2	mapflag	gvg
+// v4arena3	mapflag	gvg
+// v4arena4	mapflag	gvg
+// v4arena5	mapflag	gvg
+// v4arena6	mapflag	gvg
+// v4arena7	mapflag	gvg

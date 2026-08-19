@@ -38,6 +38,17 @@ ros2024	mapflag	battleground
 2012rwc_02	mapflag	battleground
 2012rwc_03	mapflag	battleground
 2012rwc_04	mapflag	battleground
+
+// Arenas de teste (v4arena1-7) - antes estavam com mapflag gvg (precisava
+// de guild em guerra pra atacar, por isso o shift+click). battleground deixa
+// qualquer jogador atacar qualquer outro no mapa sem precisar de shift.
+v4arena1	mapflag	battleground
+v4arena2	mapflag	battleground
+v4arena3	mapflag	battleground
+v4arena4	mapflag	battleground
+v4arena5	mapflag	battleground
+v4arena6	mapflag	battleground
+v4arena7	mapflag	battleground
 guild_vs1	mapflag	battleground
 arug_cas02	mapflag	battleground
 

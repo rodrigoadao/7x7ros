@@ -1,0 +1,56 @@
+izlude,129,145,4	script	Kafra ROS::kaf_izlude	423,{
+	cutin "kafra_ros4",2;
+	mes "[Kafra ROS]";
+	mes "Voce pode usar o storage manejar seu inventario entre as partidas sem atrasar outras 13 pessoas para ir no mercado.";
+	mes "Assim ninguem fica sabendo que voce tem sobrepeso. Viu como somos inclusivos com os gorduchos?";
+	switch(select("Fechar:Resetar zenys:Pegar Falcao:Skills Platina")) {
+			case 1:
+				// callfunc "F_Kafra",5,1,0,0,0;
+				// callfunc "F_KafEnd",0,1,"in the city of Izlude";
+			break;
+			case 2:
+				set Zeny, 20000000;
+			break;
+			case 3:
+			    if (getskilllv("HT_FALCON")) {
+        		atcommand "@option 0 0 16";
+    			}
+			break;
+			case 4:
+				skill 1,9,0;
+				skill 142,1,SKILL_PERM;
+				switch(BaseClass) {
+					case 0: if (Class != 23) skill 143,1,SKILL_PERM; break;
+					case 1: skill 144,1,SKILL_PERM; skill 145,1,SKILL_PERM; skill 146,1,SKILL_PERM; break;
+					case 2: skill 157,1,SKILL_PERM; break;
+					case 3: skill 147,1,SKILL_PERM; skill 148,1,SKILL_PERM; break;
+					case 4: skill 156,1,SKILL_PERM; break;
+					case 5: skill 153,1,SKILL_PERM; skill 154,1,SKILL_PERM; skill 155,1,SKILL_PERM; break;
+					case 6: skill 149,1,SKILL_PERM; skill 150,1,SKILL_PERM; skill 151,1,SKILL_PERM; skill 152,1,SKILL_PERM; break;
+					default: break;
+				}
+				switch(BaseJob) {
+					case 7: skill 1001,1,SKILL_PERM; break;
+					case 8: skill 1014,1,SKILL_PERM; break;
+					case 9: skill 1006,1,SKILL_PERM; break;
+					case 10: skill 1012,1,SKILL_PERM; skill 1013,1,SKILL_PERM; break;
+					case 11: skill 1009,1,SKILL_PERM; break;
+					case 12: skill 1003,1,SKILL_PERM; skill 1004,1,SKILL_PERM; break;
+					case 14: skill 1002,1,SKILL_PERM; break;
+					case 15: skill 1015,1,SKILL_PERM; skill 1016,1,SKILL_PERM; break;
+					case 16: skill 1007,1,SKILL_PERM; skill 1008,1,SKILL_PERM; skill 1017,1,SKILL_PERM; skill 1018,1,SKILL_PERM; skill 1019,1,SKILL_PERM; break;
+					case 17: skill 1005,1,SKILL_PERM; break;
+					case 19: skill 1010,1,SKILL_PERM; break;
+					case 20: skill 1011,1,SKILL_PERM; break;
+					default: break;
+				}
+				dispbottom "Skills platina liberadas para sua classe.";
+			break;
+		}
+	cutin "",255;
+	close;
+}
+quiz_02,141,353,4	duplicate(kaf_izlude)	Kafra Blue#iz	423
+quiz_02,243,351,4	duplicate(kaf_izlude)	Kafra Blue#quiz_02_2	423
+quiz_02,154,353,4	duplicate(kaf_izlude)	Kafra Red#iz	423
+quiz_02,256,351,4	duplicate(kaf_izlude)	Kafra Red#quiz_02_2	423

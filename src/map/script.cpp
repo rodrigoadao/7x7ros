@@ -24969,6 +24969,104 @@ BUILDIN_FUNC(arena7x7_getguildname)
 	return SCRIPT_CMD_SUCCESS;
 }
 
+/**
+ * Cria uma nova partida de arena 7x7
+ * arena7x7_create(<map_name>);
+ * Retorna o match_id criado (0 em caso de falha)
+ */
+BUILDIN_FUNC(arena7x7_create)
+{
+	const char *map_name = script_getstr(st, 2);
+	uint32 match_id = arena7x7_create_match(map_name);
+	script_pushint(st, match_id);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * Adiciona o jogador anexado a uma partida de arena 7x7
+ * arena7x7_join(<match_id>, <team>, <is_leader>);
+ * team: 1 = azul, 2 = vermelho
+ */
+BUILDIN_FUNC(arena7x7_join)
+{
+	uint32 match_id = script_getnum(st, 2);
+	int team = script_getnum(st, 3);
+	bool is_leader = script_getnum(st, 4) != 0;
+
+	map_session_data *sd;
+	if (!script_rid2sd(sd))
+	{
+		script_pushint(st, 0);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	bool result = arena7x7_add_player(match_id, sd, static_cast<e_arena7x7_team>(team), is_leader);
+	script_pushint(st, result ? 1 : 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * Remove o jogador anexado da partida em que estiver
+ * arena7x7_leave(<deserter>);
+ * deserter: 1 = saiu como desertor (aplica penalidade), 0 = saida normal
+ */
+BUILDIN_FUNC(arena7x7_leave)
+{
+	bool deserter = script_getnum(st, 2) != 0;
+
+	map_session_data *sd;
+	if (!script_rid2sd(sd))
+	{
+		script_pushint(st, 0);
+		return SCRIPT_CMD_SUCCESS;
+	}
+
+	bool result = arena7x7_remove_player(sd, deserter);
+	script_pushint(st, result ? 1 : 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * Inicia uma partida de arena 7x7
+ * arena7x7_start(<match_id>);
+ */
+BUILDIN_FUNC(arena7x7_start)
+{
+	uint32 match_id = script_getnum(st, 2);
+	bool result = arena7x7_start_match(match_id);
+	script_pushint(st, result ? 1 : 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * Finaliza uma partida de arena 7x7
+ * arena7x7_finish(<match_id>, <winner_team>, <blue_score>, <red_score>);
+ * winner_team: 0 = empate, 1 = azul, 2 = vermelho
+ */
+BUILDIN_FUNC(arena7x7_finish)
+{
+	uint32 match_id = script_getnum(st, 2);
+	int winner_team = script_getnum(st, 3);
+	int blue_score = script_getnum(st, 4);
+	int red_score = script_getnum(st, 5);
+
+	bool result = arena7x7_finish_match(match_id, static_cast<e_arena7x7_team>(winner_team), static_cast<uint16>(blue_score), static_cast<uint16>(red_score));
+	script_pushint(st, result ? 1 : 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
+/**
+ * Cancela uma partida de arena 7x7
+ * arena7x7_cancel(<match_id>);
+ */
+BUILDIN_FUNC(arena7x7_cancel)
+{
+	uint32 match_id = script_getnum(st, 2);
+	bool result = arena7x7_cancel_match(match_id);
+	script_pushint(st, result ? 1 : 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
 /*==========================================
  * Instancing System
  *------------------------------------------*/
@@ -32462,6 +32560,12 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(arena7x7_isplayerdead, "i"),
 	BUILDIN_DEF(arena7x7_restoreall, "i"),
 	BUILDIN_DEF(arena7x7_getguildname, "ii"),
+	BUILDIN_DEF(arena7x7_create, "s"),
+	BUILDIN_DEF(arena7x7_join, "iii"),
+	BUILDIN_DEF(arena7x7_leave, "i"),
+	BUILDIN_DEF(arena7x7_start, "i"),
+	BUILDIN_DEF(arena7x7_finish, "iiii"),
+	BUILDIN_DEF(arena7x7_cancel, "i"),
 
 	// Instancing
 	BUILDIN_DEF(instance_create, "s??"),

@@ -1,0 +1,82 @@
+//===== rAthena Script =======================================
+//= Arenas ROS 2025 - NPCs de teste (warp direto)
+//= Mapas v4arena1~7 (confirmados em cache pelo mapcache.exe)
+//= Coordenadas baseadas no NPC original "Test Arena" (arenadeteste.txt)
+//=============================================================
+
+izlude,134,148,4	script	Arena de Testes 1	88,{
+	mes "[ ^0000ffArena de Testes 1^000000 ]";
+	mes "Jogadores no mapa agora: ^FF0000"+getmapusers("v4arena1")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena1",132,79;
+		close;
+	}
+	close;
+}
+
+izlude,136,148,4	script	Arena de Testes 2	88,{
+	mes "[ ^0000ffArena de Testes 2^000000 ]";
+	mes "Jogadores no mapa agora: ^FF0000"+getmapusers("v4arena2")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena2",177,142;
+		close;
+	}
+	close;
+}
+
+izlude,138,148,4	script	Arena de Testes 3	88,{
+	mes "[ ^0000ffArena de Testes 3^000000 ]";
+	mes "Jogadores no mapa agora: ^FF0000"+getmapusers("v4arena3")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena3",100,69;
+		close;
+	}
+	close;
+}
+
+izlude,140,148,4	script	Arena de Testes 4	88,{
+	mes "[ ^0000ffArena de Testes 4^000000 ]";
+	mes "Jogadores no mapa agora: ^FF0000"+getmapusers("v4arena4")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena4",67,101;
+		close;
+	}
+	close;
+}
+
+izlude,142,148,4	script	Arena de Testes 5	88,{
+	mes "[ ^0000ffArena de Testes 5^000000 ]";
+	mes "Jogadores no mapa agora: ^FF0000"+getmapusers("v4arena5")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena5",178,134;
+		close;
+	}
+	close;
+}
+
+izlude,144,148,4	script	Arena de Testes 6	88,{
+	mes "[ ^0000ffArena de Testes 6^000000 ]";
+	mes "Jogadores no mapa agora: ^FF0000"+getmapusers("v4arena6")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena6",98,70;
+		close;
+	}
+	close;
+}
+
+izlude,146,148,4	script	Arena de Testes 7	88,{
+	mes "[ ^0000ffArena de Testes 7^000000 ]";
+	mes "Jogadores no mapa agora: ^FF0000"+getmapusers("v4arena7")+"^000000";
+	next;
+	if (select("Entrar:Cancelar") == 1) {
+		warp "v4arena7",99,76;
+		close;
+	}
+	close;
+}

@@ -94,3 +94,12 @@ pvp_n_8-3	mapflag	pvp_noguild
 pvp_n_8-4	mapflag	pvp_noguild
 pvp_n_8-5	mapflag	pvp_noguild
 pvp_2vs2	mapflag	pvp_noguild
+
+// Arenas de teste (v4arena1-7)
+v4arena1	mapflag	pvp_noguild
+v4arena2	mapflag	pvp_noguild
+v4arena3	mapflag	pvp_noguild
+v4arena4	mapflag	pvp_noguild
+v4arena5	mapflag	pvp_noguild
+v4arena6	mapflag	pvp_noguild
+v4arena7	mapflag	pvp_noguild
