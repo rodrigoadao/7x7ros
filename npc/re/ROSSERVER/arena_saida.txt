@@ -1,0 +1,74 @@
+//===== rAthena Script =======================================
+//= Saida das arenas de teste (v4arena1~7)
+//= NPC colocado perto do ponto de spawn de cada arena
+//=============================================================
+
+v4arena1,132,79,4	script	Sair#v4a1	123,{
+	mes "Deseja sair da arena?";
+	next;
+	if (select("Sair:Cancelar") == 1) {
+		warp "izlude",128,133;
+		close;
+	}
+	close;
+}
+
+v4arena2,177,142,4	script	Sair#v4a2	123,{
+	mes "Deseja sair da arena?";
+	next;
+	if (select("Sair:Cancelar") == 1) {
+		warp "izlude",128,133;
+		close;
+	}
+	close;
+}
+
+v4arena3,100,69,4	script	Sair#v4a3	123,{
+	mes "Deseja sair da arena?";
+	next;
+	if (select("Sair:Cancelar") == 1) {
+		warp "izlude",128,133;
+		close;
+	}
+	close;
+}
+
+v4arena4,67,101,4	script	Sair#v4a4	123,{
+	mes "Deseja sair da arena?";
+	next;
+	if (select("Sair:Cancelar") == 1) {
+		warp "izlude",128,133;
+		close;
+	}
+	close;
+}
+
+v4arena5,178,134,4	script	Sair#v4a5	123,{
+	mes "Deseja sair da arena?";
+	next;
+	if (select("Sair:Cancelar") == 1) {
+		warp "izlude",128,133;
+		close;
+	}
+	close;
+}
+
+v4arena6,98,70,4	script	Sair#v4a6	123,{
+	mes "Deseja sair da arena?";
+	next;
+	if (select("Sair:Cancelar") == 1) {
+		warp "izlude",128,133;
+		close;
+	}
+	close;
+}
+
+v4arena7,99,76,4	script	Sair#v4a7	123,{
+	mes "Deseja sair da arena?";
+	next;
+	if (select("Sair:Cancelar") == 1) {
+		warp "izlude",128,133;
+		close;
+	}
+	close;
+}

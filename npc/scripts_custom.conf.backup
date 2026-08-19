@@ -97,20 +97,6 @@
 // -- Custom Battleground Scripts
 //npc: npc/custom/battleground/bg_emp.txt
 //npc: npc/custom/battleground/bg_pvp.txt
-npc: npc/custom/battleground/bg_arenas_registro.txt
-npc: npc/custom/battleground/arena_testes_menu.txt
-npc: npc/custom/battleground/bg_2v2.txt
-npc: npc/custom/battleground/bg_3v3.txt
-npc: npc/custom/battleground/bg_4v4.txt
-npc: npc/custom/battleground/bg_5v5.txt
-npc: npc/custom/battleground/bg_6v6.txt
-npc: npc/custom/battleground/bg_7v7.txt
-npc: npc/custom/battleground/bg_2v2_times.txt
-npc: npc/custom/battleground/bg_3v3_times.txt
-npc: npc/custom/battleground/bg_4v4_times.txt
-npc: npc/custom/battleground/bg_5v5_times.txt
-npc: npc/custom/battleground/bg_6v6_times.txt
-npc: npc/custom/battleground/bg_7v7_times.txt
 // -- Unofficial Battlegrounds (custom version of official scripts)
 //npc: npc/custom/battleground/unofficial/bg_common.txt
 //npc: npc/custom/battleground/unofficial/bg_tierra_01.txt

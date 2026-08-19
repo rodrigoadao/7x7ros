@@ -1,0 +1,39 @@
+//===== rAthena Script =======================================
+//= Arena de Testes - NPC unico com menu
+//===== Description: =========================================
+//= Substitui os 7 NPCs separados de npc/re/ROSSERVER/arenas_ros2025_teste.txt
+//= (essa linha foi comentada em npc/re/scripts_athena.conf, arquivo
+//= original nao foi apagado) por UM so NPC que abre um menu com as
+//= 7 arenas.
+//=
+//= Depende de bg_arenas_registro.txt (usa $@bg3v3_arena_map$/
+//= $@bg3v3_arena_count/$@bg3v3_arena_busy pra saber os nomes das 7
+//= arenas e mostrar no menu quais estao com partida rolando).
+//= Coordenadas de entrada sao as mesmas que os NPCs antigos usavam
+//= (nao as coordenadas de spawn de time da partida).
+//============================================================
+
+izlude,140,148,4	script	Arena de Testes	88,{
+	mes "[ Arena de Testes ]";
+	mes "Qual arena voce quer visitar?";
+
+	setarray .@ex[0], 132,177,100,67,178,98,99;
+	setarray .@ey[0], 79,142,69,101,134,70,76;
+
+	.@menu$ = "";
+	for ( .@i = 0; .@i < $@bg3v3_arena_count; ++.@i ) {
+		.@menu$ += "Arena " + (.@i +1);
+		if ( $@bg3v3_arena_busy[.@i] )
+			.@menu$ += " (partida em andamento)";
+		.@menu$ += ":";
+	}
+	.@menu$ += "Cancelar";
+
+	.@sel = select(.@menu$) -1;
+	if ( .@sel < 0 || .@sel >= $@bg3v3_arena_count ) {
+		close;
+	}
+
+	warp $@bg3v3_arena_map$[.@sel], .@ex[.@sel], .@ey[.@sel];
+	close;
+}
