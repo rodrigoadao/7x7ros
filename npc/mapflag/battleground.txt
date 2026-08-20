@@ -177,3 +177,7 @@ prtg_cas05	mapflag	battleground
 // job_prist	mapflag	battleground	2
 // ecl_tdun02	mapflag	battleground	2
 // evt_bomb	mapflag	battleground	2 
+2026arena1	mapflag	battleground
+2026arena2	mapflag	battleground
+2026arena3	mapflag	battleground
+2026arena4	mapflag	battleground

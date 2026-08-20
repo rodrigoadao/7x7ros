@@ -134,3 +134,7 @@ v4arena4	mapflag	nopenalty
 v4arena5	mapflag	nopenalty
 v4arena6	mapflag	nopenalty
 v4arena7	mapflag	nopenalty
+2026arena1	mapflag	nopenalty
+2026arena2	mapflag	nopenalty
+2026arena3	mapflag	nopenalty
+2026arena4	mapflag	nopenalty

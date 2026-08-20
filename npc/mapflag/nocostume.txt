@@ -125,3 +125,7 @@ v4arena4	mapflag	nocostume
 v4arena5	mapflag	nocostume
 v4arena6	mapflag	nocostume
 v4arena7	mapflag	nocostume
+2026arena1	mapflag	nocostume
+2026arena2	mapflag	nocostume
+2026arena3	mapflag	nocostume
+2026arena4	mapflag	nocostume

@@ -62,3 +62,7 @@
 // arena40	mapflag	nowarp
 // arena41	mapflag	nowarp
 // arena42	mapflag	nowarp
+2026arena1	mapflag	nowarp
+2026arena2	mapflag	nowarp
+2026arena3	mapflag	nowarp
+2026arena4	mapflag	nowarp

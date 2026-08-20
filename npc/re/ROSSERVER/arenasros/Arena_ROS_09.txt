@@ -1,0 +1,495 @@
+// ==============================================================================
+// Arenas 7vs7 modificada inicialmente por rodrigo aka narutekz (2014) e Fissuris (2017)
+// e intensamente aprimorada por Moskaum Y (2024 e 2025)
+// ==============================================================================
+quiz_02,234,346,5	script	Waiting Room::KvM88R_Guillaume	418,{
+	cutin "ros9",4;
+	mes "Se você tem se divertido no servidor, demonstre sua apreciação ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que você sente ser proporcional ao entretenimento que você está tendo:";
+	mes "^33940CCHAVE PIX 7x7rwc@gmail.com^000000";
+	next;
+	cutin "", 255;
+	end;
+	
+OnInit:
+	while (1){
+		sleep 2000;
+		if (getwaitingroomstate (1) != $@jogadoresbluechat){
+			delwaitingroom;
+			waitingroom "Arena 9 - 2026arena2",$@jogadoresbluechat,"KvM88_BG::OnGuillaumeJoin",1;
+			}
+	}
+	end;
+	
+OnEnterBG:
+	set $@KvM88BG_id1, waitingroom2bg("izlude",128,135,"KvM88_BG::OnGuillaumeQuit","KvM88_BG::OnGuillaumeDie");
+	end;
+}
+
+quiz_02,266,347,4	script	Waiting Room::KvM88R_Croix	414,{
+	cutin "ros9",4;
+	mes "Se você tem se divertido no servidor, demonstre sua apreciação ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que você sente ser proporcional ao entretenimento que você está tendo:";
+	mes "^33940CCHAVE PIX 7x7rwc@gmail.com^000000";
+	next;
+	cutin "", 255;
+	end;
+
+OnInit:
+	while (1){
+		sleep 2000;
+		if (getwaitingroomstate (1) != $@jogadoresredchat){
+			delwaitingroom;
+			waitingroom "Arena 9 - 2026arena2",$@jogadoresredchat,"KvM88_BG::OnCroixJoin",1;
+			}
+	}
+	end;
+
+OnEnterBG:
+	set $@KvM88BG_id2, waitingroom2bg("izlude",128,135,"KvM88_BG::OnCroixQuit","KvM88_BG::OnCroixDie");
+	end;
+}
+
+// Battleground Engine
+// *********************************************************************
+
+-	script	KvM88_BG	-1,{
+	end;
+
+OnGuillaumeJoin:
+	donpcevent "KvM88_BG::OnReadyCheck";
+	end;
+OnCroixJoin:
+	donpcevent "KvM88_BG::OnReadyCheck";
+	end;
+OnGuillaumeQuit:
+	set BG_Delay_Tick, gettimetick(2) + 2000;
+	
+	// Se estiver em preparacao (estado 1), cancelar a partida
+	if ($@KvM88BG == 1) {
+		set $@KvM88BG_Victory, 3;
+		set $@KvM88BG, 3;
+		mapannounce "2026arena2","- Partida cancelada: um jogador do Time Azul saiu durante a preparação! -", bc_yellow;
+		donpcevent "Arena7x7_Ranking_09_Hook::OnMatchCancel";
+		donpcevent "KvM88_BG::OnReset";  // Usar OnReset para destruir BG imediatamente
+		warp "izlude",128,135;
+		end;
+	}
+	
+	// Se a partida esta ativa (estado 2), aplicar penalidade de desertor
+	if ($@KvM88BG == 2) {
+		// Decrementar contador de jogadores vivos do time azul
+		if (.Guillaume_Count > 0) {
+			set .Guillaume_Count, .Guillaume_Count - 1;
+		}
+		// Atualizar placar
+		bg_updatescore "2026arena2",.Guillaume_Count,.Croix_Count;
+		// Aplicar penalidade de desertor (-3 pontos)
+		if ($@arena09_match_id > 0) {
+			arena7x7_leave(1); // 1 = desertor com penalidade
+		}
+		// Verificar se o time azul foi eliminado
+		if (.Guillaume_Count < 1) {
+			donpcevent "KvM88_BG::OnCroixWin";
+		}
+	}
+	end;
+
+OnGuillaumeDie:
+	// //debugmes "[NPC //debug] OnGuillaumeDie chamado para " + strcharinfo(0);
+	if( $@KvM88BG == 2 )
+	{
+		// Decrementar contador de jogadores vivos do time azul
+		if (.Guillaume_Count > 0) {
+			set .Guillaume_Count, .Guillaume_Count - 1;
+		}
+		// Incrementar pontua??o do time vermelho (1 ponto por kill)
+		set .Croix_Score, .Croix_Score + 1;
+		// Atualizar placar com contadores de jogadores vivos
+		bg_updatescore "2026arena2",.Guillaume_Count,.Croix_Count;
+		// Verificar se o time azul foi eliminado
+		if( (.Guillaume_Count) < 1 ){
+			donpcevent "KvM88_BG::OnCroixWin";
+		}
+	}
+	end;
+
+OnCroixQuit:
+	set BG_Delay_Tick, gettimetick(2) + 2000;
+	
+	// Se estiver em preparacao (estado 1), cancelar a partida
+	if ($@KvM88BG == 1) {
+		set $@KvM88BG_Victory, 3;
+		set $@KvM88BG, 3;
+		mapannounce "2026arena2","- Partida cancelada: um jogador do Time Vermelho saiu durante a preparação! -", bc_yellow;
+		donpcevent "Arena7x7_Ranking_09_Hook::OnMatchCancel";
+		donpcevent "KvM88_BG::OnReset";  // Usar OnReset para destruir BG imediatamente
+		warp "izlude",128,135;
+		end;
+	}
+	
+	// Se a partida esta ativa (estado 2), aplicar penalidade de desertor
+	if ($@KvM88BG == 2) {
+		// Decrementar contador de jogadores vivos do time vermelho
+		if (.Croix_Count > 0) {
+			set .Croix_Count, .Croix_Count - 1;
+		}
+		// Atualizar placar
+		bg_updatescore "2026arena2",.Guillaume_Count,.Croix_Count;
+		// Aplicar penalidade de desertor (-3 pontos)
+		if ($@arena09_match_id > 0) {
+			arena7x7_leave(1); // 1 = desertor com penalidade
+		}
+		// Verificar se o time vermelho foi eliminado
+		if (.Croix_Count < 1) {
+			donpcevent "KvM88_BG::OnGuillaumeWin";
+		}
+	}
+	end;
+
+OnCroixDie:
+	// //debugmes "[NPC //debug] OnCroixDie chamado para " + strcharinfo(0);
+	if( $@KvM88BG == 2 )
+	{
+		// Decrementar contador de jogadores vivos do time vermelho
+		if (.Croix_Count > 0) {
+			set .Croix_Count, .Croix_Count - 1;
+		}
+		// Incrementar pontua??o do time azul (1 ponto por kill)
+		set .Guillaume_Score, .Guillaume_Score + 1;
+		// Atualizar placar com contadores de jogadores vivos
+		bg_updatescore "2026arena2",.Guillaume_Count,.Croix_Count;
+		// Verificar se o time vermelho foi eliminado
+		if( (.Croix_Count) < 1 ){
+			donpcevent "KvM88_BG::OnGuillaumeWin";
+		}
+	}
+	end;
+
+OnReadyCheck:
+	if( $@KvM88BG )
+		end;
+	set .@Guillaume, getwaitingroomstate(0,"KvM88R_Guillaume");
+	set .@Croix, getwaitingroomstate(0,"KvM88R_Croix");
+
+	// Verifica??o de jogadores na waitingroom (necess?rio 7 de cada time para 7x7)
+	// Usa $@jogadoresblue/$@jogadoresred que s?o definidos nos NPCs Blue Team e Red Team
+	if((.@Guillaume < $@jogadoresblue) || (.@Croix < $@jogadoresred) )
+	{
+		// Define os nomes das guildas para exibir (usa valor padr?o se n?o definido)
+		if ($@BlueGuildName$ == "") set .@bluename$, "Blue Team"; else set .@bluename$, $@BlueGuildName$;
+		if ($@RedGuildName$ == "") set .@redname$, "Red Team"; else set .@redname$, $@RedGuildName$;
+		
+		if( .@Guillaume > 0 && .@Croix > 0 && !agitcheck() && $@KvM_Flood < gettimetick(2) )
+		{
+			announce "Arena 9 - 2026arena2 | " + .@bluename$ + ": " + .@Guillaume + "/" + $@jogadoresblue + " vs " + .@redname$ + ": " + .@Croix + "/" + $@jogadoresred,0,0xFFA500;
+			set $@KvM_Flood, gettimetick(2) + 15;
+		}
+		else
+			mapannounce "quiz_02","Arena 9 - 2026arena2 | " + .@bluename$ + ": " + .@Guillaume + "/" + $@jogadoresblue + " vs " + .@redname$ + ": " + .@Croix + "/" + $@jogadoresred,1,0xFFA500;
+		end;
+	}
+		
+	if ((.@Guillaume == 0) || (.@Croix == 0)) {
+		end;
+	}
+	
+	set $@KvM88BG, 1; // Starting
+	donpcevent "KvM88R_Croix::OnEnterBG";
+	donpcevent "KvM88R_Guillaume::OnEnterBG";
+	donpcevent "KvM88_BG::OnStart";
+	end;
+OnStart:
+	announce "- Duas equipes entraram na [ Arena 9 - 2026arena2 ]. -", bc_yellow;
+	set $@KvM88BG_Victory, 0;
+	
+	// Criar partida no sistema de ranking ANTES do warp (para rastrear desertores durante preparo)
+	donpcevent "Arena7x7_Ranking_09_Hook::OnMatchCreate";
+	
+	// Remover buffs de todos em quiz_02 antes de teleportar
+	getmapunits BL_PC, "quiz_02", .@units;
+	for (set .@i, 0; .@i < getarraysize(.@units); set .@i, .@i + 1) {
+		if (isloggedin(.@units[.@i])) {
+			attachrid .@units[.@i];
+			sc_end SC_ALL;
+			setoption 0x40 | Option_Invisible | Option_Xmas, 0;
+			sc_end SC_FIGHTINGSPIRIT;
+			sc_end SC_LUXANIMA;
+			sc_end SC_GIANTGROWTH;
+			sc_end SC_STONEHARDSKIN;
+			sc_end SC_VITALITYACTIVATION;
+			sc_end SC_ABUNDANCE;
+			sc_end SC_CRUSHSTRIKE;
+			sc_end SC_REFRESH;
+			sc_end SC_MILLENNIUMSHIELD;
+			delspiritball 15;
+			deleteelemental;
+			sc_end SC_ALL;
+			sc_end SC_SAVAGE_STEAK;
+			sc_end SC_COCKTAIL_WARG_BLOOD;
+			sc_end SC_MINOR_BBQ;
+			sc_end SC_SIROMA_ICE_TEA;
+			sc_end SC_DROCERA_HERB_STEAMED;
+			sc_end SC_PUTTI_TAILS_NOODLES;
+			sc_end SC_STOMACHACHE;
+			sc_end SC_VITATA_500;
+			sc_end SC_EXTRACT_SALAMINE_JUICE;
+		}
+	}
+	
+	donpcevent "Arena_AutoRestock::OnRestock8";
+	atcommand "@repairall";
+	// Warp Teams
+	bg_warp $@KvM88BG_id1,"2026arena2",33,90;
+	bg_warp $@KvM88BG_id2,"2026arena2",165,90;
+
+	if ($@guildsInArena > 0) {
+        $@guildsInArena--;
+    }
+	if ($@guildsInArena > 0) {
+        $@guildsInArena--;
+    }
+
+	setwall "2026arena2",158,91,4,4,0,"a";
+	setwall "2026arena2",41,91,4,4,0,"b";
+	// setwall "2026arena2",229,113,8,4,0,"batc01wall_ae01";
+	// setwall "2026arena2",113,113,8,4,0,"batc01wall_ae02";
+
+	sleep 100;
+	// ScoreBoard
+	set .Guillaume_Score, 0;
+	set .Croix_Score, 0;
+	
+	// Obter quantidade de jogadores em cada time IMEDIATAMENTE ap?s warp
+	set .Guillaume_Count, bg_get_data($@KvM88BG_id1, 0);
+	set .Croix_Count, bg_get_data($@KvM88BG_id2, 0);
+	
+	// Usar Score (azul x vermelho) e Count (vivos) no placar
+	// O placar mostra: Score Azul | Vivos Azul vs Vivos Vermelho | Score Vermelho
+	// bg_updatescore usa os valores como placar esquerdo e direito
+	// Mas precisamos mostrar jogadores vivos, ent?o usaremos Count
+	bg_updatescore "2026arena2",.Guillaume_Count,.Croix_Count;
+	
+	initnpctimer;
+	end;
+
+OnTimer5000:
+	mapannounce "2026arena2","- The match will begin in 25 seconds! -", bc_yellow;
+	end;
+
+OnTimer25000:
+	// VERIFICA??O antecipada de jogadores (5 segundos antes)
+	set .@blue_check, bg_get_data($@KvM88BG_id1, 0);
+	set .@red_check, bg_get_data($@KvM88BG_id2, 0);
+	
+	if( (.@blue_check < $@jogadoresblue) || (.@red_check < $@jogadoresred) )
+	{
+		set $@KvM88BG_Victory, 3;
+		set $@KvM88BG, 3;
+		
+		set .@missing_blue, $@jogadoresblue - .@blue_check;
+		set .@missing_red, $@jogadoresred - .@red_check;
+		
+		if (.@missing_blue > 0 && .@missing_red > 0) {
+			mapannounce "2026arena2","- Partida cancelada: jogadores desconectaram de ambos os times! -", bc_yellow;
+		} else if (.@missing_blue > 0) {
+			mapannounce "2026arena2","- Partida cancelada: " + .@missing_blue + " jogador(es) do Time Azul desconectou! -", bc_yellow;
+		} else {
+			mapannounce "2026arena2","- Partida cancelada: " + .@missing_red + " jogador(es) do Time Vermelho desconectou! -", bc_yellow;
+		}
+		
+		donpcevent "Arena7x7_Ranking_09_Hook::OnMatchCancel";
+		stopnpctimer;
+		sleep 2000;
+		donpcevent "KvM88_BG::OnReset";  // Usar OnReset para destruir BG imediatamente
+		end;
+	}
+	
+	mapannounce "2026arena2","- The match will begin in 5 seconds! -", bc_yellow;
+	end;
+
+OnTimer26000:
+	mapannounce "2026arena2","- The match will begin in 4 seconds! -", bc_yellow;
+	end;
+
+OnTimer27000:
+	mapannounce "2026arena2","- The match will begin in 3 seconds! -", bc_yellow;
+	end;
+
+OnTimer28000:
+	mapannounce "2026arena2","- The match will begin in 2 seconds! -", bc_yellow;
+	end;
+
+OnTimer29000:
+	mapannounce "2026arena2","- The match will begin in 1 second! -", bc_yellow;
+	end;
+OnTimer30000:
+	// ============================================================================
+	// VERIFICA??O CR?TICA: Obter contagem REAL de players nos battlegrounds
+	// Usa bg_get_data() para garantir precis?o no momento exato do in?cio
+	// ============================================================================
+	set .@blue_count_real, bg_get_data($@KvM88BG_id1, 0);
+	set .@red_count_real, bg_get_data($@KvM88BG_id2, 0);
+	
+	// Verifica??o de jogadores suficientes para iniciar
+	if( (.@blue_count_real < $@jogadoresblue) || (.@red_count_real < $@jogadoresred) )
+	{
+		set $@KvM88BG_Victory, 3;
+		set $@KvM88BG, 3;
+		
+		// Obter nomes das guilds para mensagens
+		if ($@BlueGuildName$ == "") set .@bluename$, "Blue Team"; else set .@bluename$, $@BlueGuildName$;
+		if ($@RedGuildName$ == "") set .@redname$, "Red Team"; else set .@redname$, $@RedGuildName$;
+		
+		// Detectar qual time perdeu jogadores
+		set .@missing_blue, $@jogadoresblue - .@blue_count_real;
+		set .@missing_red, $@jogadoresred - .@red_count_real;
+		
+		if (.@missing_blue > 0 && .@missing_red > 0) {
+			mapannounce "2026arena2","- Partida cancelada: jogadores desconectaram de ambos os times! -", bc_yellow;
+			mapannounce "2026arena2","- " + .@bluename$ + ": " + .@blue_count_real + "/" + $@jogadoresblue + " | " + .@redname$ + ": " + .@red_count_real + "/" + $@jogadoresred + " -", bc_yellow;
+		} else if (.@missing_blue > 0) {
+			mapannounce "2026arena2","- Partida cancelada: " + .@missing_blue + " jogador(es) da Guild " + .@bluename$ + " desconectou! -", bc_yellow;
+			mapannounce "2026arena2","- " + .@bluename$ + ": " + .@blue_count_real + "/" + $@jogadoresblue + " players presentes -", bc_yellow;
+		} else {
+			mapannounce "2026arena2","- Partida cancelada: " + .@missing_red + " jogador(es) da Guild " + .@redname$ + " desconectou! -", bc_yellow;
+			mapannounce "2026arena2","- " + .@redname$ + ": " + .@red_count_real + "/" + $@jogadoresred + " players presentes -", bc_yellow;
+		}
+		
+		// Cancelar a partida no sistema de ranking (se foi criada)
+		donpcevent "Arena7x7_Ranking_09_Hook::OnMatchCancel";
+		
+		stopnpctimer;
+		sleep 2000;
+		donpcevent "KvM88_BG::OnStop";
+		end;
+	}
+	
+	// Atualizar contadores com valores reais antes de iniciar
+	set .Guillaume_Count, .@blue_count_real;
+	set .Croix_Count, .@red_count_real;
+	
+	set $@KvM88BG, 2; // Playing - Partida iniciada
+	
+	// Iniciar a partida no sistema de ranking (jogadores j? foram adicionados em OnMatchCreate)
+	donpcevent "Arena7x7_Ranking_09_Hook::OnMatchStart";
+	
+	delwall "a";
+	delwall "b";
+	// delwall "batc01wall_ae01";
+	// delwall "batc01wall_ae02";
+	end;
+
+OnTimer30001:
+	// mapannounce "2026arena2","- The match started! Good luck to all. -", bc_yellow;
+killmonsterall "2026arena2";
+	end;
+
+OnTimer420000:
+//OnTimer60000:
+	mapannounce "2026arena2","- The match will end in 30 seconds! -", bc_yellow;
+	end;
+
+OnTimer450000:
+//OnTimer90000:
+	if( .Croix_Count > .Guillaume_Count )
+		donpcevent "KvM88_BG::OnCroixWin";
+	else if( .Croix_Count < .Guillaume_Count )
+		donpcevent "KvM88_BG::OnGuillaumeWin";
+	else
+	{ // Draw Game
+
+		set $@KvM88BG_Victory, 3;
+		donpcevent "Arena7x7_Ranking_09_Hook::OnDraw";
+		
+		stopnpctimer;
+		sleep 2000;
+		announce "- As duas equipes empataram! -", bc_yellow;
+		donpcevent "KvM88_BG::OnStop";
+	}
+	end;
+OnGuillaumeWin:
+
+	set $@KvM88BG_Victory, 1;
+	donpcevent "Arena7x7_Ranking_09_Hook::OnBlueWin";
+	
+	stopnpctimer;
+	sleep 1000;
+	// announce "- Blue Team VENCEU! -",bc_all,0x00bfff; // Comentado - anuncio compacto no Hook
+	sleep 3000;
+	donpcevent "KvM88_BG::OnStop";
+	end;
+
+OnCroixWin:
+
+	set $@KvM88BG_Victory, 2;
+	donpcevent "Arena7x7_Ranking_09_Hook::OnRedWin";
+	
+	stopnpctimer;
+	sleep 1000;
+	// announce "- Red Team VENCEU! -",bc_all,0xff6347; // Comentado - anuncio compacto no Hook
+	sleep 3000;
+	donpcevent "KvM88_BG::OnStop";
+	end;
+
+OnStop:
+	if ($spectator_count9 > 0) {
+       set $spectator_count9, $spectator_count9 - 1;
+    }
+	if ($spectator_count9 > 0) {
+       set $spectator_count9, $spectator_count9 - 1;
+    }
+	// Restaurar todos os tumbas para jogadores normais
+	if ($@arena09_match_id > 0) {
+		arena7x7_restoreall($@arena09_match_id);
+	}
+	donpcevent "Arena_AutoRestock::OnRestock8";
+	sleep 500;
+	// Teleportar membros do BG (vivos)
+	if ($@KvM88BG_id1) bg_warp $@KvM88BG_id1,"izlude",128,135;
+	if ($@KvM88BG_id2) bg_warp $@KvM88BG_id2,"izlude",128,135;
+	sleep 500;
+	// Teleportar ex-tumbas que foram restauradas (nao estao mais no BG)
+	mapwarp "2026arena2","izlude",128,135;
+	donpcevent "KvM88_BG_Out::OnBegin";
+	end;
+
+OnReset:
+	donpcevent "Arena7x7_Ranking_09_Hook::OnMatchCancel";
+	stopnpctimer;
+	stopnpctimer "KvM88_BG_Out";
+	set .Croix_Count, 0;
+	set .Guillaume_Count, 0;
+	set .Croix_Score, 0;
+	set .Guillaume_Score, 0;
+	set $@KvM88BG_Victory, 0;
+	// Se a partida foi cancelada (state==3), teleportar jogadores antes de destruir BG
+	if( $@KvM88BG == 3 ) {
+		bg_warp $@KvM88BG_id1,"izlude",128,135;
+		bg_warp $@KvM88BG_id2,"izlude",128,135;
+		mapwarp "2026arena2","izlude",128,135;
+	}
+	// Destruir BG
+	if( $@KvM88BG_id1 ) { bg_destroy $@KvM88BG_id1; set $@KvM88BG_id1, 0; }
+	if( $@KvM88BG_id2 ) { bg_destroy $@KvM88BG_id2; set $@KvM88BG_id2, 0; }
+	sleep 2000;
+	maprespawnguildid "2026arena2",0,3; // Just in case someone else
+	bg_updatescore "2026arena2",0,0;
+	sleep 2000;
+	set $@KvM88BG, 0;
+	donpcevent "KvM88_BG::OnReadyCheck"; // Maybe a game is ready to start
+	end;
+}
+
+-	script	KvM88_BG_Out	-1,{
+	end;
+
+OnBegin:
+	initnpctimer;
+	end;
+
+OnTimer50000:
+	mapannounce "2026arena2","- The match will end in 10 seconds! -",1,0x696969;
+	end;
+OnTimer5000:
+	donpcevent "KvM88_BG::OnReset";
+	end;
+}
