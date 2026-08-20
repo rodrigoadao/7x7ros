@@ -155,3 +155,6 @@ generated
 data/data.grf
 data/rdata.grf
 7x7ros.code-workspace
+
+# CMake Tools build output (Visual Studio / VS Code CMake integration)
+out/

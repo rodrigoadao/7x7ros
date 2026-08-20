@@ -135,3 +135,7 @@ v4arena4	mapflag	nosave	SavePoint
 v4arena5	mapflag	nosave	SavePoint
 v4arena6	mapflag	nosave	SavePoint
 v4arena7	mapflag	nosave	SavePoint
+2026arena1	mapflag	nosave	SavePoint
+2026arena2	mapflag	nosave	SavePoint
+2026arena3	mapflag	nosave	SavePoint
+2026arena4	mapflag	nosave	SavePoint

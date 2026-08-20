@@ -64,3 +64,7 @@
 // arena40	mapflag	noteleport
 // arena41	mapflag	noteleport
 // arena42	mapflag	noteleport
+2026arena1	mapflag	noteleport
+2026arena2	mapflag	noteleport
+2026arena3	mapflag	noteleport
+2026arena4	mapflag	noteleport
