@@ -492,6 +492,18 @@ OnRestock6:
 OnRestock7:
 	set .@map$, "ros2025_6";
 	goto OnRestockExec;
+OnRestock8:
+	set .@map$, "2026arena1";
+	goto OnRestockExec;
+OnRestock9:
+	set .@map$, "2026arena2";
+	goto OnRestockExec;
+OnRestock10:
+	set .@map$, "2026arena3";
+	goto OnRestockExec;
+OnRestock11:
+	set .@map$, "2026arena4";
+	goto OnRestockExec;
 OnRestockExec:
 	set .@total, getmapusers(.@map$);
 	if (.@total == 0) end;

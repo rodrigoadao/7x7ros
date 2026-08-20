@@ -1,4 +1,5 @@
 autom4te.cache/
+data/
 
 #Global
 .vscode
@@ -117,6 +118,7 @@ Thumbs.db
 *.VC.db
 *.VC.opendb
 *.slnLaunch.user
+*-workspace
 
 /.idea/.name
 /.idea/misc.xml
@@ -150,3 +152,9 @@ Thumbs.db
 
 # generated files
 generated
+data/data.grf
+data/rdata.grf
+7x7ros.code-workspace
+
+# CMake Tools build output (Visual Studio / VS Code CMake integration)
+out/

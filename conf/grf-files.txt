@@ -2,8 +2,8 @@
 // GRF Files
 // Add as many as needed.
 //-----------------------------------------
-//grf: C:\Program Files\Gravity\RO\rdata.grf
-//grf: C:\Program Files\Gravity\RO\data.grf
+grf:C:\Users\gabri\Desktop\7x7ros\data\rdata.grf
+grf: C:\Users\gabri\Desktop\7x7ros\data\data.grf
 
 //-----------------------------------------
 // Data Directory

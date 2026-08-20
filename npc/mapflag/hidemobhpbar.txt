@@ -55,3 +55,7 @@ v4arena4	mapflag	hidemobhpbar
 v4arena5	mapflag	hidemobhpbar
 v4arena6	mapflag	hidemobhpbar
 v4arena7	mapflag	hidemobhpbar
+2026arena1	mapflag	hidemobhpbar
+2026arena2	mapflag	hidemobhpbar
+2026arena3	mapflag	hidemobhpbar
+2026arena4	mapflag	hidemobhpbar

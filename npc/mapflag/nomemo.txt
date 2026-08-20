@@ -144,3 +144,7 @@ v4arena4	mapflag	nomemo
 v4arena5	mapflag	nomemo
 v4arena6	mapflag	nomemo
 v4arena7	mapflag	nomemo
+2026arena1	mapflag	nomemo
+2026arena2	mapflag	nomemo
+2026arena3	mapflag	nomemo
+2026arena4	mapflag	nomemo

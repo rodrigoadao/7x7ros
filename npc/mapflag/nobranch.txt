@@ -137,3 +137,7 @@ v4arena4	mapflag	nobranch
 v4arena5	mapflag	nobranch
 v4arena6	mapflag	nobranch
 v4arena7	mapflag	nobranch
+2026arena1	mapflag	nobranch
+2026arena2	mapflag	nobranch
+2026arena3	mapflag	nobranch
+2026arena4	mapflag	nobranch

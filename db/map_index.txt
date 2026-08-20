@@ -1433,3 +1433,7 @@ v4arena4
 v4arena5
 v4arena6
 v4arena7
+2026arena1
+2026arena2
+2026arena3
+2026arena4

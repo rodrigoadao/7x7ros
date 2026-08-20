@@ -138,3 +138,7 @@ v4arena4	mapflag	noreturn
 v4arena5	mapflag	noreturn
 v4arena6	mapflag	noreturn
 v4arena7	mapflag	noreturn
+2026arena1	mapflag	noreturn
+2026arena2	mapflag	noreturn
+2026arena3	mapflag	noreturn
+2026arena4	mapflag	noreturn
