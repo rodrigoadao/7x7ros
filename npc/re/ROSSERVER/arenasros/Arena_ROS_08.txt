@@ -4,7 +4,7 @@
 // ==============================================================================
 quiz_02,234,348,5	script	Waiting Room::KvM87R_Guillaume	418,{
 	cutin "ros8",4;
-	mes "Se você tem se divertido no servidor, demonstre sua apreciação ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que você sente ser proporcional ao entretenimento que você está tendo:";
+	mes "Se vocï¿½ tem se divertido no servidor, demonstre sua apreciaï¿½ï¿½o ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que vocï¿½ sente ser proporcional ao entretenimento que vocï¿½ estï¿½ tendo:";
 	mes "^33940CCHAVE PIX 7x7rwc@gmail.com^000000";
 	next;
 	cutin "", 255;
@@ -27,7 +27,7 @@ OnEnterBG:
 
 quiz_02,266,349,4	script	Waiting Room::KvM87R_Croix	414,{
 	cutin "ros8",4;
-	mes "Se você tem se divertido no servidor, demonstre sua apreciação ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que você sente ser proporcional ao entretenimento que você está tendo:";
+	mes "Se vocï¿½ tem se divertido no servidor, demonstre sua apreciaï¿½ï¿½o ^DB6446agora^000000 mesmo fazendo um pix em qualquer quantia que vocï¿½ sente ser proporcional ao entretenimento que vocï¿½ estï¿½ tendo:";
 	mes "^33940CCHAVE PIX 7x7rwc@gmail.com^000000";
 	next;
 	cutin "", 255;
@@ -67,7 +67,7 @@ OnGuillaumeQuit:
 	if ($@KvM87BG == 1) {
 		set $@KvM87BG_Victory, 3;
 		set $@KvM87BG, 3;
-		mapannounce "2026arena1","- Partida cancelada: um jogador do Time Azul saiu durante a preparação! -", bc_yellow;
+		mapannounce "2026arena1","- Partida cancelada: um jogador do Time Azul saiu durante a preparaï¿½ï¿½o! -", bc_yellow;
 		donpcevent "Arena7x7_Ranking_08_Hook::OnMatchCancel";
 		donpcevent "KvM87_BG::OnReset";  // Usar OnReset para destruir BG imediatamente
 		warp "izlude",128,135;
@@ -119,7 +119,7 @@ OnCroixQuit:
 	if ($@KvM87BG == 1) {
 		set $@KvM87BG_Victory, 3;
 		set $@KvM87BG, 3;
-		mapannounce "2026arena1","- Partida cancelada: um jogador do Time Vermelho saiu durante a preparação! -", bc_yellow;
+		mapannounce "2026arena1","- Partida cancelada: um jogador do Time Vermelho saiu durante a preparaï¿½ï¿½o! -", bc_yellow;
 		donpcevent "Arena7x7_Ranking_08_Hook::OnMatchCancel";
 		donpcevent "KvM87_BG::OnReset";  // Usar OnReset para destruir BG imediatamente
 		warp "izlude",128,135;
@@ -248,10 +248,16 @@ OnStart:
         $@guildsInArena--;
     }
 
-	setwall "2026arena1",143,97,2,4,0,"a";
+	//esqueda
 	setwall "2026arena1",52,96,2,0,0,"b";
-	// setwall "2026arena1",229,113,8,4,0,"batc01wall_ae01";
-	// setwall "2026arena1",113,113,8,4,0,"batc01wall_ae02";
+	setwall "2026arena1",45,106,2,2,0, "e";
+	setwall "2026arena1",45,87,2,2,0, "f";
+
+	//direita
+	setwall "2026arena1",143,97,2,4,0,"a";
+	setwall "2026arena1",151,87,2,2,0, "c";
+	setwall "2026arena1",151,106,2,2,0, "d";
+
 
 	sleep 100;
 	// ScoreBoard
@@ -374,8 +380,11 @@ OnTimer30000:
 	
 	delwall "a";
 	delwall "b";
-	// delwall "batc01wall_ae01";
-	// delwall "batc01wall_ae02";
+	delwall "c";
+	delwall "d";
+	delwall "e";
+	delwall "f";
+
 	end;
 
 OnTimer30001:
