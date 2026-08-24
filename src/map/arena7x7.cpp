@@ -83,7 +83,7 @@ uint32 arena7x7_create_match(const char *map_name)
 {
 	if (!map_name || !map_name[0])
 	{
-		//showerror("arena7x7_create_match: nome do mapa invalido\n");
+		// showerror("arena7x7_create_match: nome do mapa invalido\n");
 		return 0;
 	}
 
@@ -98,9 +98,9 @@ uint32 arena7x7_create_match(const char *map_name)
 
 	arena7x7_matches[new_id] = match;
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Partida %u criada no mapa %s\n", new_id, map_name);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: Partida %u criada no mapa %s\n", new_id, map_name);
+	// #endif
 	return new_id;
 }
 
@@ -114,7 +114,7 @@ bool arena7x7_add_player(uint32 match_id, map_session_data *sd, e_arena7x7_team 
 	// Validar ponteiro do status do jogador
 	if (!sd->status.name || strlen(sd->status.name) == 0)
 	{
-		//showerror("arena7x7_add_player: nome do jogador invalido (char_id: %u)\n", sd->status.char_id);
+		// showerror("arena7x7_add_player: nome do jogador invalido (char_id: %u)\n", sd->status.char_id);
 		return false;
 	}
 
@@ -139,14 +139,14 @@ bool arena7x7_add_player(uint32 match_id, map_session_data *sd, e_arena7x7_team 
 	// Verificar se partida ainda aceita jogadores
 	if (match->status != ARENA7X7_MATCH_WAITING && match->status != ARENA7X7_MATCH_ACTIVE)
 	{
-		//showwarning("arena7x7_add_player: partida %u nao aceita mais jogadores\n", match_id);
+		// showwarning("arena7x7_add_player: partida %u nao aceita mais jogadores\n", match_id);
 		return false;
 	}
 
 	// Verificar se jogador j� est� em alguma partida
 	if (arena7x7_player_match.find(sd->status.char_id) != arena7x7_player_match.end())
 	{
-		//showwarning("arena7x7_add_player: jogador %s ja esta em uma partida\n", sd->status.name);
+		// showwarning("arena7x7_add_player: jogador %s ja esta em uma partida\n", sd->status.name);
 		return false;
 	}
 
@@ -237,12 +237,12 @@ bool arena7x7_add_player(uint32 match_id, map_session_data *sd, e_arena7x7_team 
 		match->red_alive++;
 	}
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Jogador %s adicionado a partida %u (time %s%s)\n",
-// 			 sd->status.name, match_id,
-// 			 team == ARENA7X7_TEAM_BLUE ? "Azul" : "Vermelho",
-// 			 is_leader ? ", Lider" : "");
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: Jogador %s adicionado a partida %u (time %s%s)\n",
+	// 			 sd->status.name, match_id,
+	// 			 team == ARENA7X7_TEAM_BLUE ? "Azul" : "Vermelho",
+	// 			 is_leader ? ", Lider" : "");
+	// #endif
 
 	return true;
 }
@@ -282,26 +282,26 @@ bool arena7x7_remove_player(map_session_data *sd, bool deserter)
 			pit->second->deaths += 1; // Contar como morte
 			arena7x7_update_ranking(sd->status.char_id, pit->second.get(), false, true, false);
 
-// #if ARENA7X7_DEBUG
-// 			ShowInfo("Arena7x7: Desertor %s penalizado (-3 pontos, +1 death) na partida %u\n",
-// 					 sd->status.name, match_id);
-// #endif
+			// #if ARENA7X7_DEBUG
+			// 			ShowInfo("Arena7x7: Desertor %s penalizado (-3 pontos, +1 death) na partida %u\n",
+			// 					 sd->status.name, match_id);
+			// #endif
 		}
 	}
 
 	// Remover do mapa de jogadores (mas manter nas estat�sticas da partida para hist�rico)
 	arena7x7_player_match.erase(it);
 
-// #if ARENA7X7_DEBUG
-// 	if (deserter)
-// 	{
-// 		ShowInfo("Arena7x7: Jogador %s desertou da partida %u\n", sd->status.name, match_id);
-// 	}
-// 	else
-// 	{
-// 		ShowInfo("Arena7x7: Jogador %s removido da partida %u\n", sd->status.name, match_id);
-// 	}
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	if (deserter)
+	// 	{
+	// 		ShowInfo("Arena7x7: Jogador %s desertou da partida %u\n", sd->status.name, match_id);
+	// 	}
+	// 	else
+	// 	{
+	// 		ShowInfo("Arena7x7: Jogador %s removido da partida %u\n", sd->status.name, match_id);
+	// 	}
+	// #endif
 
 	return true;
 }
@@ -320,7 +320,7 @@ bool arena7x7_start_match(uint32 match_id)
 
 	if (match->status != ARENA7X7_MATCH_WAITING)
 	{
-		//showwarning("arena7x7_start_match: partida %u nao esta em espera\n", match_id);
+		// showwarning("arena7x7_start_match: partida %u nao esta em espera\n", match_id);
 		return false;
 	}
 
@@ -331,10 +331,10 @@ bool arena7x7_start_match(uint32 match_id)
 	arena7x7_count_alive_players(match);
 	arena7x7_update_score_display(match);
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Partida %u iniciada com %zu jogadores (Azul: %u, Vermelho: %u)\n",
-// 			 match_id, match->players.size(), match->blue_alive, match->red_alive);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: Partida %u iniciada com %zu jogadores (Azul: %u, Vermelho: %u)\n",
+	// 			 match_id, match->players.size(), match->blue_alive, match->red_alive);
+	// #endif
 	return true;
 }
 
@@ -375,12 +375,12 @@ bool arena7x7_finish_match(uint32 match_id, e_arena7x7_team winner_team, uint16 
 		}
 	}
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Partida %u finalizada - Vencedor: %s (Azul %u x %u Vermelho)\n",
-// 			 match_id,
-// 			 winner_team == ARENA7X7_TEAM_BLUE ? "Azul" : (winner_team == ARENA7X7_TEAM_RED ? "Vermelho" : "Empate"),
-// 			 blue_score, red_score);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: Partida %u finalizada - Vencedor: %s (Azul %u x %u Vermelho)\n",
+	// 			 match_id,
+	// 			 winner_team == ARENA7X7_TEAM_BLUE ? "Azul" : (winner_team == ARENA7X7_TEAM_RED ? "Vermelho" : "Empate"),
+	// 			 blue_score, red_score);
+	// #endif
 
 	// Salvar no banco de dados
 	if (!arena7x7_save_match(match))
@@ -406,10 +406,10 @@ bool arena7x7_finish_match(uint32 match_id, e_arena7x7_team winner_team, uint16 
 		// Isso evita aplicar dupla penalidade
 		if (stats->is_deserter && arena7x7_player_match.find(stats->char_id) == arena7x7_player_match.end())
 		{
-// #if ARENA7X7_DEBUG
-// 			ShowInfo("Arena7x7: Desertor %s j� foi penalizado, pulando atualiza��o no finish\n",
-// 					 stats->char_name.c_str());
-// #endif
+			// #if ARENA7X7_DEBUG
+			// 			ShowInfo("Arena7x7: Desertor %s j� foi penalizado, pulando atualiza��o no finish\n",
+			// 					 stats->char_name.c_str());
+			// #endif
 			continue; // J� foi penalizado em arena7x7_remove_player
 		}
 
@@ -461,16 +461,16 @@ bool arena7x7_cancel_match(uint32 match_id)
 		if (match_id == arena7x7_match_counter)
 		{
 			arena7x7_match_counter--;
-// #if ARENA7X7_DEBUG
-// 			ShowInfo("Arena7x7: Partida %u cancelada durante preparacao - ID liberado (proximo: %u)\n",
-// 					 match_id, arena7x7_match_counter + 1);
-// #endif
+			// #if ARENA7X7_DEBUG
+			// 			ShowInfo("Arena7x7: Partida %u cancelada durante preparacao - ID liberado (proximo: %u)\n",
+			// 					 match_id, arena7x7_match_counter + 1);
+			// #endif
 		}
 		else
 		{
-// #if ARENA7X7_DEBUG
-// 			ShowInfo("Arena7x7: Partida %u cancelada durante preparacao e removida\n", match_id);
-// #endif
+			// #if ARENA7X7_DEBUG
+			// 			ShowInfo("Arena7x7: Partida %u cancelada durante preparacao e removida\n", match_id);
+			// #endif
 		}
 
 		return true;
@@ -480,9 +480,9 @@ bool arena7x7_cancel_match(uint32 match_id)
 	match->status = ARENA7X7_MATCH_CANCELLED;
 	match->end_time = gettick();
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Partida %u cancelada ap�s in�cio\n", match_id);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: Partida %u cancelada ap�s in�cio\n", match_id);
+	// #endif
 	return true;
 }
 
@@ -495,7 +495,7 @@ bool arena7x7_set_guild_names(uint32 match_id, const char *blue_guild_name, cons
 	auto match = arena7x7_get_match(match_id);
 	if (!match)
 	{
-		//showerror("arena7x7_set_guild_names: partida %u nao encontrada\n", match_id);
+		// showerror("arena7x7_set_guild_names: partida %u nao encontrada\n", match_id);
 		return false;
 	}
 
@@ -510,7 +510,7 @@ bool arena7x7_set_guild_names(uint32 match_id, const char *blue_guild_name, cons
 		}
 		catch (const std::exception &)
 		{
-			//showerror("arena7x7_set_guild_names: falha ao copiar nome da guild azul\n");
+			// showerror("arena7x7_set_guild_names: falha ao copiar nome da guild azul\n");
 		}
 		match->blue_guild_id = blue_guild_id;
 	}
@@ -526,15 +526,15 @@ bool arena7x7_set_guild_names(uint32 match_id, const char *blue_guild_name, cons
 		}
 		catch (const std::exception &)
 		{
-			//showerror("arena7x7_set_guild_names: falha ao copiar nome da guild vermelha\n");
+			// showerror("arena7x7_set_guild_names: falha ao copiar nome da guild vermelha\n");
 		}
 		match->red_guild_id = red_guild_id;
 	}
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Partida %u - Times: %s vs %s\n",
-// 			 match_id, match->blue_guild_name.c_str(), match->red_guild_name.c_str());
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: Partida %u - Times: %s vs %s\n",
+	// 			 match_id, match->blue_guild_name.c_str(), match->red_guild_name.c_str());
+	// #endif
 	return true;
 }
 
@@ -1001,7 +1001,7 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 							   (uint32)match->status))
 	{
 
-		//showerror("arena7x7_save_match: falha ao inserir partida %u\n", match->match_id);
+		// showerror("arena7x7_save_match: falha ao inserir partida %u\n", match->match_id);
 		Sql_Query(mmysql_handle, "ROLLBACK");
 		return false;
 	}
@@ -1035,7 +1035,7 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 								   stats->is_deserter ? 1 : 0, won ? 1 : 0))
 		{
 
-			//showwarning("arena7x7_save_match: falha ao inserir jogador %u\n", stats->char_id);
+			// showwarning("arena7x7_save_match: falha ao inserir jogador %u\n", stats->char_id);
 			continue;
 		}
 
@@ -1056,7 +1056,7 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 								   stats->time_alive))
 		{
 
-			//showwarning("arena7x7_save_match: falha ao inserir stats do jogador %u\n", stats->char_id);
+			// showwarning("arena7x7_save_match: falha ao inserir stats do jogador %u\n", stats->char_id);
 		}
 
 		// Salvar lista detalhada de skills usadas pelo jogador
@@ -1084,22 +1084,22 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 	const size_t MAX_DAMAGE_LOGS = 10000;
 	const size_t BATCH_SIZE = 100; // Inserir 100 registros por vez
 	size_t count = 0;
-	
+
 	if (!match->damage_log.empty())
 	{
 		std::string damage_batch;
 		size_t batch_count = 0;
-		
+
 		for (auto &entry : match->damage_log)
 		{
 			if (count++ >= MAX_DAMAGE_LOGS)
 				break;
-			
+
 			char value_str[256];
 			snprintf(value_str, sizeof(value_str), "(%u, %u, %u, %u, %u, %d, %d)",
 					 match->match_id, entry.attacker_id, entry.target_id,
 					 entry.skill_id, entry.damage, entry.is_critical ? 1 : 0, entry.is_kill ? 1 : 0);
-			
+
 			if (batch_count == 0)
 			{
 				damage_batch = "INSERT INTO `arena7x7_damage_log` "
@@ -1113,7 +1113,7 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 				damage_batch += value_str;
 			}
 			batch_count++;
-			
+
 			// Executar batch quando atingir o limite ou for o ultimo
 			if (batch_count >= BATCH_SIZE || count >= MAX_DAMAGE_LOGS || count >= match->damage_log.size())
 			{
@@ -1136,7 +1136,7 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 			auto &data = kv.second;
 			char esc_skill_name[SKILL_NAME_LENGTH * 2 + 1];
 			Sql_EscapeStringLen(mmysql_handle, esc_skill_name, data.skill_name.c_str(), data.skill_name.length());
-			
+
 			char value_str[512];
 			snprintf(value_str, sizeof(value_str), "%s(%u, %u, %u, '%s', %u, %u, %u, %u, %u)",
 					 first ? "" : ",", match->match_id, data.char_id, data.skill_id, esc_skill_name,
@@ -1182,7 +1182,7 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 			support_batch += value_str;
 			first = false;
 			batch_count++;
-			
+
 			if (batch_count >= 100)
 			{
 				Sql_QueryStr(mmysql_handle, support_batch.c_str());
@@ -1226,7 +1226,7 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 		{
 			char esc_item_name[100 * 2 + 1];
 			Sql_EscapeStringLen(mmysql_handle, esc_item_name, entry.item_name.c_str(), entry.item_name.length());
-			
+
 			char value_str[512];
 			snprintf(value_str, sizeof(value_str), "%s(%u, %u, %u, %u, '%s', %u, %u)",
 					 first ? "" : ",", match->match_id, entry.char_id, entry.target_id,
@@ -1234,7 +1234,7 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 			item_batch += value_str;
 			first = false;
 			batch_count++;
-			
+
 			if (batch_count >= 100)
 			{
 				Sql_QueryStr(mmysql_handle, item_batch.c_str());
@@ -1270,9 +1270,9 @@ bool arena7x7_save_match(std::shared_ptr<s_arena7x7_match> match)
 	// === FINALIZAR TRANSACAO ===
 	Sql_Query(mmysql_handle, "COMMIT");
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Partida %u salva no banco de dados\n", match->match_id);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: Partida %u salva no banco de dados\n", match->match_id);
+	// #endif
 	return true;
 }
 
@@ -1293,9 +1293,9 @@ bool arena7x7_update_ranking(uint32 char_id, s_arena7x7_player_stats *stats, boo
 	{
 		points = -3;
 		stats->deaths += 1; // Contar como morte
-// #if ARENA7X7_DEBUG
-// 		ShowInfo("Arena7x7: Jogador %s marcado como desertor - penalidade aplicada (-3 pontos, +1 death)\n", stats->char_name.c_str());
-// #endif
+							// #if ARENA7X7_DEBUG
+							// 		ShowInfo("Arena7x7: Jogador %s marcado como desertor - penalidade aplicada (-3 pontos, +1 death)\n", stats->char_name.c_str());
+							// #endif
 	}
 	else if (won)
 		points = 3;
@@ -1427,7 +1427,7 @@ uint32 arena7x7_load_next_match_id()
 	if (SQL_ERROR == Sql_Query(mmysql_handle,
 							   "SELECT COALESCE(MAX(`match_id`), 0) + 1 FROM `arena7x7_matches`"))
 	{
-		//showerror("arena7x7_load_next_match_id: falha na query\n");
+		// showerror("arena7x7_load_next_match_id: falha na query\n");
 		return 1;
 	}
 
@@ -1563,14 +1563,14 @@ void arena7x7_update_score_display(std::shared_ptr<s_arena7x7_match> match)
 	// Enviar atualiza��o para todos os jogadores no mapa via protocolo BG
 	clif_bg_updatescore(m);
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Placar atualizado - %s: %d vs %s: %d\n",
-// 			 match->blue_guild_name.c_str(), match->blue_alive,
-// 			 match->red_guild_name.c_str(), match->red_alive);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: Placar atualizado - %s: %d vs %s: %d\n",
+	// 			 match->blue_guild_name.c_str(), match->blue_alive,
+	// 			 match->red_guild_name.c_str(), match->red_alive);
+	// #endif
 }
 
-//in�cio do custom moskaum
+// in�cio do custom moskaum
 /**
  * Callback para remover SC_CURSEDCIRCLE_TARGET dos alvos
  */
@@ -1583,13 +1583,15 @@ static int arena7x7_remove_cursedcircle_callback(struct block_list *bl, va_list 
 
 	map_session_data *target = (map_session_data *)bl;
 	status_change *tsc = status_get_sc(bl);
-	
-	if (tsc && tsc->getSCE(SC_CURSEDCIRCLE_TARGET)) {
+
+	if (tsc && tsc->getSCE(SC_CURSEDCIRCLE_TARGET))
+	{
 		// Verificar se este alvo est� preso pelo Shura que morreu
-		if (tsc->getSCE(SC_CURSEDCIRCLE_TARGET)->val2 == (int)shura_id) {
-// #if ARENA7X7_DEBUG
-// 			ShowInfo("Arena7x7: Removendo SC_CURSEDCIRCLE_TARGET de %s\n", target->status.name);
-// #endif
+		if (tsc->getSCE(SC_CURSEDCIRCLE_TARGET)->val2 == (int)shura_id)
+		{
+			// #if ARENA7X7_DEBUG
+			// 			ShowInfo("Arena7x7: Removendo SC_CURSEDCIRCLE_TARGET de %s\n", target->status.name);
+			// #endif
 			// Enviar packet de fim do bladestop visual
 			clif_bladestop(*bl, shura_id, false);
 			// Remover o status
@@ -1614,10 +1616,10 @@ static void arena7x7_remove_cursedcircle_targets(map_session_data *sd)
 
 	uint32 shura_id = sd->id;
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Removendo SC_CURSEDCIRCLE_TARGET de alvos do Shura %s (ID: %u)\n", 
-// 		sd->status.name, shura_id);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: Removendo SC_CURSEDCIRCLE_TARGET de alvos do Shura %s (ID: %u)\n",
+	// 		sd->status.name, shura_id);
+	// #endif
 
 	// Procurar em toda a �rea do mapa
 	map_foreachinmap(arena7x7_remove_cursedcircle_callback, sd->m, BL_PC, shura_id);
@@ -1625,7 +1627,7 @@ static void arena7x7_remove_cursedcircle_targets(map_session_data *sd)
 	// Remover o status do pr�prio Shura tamb�m
 	status_change_end((struct block_list *)sd, SC_CURSEDCIRCLE_ATKER);
 }
-//fim do custom
+// fim do custom
 /**
  * Transforma jogador em tumba (morte permanente na arena)
  * O jogador fica MORTO e n�o pode ser ressuscitado at� o fim da partida
@@ -1639,59 +1641,59 @@ void arena7x7_transform_to_tombstone(map_session_data *sd)
 {
 	nullpo_retv(sd);
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7 DEBUG: === INICIO transform_to_tombstone para %s ===\n", sd->status.name);
-// 	ShowInfo("Arena7x7 DEBUG: HP atual: %d/%d, dead_sit: %d, vd.dead_sit: %d\n",
-// 			 sd->battle_status.hp, sd->battle_status.max_hp, sd->state.dead_sit, sd->vd.dead_sit);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7 DEBUG: === INICIO transform_to_tombstone para %s ===\n", sd->status.name);
+	// 	ShowInfo("Arena7x7 DEBUG: HP atual: %d/%d, dead_sit: %d, vd.dead_sit: %d\n",
+	// 			 sd->battle_status.hp, sd->battle_status.max_hp, sd->state.dead_sit, sd->vd.dead_sit);
+	// #endif
 
 	auto stats = arena7x7_get_player_stats(sd->status.char_id);
 	if (!stats)
 	{
-		//showwarning("Arena7x7: transform_to_tombstone - stats nao encontrado para %s\n", sd->status.name);
+		// showwarning("Arena7x7: transform_to_tombstone - stats nao encontrado para %s\n", sd->status.name);
 		return;
 	}
 
-// 	// OFICIAL: Player fica MORTO mas com disguise vis�vel
-// 	// N�o reviver! O disguise funciona com player morto
-	
-// 	// Garantir que est� no estado morto correto
-// 	if (!pc_isdead(sd)) {
-// 		sd->state.dead_sit = 1; // Morto deitado
-// 		sd->vd.dead_sit = 1;
-// 	}
+	// 	// OFICIAL: Player fica MORTO mas com disguise vis�vel
+	// 	// N�o reviver! O disguise funciona com player morto
 
-// // #if ARENA7X7_DEBUG
-// // 	ShowInfo("Arena7x7 DEBUG: Player permanece morto (dead_sit=%d)\n", sd->state.dead_sit);
-// // #endif
+	// 	// Garantir que est� no estado morto correto
+	// 	if (!pc_isdead(sd)) {
+	// 		sd->state.dead_sit = 1; // Morto deitado
+	// 		sd->vd.dead_sit = 1;
+	// 	}
 
-// 	// AGORA marcar como morto no sistema Arena7x7 (impede ressurrei��o e dano futuros)
-// 	// Fazer isso ANTES do disguise para que a prote��o contra dano j� esteja ativa
-// 	stats->is_dead = true;
-// // #if ARENA7X7_DEBUG
-// // 	ShowInfo("Arena7x7 DEBUG: Marcado is_dead=true\n");
-// // 	ShowInfo("Arena7x7 DEBUG: Aplicando pc_disguise(MOBID_ARENA_TOMBSTONE = %d)...\n", MOBID_ARENA_TOMBSTONE);
-// // #endif
-// 	// Transformar visualmente em tumba arena (mob ID 22301 - ARENA_TOMBSTONE)
-// 	// IMPORTANTE: Mob 22301 usa sprite customizado para evitar cursor de conversa
-// 	// pc_disguise(sd, MOBID_ARENA_TOMBSTONE);
+	// // #if ARENA7X7_DEBUG
+	// // 	ShowInfo("Arena7x7 DEBUG: Player permanece morto (dead_sit=%d)\n", sd->state.dead_sit);
+	// // #endif
 
-// // #if ARENA7X7_DEBUG
-// // 	ShowInfo("Arena7x7 DEBUG: Apos pc_disguise - disguise: %d\n", sd->disguise);
-// // #endif
+	// 	// AGORA marcar como morto no sistema Arena7x7 (impede ressurrei��o e dano futuros)
+	// 	// Fazer isso ANTES do disguise para que a prote��o contra dano j� esteja ativa
+	// 	stats->is_dead = true;
+	// // #if ARENA7X7_DEBUG
+	// // 	ShowInfo("Arena7x7 DEBUG: Marcado is_dead=true\n");
+	// // 	ShowInfo("Arena7x7 DEBUG: Aplicando pc_disguise(MOBID_ARENA_TOMBSTONE = %d)...\n", MOBID_ARENA_TOMBSTONE);
+	// // #endif
+	// 	// Transformar visualmente em tumba arena (mob ID 22301 - ARENA_TOMBSTONE)
+	// 	// IMPORTANTE: Mob 22301 usa sprite customizado para evitar cursor de conversa
+	// 	// pc_disguise(sd, MOBID_ARENA_TOMBSTONE);
 
-// 	// NAO chamar clif_spawn! O pc_disguise ja envia os packets necessarios
-// 	// Players mortos com disguise aparecem normalmente no cliente
+	// // #if ARENA7X7_DEBUG
+	// // 	ShowInfo("Arena7x7 DEBUG: Apos pc_disguise - disguise: %d\n", sd->disguise);
+	// // #endif
 
-// 	// Parar movimento e ataques
-// 	unit_stop_walking(sd, USW_FIXPOS);
-// 	unit_stop_attack(sd);
+	// 	// NAO chamar clif_spawn! O pc_disguise ja envia os packets necessarios
+	// 	// Players mortos com disguise aparecem normalmente no cliente
 
-// 	// Aplicar SC_STOP para imobilizar sem efeito visual (30 minutos)
-// // #if ARENA7X7_DEBUG
-// // 	ShowInfo("Arena7x7 DEBUG: Aplicando SC_STOP...\n");
-// // #endif
-// 	status_change_start(NULL, sd, SC_STOP, 10000, 0, 0, 0, 0, 1800000, SCSTART_NOAVOID | SCSTART_NOTICKDEF | SCSTART_NORATEDEF, 0);
+	// 	// Parar movimento e ataques
+	// 	unit_stop_walking(sd, USW_FIXPOS);
+	// 	unit_stop_attack(sd);
+
+	// 	// Aplicar SC_STOP para imobilizar sem efeito visual (30 minutos)
+	// // #if ARENA7X7_DEBUG
+	// // 	ShowInfo("Arena7x7 DEBUG: Aplicando SC_STOP...\n");
+	// // #endif
+	// 	status_change_start(NULL, sd, SC_STOP, 10000, 0, 0, 0, 0, 1800000, SCSTART_NOAVOID | SCSTART_NOTICKDEF | SCSTART_NORATEDEF, 0);
 	// Marcar como morto no sistema Arena7x7 (impede ressurrei��o e dano futuros)
 	stats->is_dead = true;
 
@@ -1728,15 +1730,15 @@ void arena7x7_transform_to_tombstone(map_session_data *sd)
 
 	// IMPORTANTE: Garantir que jogador est� MORTO e DEITADO
 	// Setar HP para 0 para garantir estado de morte
-	sd->status.hp = 0;
-	sd->battle_status.hp = 0;
-	
+	// sd->status.hp = 0;
+	// sd->battle_status.hp = 0;
+
 	// For�ar estado visual de morto (deitado)
-	sd->state.dead_sit = 1;
-	sd->vd.dead_sit = 1;
+	// sd->state.dead_sit = 1;
+	// sd->vd.dead_sit = 1;
 
 	// Parar qualquer movimento/a��o
-	unit_stop_walking(sd, USW_FIXPOS);
+	// unit_stop_walking(sd, USW_FIXPOS);
 	unit_stop_attack(sd);
 
 	// Cancelar qualquer cast em andamento
@@ -1747,18 +1749,19 @@ void arena7x7_transform_to_tombstone(map_session_data *sd)
 	clif_spawn(sd);
 
 	// Aplicar SC_STOP para imobilizar completamente
-	status_change_start(NULL, sd, SC_STOP, 10000, 0, 0, 0, 0, 1800000, 
-		SCSTART_NOAVOID | SCSTART_NOTICKDEF | SCSTART_NORATEDEF, 0);
+	// status_change_start(NULL, sd, SC_STOP, 10000, 0, 0, 0, 0, 1800000,
+	// 	SCSTART_NOAVOID | SCSTART_NOTICKDEF | SCSTART_NORATEDEF, 0);
 
 	// IMPORTANTE: Cancelar respawn timer se foi adicionado por pc_dead()
 	// O pc_dead() � chamado ANTES de arena7x7_on_death em status_damage()
 	if (sd->respawn_tid != INVALID_TIMER)
 	{
-// #if ARENA7X7_DEBUG
-// 		ShowInfo("Arena7x7 DEBUG: Cancelando respawn timer de %s (tid: %d)\n", sd->status.name, sd->respawn_tid);
-// #endif
+		// #if ARENA7X7_DEBUG
+		// 		ShowInfo("Arena7x7 DEBUG: Cancelando respawn timer de %s (tid: %d)\n", sd->status.name, sd->respawn_tid);
+		// #endif
 		delete_timer(sd->respawn_tid, NULL);
-		sd->respawn_tid = INVALID_TIMER;;
+		sd->respawn_tid = INVALID_TIMER;
+		;
 	}
 
 	// NAO remover do BG aqui! Isso impede que pc_dead() detecte arena7x7 na proxima morte
@@ -1767,9 +1770,9 @@ void arena7x7_transform_to_tombstone(map_session_data *sd)
 	// Notificar o jogador
 	clif_displaymessage(sd->fd, "[Arena 7x7] Voce foi eliminado! Aguarde o fim da partida.");
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7 DEBUG: === FIM transform_to_tombstone para %s ===\n", sd->status.name);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7 DEBUG: === FIM transform_to_tombstone para %s ===\n", sd->status.name);
+	// #endif
 
 	// Atualizar placar
 	auto match = arena7x7_get_player_match(sd->status.char_id);
@@ -1781,10 +1784,10 @@ void arena7x7_transform_to_tombstone(map_session_data *sd)
 		if (match->blue_alive == 0 || match->red_alive == 0)
 		{
 			// Um time foi eliminado - a partida deve ser finalizada pelo NPC
-// #if ARENA7X7_DEBUG
-// 			ShowInfo("Arena7x7: Time %s foi eliminado!\n",
-// 					 match->blue_alive == 0 ? match->blue_guild_name.c_str() : match->red_guild_name.c_str());
-// #endif
+			// #if ARENA7X7_DEBUG
+			// 			ShowInfo("Arena7x7: Time %s foi eliminado!\n",
+			// 					 match->blue_alive == 0 ? match->blue_guild_name.c_str() : match->red_guild_name.c_str());
+			// #endif
 		}
 	}
 }
@@ -1802,9 +1805,9 @@ void arena7x7_restore_from_tombstone(map_session_data *sd)
 {
 	nullpo_retv(sd);
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: restore_from_tombstone chamado para %s\n", sd->status.name);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: restore_from_tombstone chamado para %s\n", sd->status.name);
+	// #endif
 
 	auto stats = arena7x7_get_player_stats(sd->status.char_id);
 	if (stats)
@@ -1824,9 +1827,9 @@ void arena7x7_restore_from_tombstone(map_session_data *sd)
 	// Restaurar HP/SP totais
 	status_percent_heal(sd, 100, 100);
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: %s restaurado com sucesso\n", sd->status.name);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: %s restaurado com sucesso\n", sd->status.name);
+	// #endif
 	clif_displaymessage(sd->fd, "[Arena 7x7] Voce foi restaurado.");
 }
 
@@ -1839,13 +1842,13 @@ void arena7x7_restore_all_tombstones(uint32 match_id)
 	auto match = arena7x7_get_match(match_id);
 	if (!match)
 	{
-		//showwarning("Arena7x7: restore_all_tombstones - partida %u nao encontrada\n", match_id);
+		// showwarning("Arena7x7: restore_all_tombstones - partida %u nao encontrada\n", match_id);
 		return;
 	}
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Restaurando todos os tumbas da partida %u\n", match_id);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: Restaurando todos os tumbas da partida %u\n", match_id);
+	// #endif
 
 	// Iterar sobre todos os jogadores da partida
 	for (const auto &kv : match->players)
@@ -1860,23 +1863,23 @@ void arena7x7_restore_all_tombstones(uint32 match_id)
 			map_session_data *sd = map_charid2sd(char_id);
 			if (sd)
 			{
-// #if ARENA7X7_DEBUG
-// 				ShowInfo("Arena7x7: Restaurando tumba %s (char_id: %u)\n", sd->status.name, char_id);
-// #endif
+				// #if ARENA7X7_DEBUG
+				// 				ShowInfo("Arena7x7: Restaurando tumba %s (char_id: %u)\n", sd->status.name, char_id);
+				// #endif
 				arena7x7_restore_from_tombstone(sd);
 			}
 			else
 			{
-// #if ARENA7X7_DEBUG
-// 				ShowInfo("Arena7x7: Jogador %u nao esta online para restaurar\n", char_id);
-// #endif
+				// #if ARENA7X7_DEBUG
+				// 				ShowInfo("Arena7x7: Jogador %u nao esta online para restaurar\n", char_id);
+				// #endif
 			}
 		}
 	}
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Restauracao de tumbas da partida %u concluida\n", match_id);
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: Restauracao de tumbas da partida %u concluida\n", match_id);
+	// #endif
 }
 
 /**
@@ -1960,21 +1963,21 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 {
 	if (!victim)
 	{
-		//showwarning("Arena7x7: on_death chamado com victim NULL\n");
+		// showwarning("Arena7x7: on_death chamado com victim NULL\n");
 		return;
 	}
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: on_death chamado - victim=%s, killer=%s\n",
-// 			 victim->status.name,
-// 			 killer ? killer->status.name : "NULL");
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: on_death chamado - victim=%s, killer=%s\n",
+	// 			 victim->status.name,
+	// 			 killer ? killer->status.name : "NULL");
+	// #endif
 
 	auto match = arena7x7_get_player_match(victim->status.char_id);
 	if (!match)
 	{
 #if ARENA7X7_DEBUG
-		//showwarning("Arena7x7: on_death - %s nao esta em uma partida\n", victim->status.name);
+		// showwarning("Arena7x7: on_death - %s nao esta em uma partida\n", victim->status.name);
 #endif
 		return;
 	}
@@ -1983,9 +1986,9 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 	auto vstats = arena7x7_get_player_stats(victim->status.char_id);
 	if (vstats && vstats->is_dead)
 	{
-// #if ARENA7X7_DEBUG
-// 		ShowInfo("Arena7x7: %s ja esta morto (tumba), ignorando\n", victim->status.name);
-// #endif
+		// #if ARENA7X7_DEBUG
+		// 		ShowInfo("Arena7x7: %s ja esta morto (tumba), ignorando\n", victim->status.name);
+		// #endif
 		return;
 	}
 
@@ -2012,7 +2015,7 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 			// Buscar o atacante mais recente que est� na partida
 			t_tick now = gettick();
 			t_tick most_recent = 0;
-			
+
 			for (auto &rd : vit->second->recent_damage_taken)
 			{
 				// Verificar se o dano foi recente (dentro da janela de assist)
@@ -2026,7 +2029,7 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 						{
 							most_recent = rd.timestamp;
 							killer_id = rd.attacker_id;
-							final_skill_id = rd.skill_id; // skill_id=0 � v�lido (ataque normal)
+							final_skill_id = rd.skill_id;  // skill_id=0 � v�lido (ataque normal)
 							final_kill_damage = rd.damage; // Dano do �ltimo hit
 						}
 					}
@@ -2061,8 +2064,8 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 	}
 
 #if ARENA7X7_DEBUG
-	ShowInfo("Arena7x7 DEBUG: on_death - victim=%s, killer_id=%u, final_skill_id=%u, kill_damage=%u\n", 
-		victim->status.name, killer_id, final_skill_id, final_kill_damage);
+	ShowInfo("Arena7x7 DEBUG: on_death - victim=%s, killer_id=%u, final_skill_id=%u, kill_damage=%u\n",
+			 victim->status.name, killer_id, final_skill_id, final_kill_damage);
 #endif
 
 	// Registrar kill (ou morte sem killer)
@@ -2091,11 +2094,11 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 			vit->second->recent_damage_taken.clear();
 		}
 	}
-//custom moskaum
-	// Se � um Shura com Cursed Circle ativo, remover de todos os alvos
+	// custom moskaum
+	//  Se � um Shura com Cursed Circle ativo, remover de todos os alvos
 	arena7x7_remove_cursedcircle_targets(victim);
-//fim do custom
-	// Transformar jogador em tumba (morte permanente)
+	// fim do custom
+	//  Transformar jogador em tumba (morte permanente)
 	arena7x7_transform_to_tombstone(victim);
 
 	// IMPORTANTE: Disparar evento de morte do BG manualmente
@@ -2106,10 +2109,10 @@ void arena7x7_on_death(map_session_data *killer, map_session_data *victim, uint1
 		std::shared_ptr<s_battleground_data> bg = util::umap_find(bg_team_db, victim->bg_id);
 		if (bg && !(bg->die_event.empty()))
 		{
-// #if ARENA7X7_DEBUG
-// 			ShowInfo("Arena7x7 DEBUG: Disparando die_event '%s' para %s\n",
-// 					 bg->die_event.c_str(), victim->status.name);
-// #endif
+			// #if ARENA7X7_DEBUG
+			// 			ShowInfo("Arena7x7 DEBUG: Disparando die_event '%s' para %s\n",
+			// 					 bg->die_event.c_str(), victim->status.name);
+			// #endif
 			npc_event(victim, bg->die_event.c_str(), 0);
 		}
 	}
@@ -2800,7 +2803,7 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 		std::string skill_batch;
 		size_t batch_count = 0;
 		bool first = true;
-		
+
 		for (const auto &log : match->skill_log)
 		{
 			char esc_caster_name[NAME_LENGTH * 2 + 1];
@@ -2809,14 +2812,14 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 			Sql_EscapeStringLen(mmysql_handle, esc_caster_name, log.caster_name.c_str(), log.caster_name.length());
 			Sql_EscapeStringLen(mmysql_handle, esc_target_name, log.target_name.c_str(), log.target_name.length());
 			Sql_EscapeStringLen(mmysql_handle, esc_skill_name, log.skill_name.c_str(), log.skill_name.length());
-			
+
 			char value_str[1024];
 			snprintf(value_str, sizeof(value_str), "%s(%u, %u, %u, '%s', %u, '%s', %u, '%s', %u, %u, %u, %d, %d)",
 					 first ? "" : ",",
 					 match_id, (uint32)log.timestamp, log.caster_id, esc_caster_name,
 					 log.target_id, esc_target_name, log.skill_id, esc_skill_name,
 					 log.skill_level, log.damage, log.hits, log.is_critical ? 1 : 0, log.is_kill ? 1 : 0);
-			
+
 			if (first)
 			{
 				skill_batch = "INSERT INTO `arena7x7_skill_log` "
@@ -2826,7 +2829,7 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 			skill_batch += value_str;
 			first = false;
 			batch_count++;
-			
+
 			if (batch_count >= BATCH_SIZE)
 			{
 				Sql_QueryStr(mmysql_handle, skill_batch.c_str());
@@ -2845,7 +2848,7 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 		std::string item_batch;
 		size_t batch_count = 0;
 		bool first = true;
-		
+
 		for (const auto &log : match->item_usage_log)
 		{
 			char esc_char_name[NAME_LENGTH * 2 + 1];
@@ -2854,13 +2857,13 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 			Sql_EscapeStringLen(mmysql_handle, esc_char_name, log.char_name.c_str(), log.char_name.length());
 			Sql_EscapeStringLen(mmysql_handle, esc_item_name, log.item_name.c_str(), log.item_name.length());
 			Sql_EscapeStringLen(mmysql_handle, esc_item_type, log.item_type.c_str(), log.item_type.length());
-			
+
 			char value_str[512];
 			snprintf(value_str, sizeof(value_str), "%s(%u, %u, %u, '%s', %u, '%s', %u, '%s', %u)",
 					 first ? "" : ",",
 					 match_id, (uint32)log.timestamp, log.char_id, esc_char_name,
 					 log.item_id, esc_item_name, log.amount, esc_item_type, log.related_skill_id);
-			
+
 			if (first)
 			{
 				item_batch = "INSERT INTO `arena7x7_item_log` "
@@ -2870,7 +2873,7 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 			item_batch += value_str;
 			first = false;
 			batch_count++;
-			
+
 			if (batch_count >= BATCH_SIZE)
 			{
 				Sql_QueryStr(mmysql_handle, item_batch.c_str());
@@ -2890,7 +2893,7 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 								   "(`match_id`, `attacker_id`, `attacker_name`, `target_id`, `target_name`, "
 								   "`total_damage`, `hit_count`, `critical_count`, `miss_count`) VALUES ";
 		bool first = true;
-		
+
 		for (const auto &kv : match->attack_log)
 		{
 			const auto &log = kv.second;
@@ -2898,7 +2901,7 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 			char esc_target_name[NAME_LENGTH * 2 + 1];
 			Sql_EscapeStringLen(mmysql_handle, esc_attacker_name, log.attacker_name.c_str(), log.attacker_name.length());
 			Sql_EscapeStringLen(mmysql_handle, esc_target_name, log.target_name.c_str(), log.target_name.length());
-			
+
 			char value_str[512];
 			snprintf(value_str, sizeof(value_str), "%s(%u, %u, '%s', %u, '%s', %lld, %u, %u, %u)",
 					 first ? "" : ",",
@@ -2943,7 +2946,7 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 			char esc_skill_name[SKILL_NAME_LENGTH * 2 + 1];
 			Sql_EscapeStringLen(mmysql_handle, esc_char_name, std::get<1>(s).c_str(), std::get<1>(s).length());
 			Sql_EscapeStringLen(mmysql_handle, esc_skill_name, std::get<3>(s).c_str(), std::get<3>(s).length());
-			
+
 			Sql_Query(mmysql_handle,
 					  "INSERT INTO `arena7x7_skill_summary` "
 					  "(`match_id`, `char_id`, `char_name`, `skill_id`, `skill_name`, "
@@ -3006,7 +3009,7 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 		char esc_target_name[NAME_LENGTH * 2 + 1];
 		Sql_EscapeStringLen(mmysql_handle, esc_attacker_name, std::get<1>(d).c_str(), std::get<1>(d).length());
 		Sql_EscapeStringLen(mmysql_handle, esc_target_name, std::get<3>(d).c_str(), std::get<3>(d).length());
-		
+
 		Sql_Query(mmysql_handle,
 				  "INSERT INTO `arena7x7_damage_by_target` "
 				  "(`match_id`, `attacker_id`, `attacker_name`, `target_id`, `target_name`, "
@@ -3045,7 +3048,7 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 		std::string item_summary_batch = "INSERT INTO `arena7x7_item_summary` "
 										 "(`match_id`, `char_id`, `char_name`, `item_id`, `item_name`, `item_type`, `total_amount`) VALUES ";
 		bool first = true;
-		
+
 		for (const auto &kv : item_summary)
 		{
 			const auto &i = kv.second;
@@ -3055,7 +3058,7 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 			Sql_EscapeStringLen(mmysql_handle, esc_char_name, std::get<1>(i).c_str(), std::get<1>(i).length());
 			Sql_EscapeStringLen(mmysql_handle, esc_item_name, std::get<3>(i).c_str(), std::get<3>(i).length());
 			Sql_EscapeStringLen(mmysql_handle, esc_item_type, std::get<4>(i).c_str(), std::get<4>(i).length());
-			
+
 			char value_str[512];
 			snprintf(value_str, sizeof(value_str), "%s(%u, %u, '%s', %u, '%s', '%s', %u)",
 					 first ? "" : ",",
@@ -3070,10 +3073,10 @@ void arena7x7_save_detailed_logs(uint32 match_id)
 	// === FINALIZAR TRANSACAO ===
 	Sql_Query(mmysql_handle, "COMMIT");
 
-// #if ARENA7X7_DEBUG
-// 	ShowInfo("Arena7x7: Logs detalhados salvos para match %u (skills: %zu, items: %zu, attacks: %zu)\n",
-// 			 match_id, match->skill_log.size(), match->item_usage_log.size(), match->attack_log.size());
-// #endif
+	// #if ARENA7X7_DEBUG
+	// 	ShowInfo("Arena7x7: Logs detalhados salvos para match %u (skills: %zu, items: %zu, attacks: %zu)\n",
+	// 			 match_id, match->skill_log.size(), match->item_usage_log.size(), match->attack_log.size());
+	// #endif
 }
 
 // ============================================================================
@@ -3099,7 +3102,7 @@ void do_final_arena7x7(void)
 	{
 		if (kv.second && kv.second->status == ARENA7X7_MATCH_ACTIVE)
 		{
-			//showwarning("Arena7x7: Cancelando partida %u por shutdown\n", kv.first);
+			// showwarning("Arena7x7: Cancelando partida %u por shutdown\n", kv.first);
 			kv.second->status = ARENA7X7_MATCH_CANCELLED;
 			arena7x7_save_match(kv.second);
 		}

@@ -1,7 +1,4 @@
 izlude,125,145,3	script	Spectator NPC	664,{
-	// cutin "fenrir_a",2;
-	// mes "temporariamente desativado";
-	// goto finalization;
 
 	if ($spectator_count1 == 0) set $spectator_count1, 0;
 	if ($spectator_count2 == 0) set $spectator_count2, 0;
@@ -176,19 +173,10 @@ izlude,125,145,3	script	Spectator NPC	664,{
 			callsub ResetSpectator, 14;
 		}
 		end;
-
+	
 	CheckSpectators:
-		.@map$ = getarg(0);
-		.@arena = getarg(1);
-		.@x = getarg(2);
-		.@y = getarg(3);
-
-		warp .@map$, .@x, .@y;
-		setoption Option_Invisible | Option_Xmas, 1;
-		sc_start SC_NOCHAT,420000,0;
-		bonus bSpeedRate,50;
-		sc_start SC_SPEEDUP1,420000,0;
-		end;
+    	callfunc "F_CheckSpectator", getarg(0), getarg(2), getarg(3);
+    end;
 
 	ResetSpectator:
 		.@arena = getarg(0);
@@ -202,4 +190,13 @@ finalization:
 next;
 	cutin "", 255;
 	close;
+}
+function	script	F_CheckSpectator	{
+    warp getarg(0), getarg(1), getarg(2);
+    setoption Option_Invisible | Option_Xmas, 1;
+    sc_start SC_NOCHAT,420000,0;
+    sc_start SC_WALKSPEED,420000,2000;
+    bonus bSpeedRate,50;
+    sc_start SC_SPEEDUP1,420000,0;
+    return;
 }
