@@ -1,7 +1,5 @@
 izlude,125,145,3	script	Spectator NPC	664,{
-	// cutin "fenrir_a",2;
-	// mes "temporariamente desativado";
-	// goto finalization;
+
 
 	if ($spectator_count1 == 0) set $spectator_count1, 0;
 	if ($spectator_count2 == 0) set $spectator_count2, 0;
@@ -12,21 +10,7 @@ izlude,125,145,3	script	Spectator NPC	664,{
 	if ($spectator_count7 == 0) set $spectator_count7, 0;
 	if ($spectator_count8 == 0) set $spectator_count8, 0;
 	if ($spectator_count9 == 0) set $spectator_count9, 0;
-	if ($spectator_count10 == 0) set $spectator_count10, 0;
-	if ($spectator_count11 == 0) set $spectator_count11, 0;
-	if ($spectator_count12 == 0) set $spectator_count12, 0;
-	if ($spectator_count13 == 0) set $spectator_count13, 0;
-	if ($spectator_count14 == 0) set $spectator_count14, 0;
-
-
-	if (Class >= 1) {{
-		cutin "fenrir_a",2;
-		mes "[ Fenrir ]";
-		mes "Voce precisa ser um ^CC00CCaprendiz^000000 para assistir uma partida: e caridoso da sua parte nao tirar do newbha seboso a oportunidade de ser massacrado de forma justa, por isso voce precisa ser um aprendiz para assistir.";
-		next;
-		goto finalization;
-	}
-	}
+	if ($spectator_count10 == 0) set $spectator_count10, 0;	if ($spectator_count11 == 0) set $spectator_count11, 0;
 
 	cutin "fenrir_a",2;
 	mes "[ Fenrir ]";
@@ -44,13 +28,10 @@ izlude,125,145,3	script	Spectator NPC	664,{
 	set .@players5, getmapusers("ros2025_4");
 	set .@players6, getmapusers("ros2025_5");
 	set .@players7, getmapusers("ros2025_6");
-	set .@players8, getmapusers("2012rwc_01");
-	set .@players9, getmapusers("2012rwc_02");
-	set .@players10, getmapusers("2012rwc_03");
-	set .@players11, getmapusers("2012rwc_04");
-	set .@players12, getmapusers("1@lab");
-	set .@players13, getmapusers("kvm");
-	set .@players14, getmapusers("bio4");
+	set .@players8, getmapusers("2026arena1");
+	set .@players9, getmapusers("2026arena2");
+	set .@players10, getmapusers("2026arena3");
+	set .@players11, getmapusers("2026arena4");
 
 	// // Create the menu with player counts
 	menu "So loko, num compensa...",Cancel,
@@ -64,10 +45,7 @@ izlude,125,145,3	script	Spectator NPC	664,{
 		"Arena 8 - " + .@players8 + " players",Arena8,
 		"Arena 9 - " + .@players9 + " players",Arena9,
 		"Arena 10 - " + .@players10 + " players",Arena10,
-		"Arena 11 - " + .@players11 + " players",Arena11,
-		"Arena 12 - " + .@players12 + " players",Arena12,
-		"Arena 13 - " + .@players13 + " players",Arena13,
-		"Arena 14 - " + .@players14 + " players",Arena14;
+		"Arena 11 - " + .@players11 + " players",Arena11;
 
 	Arena1:
 		callsub CheckSpectators, "ros2024", 1, 132,79;
@@ -98,31 +76,19 @@ izlude,125,145,3	script	Spectator NPC	664,{
 		end;
 
 	Arena8:
-		callsub CheckSpectators, "2012rwc_01", 8, 102,110;
+		callsub CheckSpectators, "2026arena1", 8, 98,68;
 		end;
 
 	Arena9:
-		callsub CheckSpectators, "2012rwc_02", 9, 122,158;
+		callsub CheckSpectators, "2026arena2", 9, 100,100;
 		end;
 
 	Arena10:
-		callsub CheckSpectators, "2012rwc_03", 10, 46,79;
+		callsub CheckSpectators, "2026arena3", 10, 100,100;
 		end;
 
 	Arena11:
-		callsub CheckSpectators, "2012rwc_04", 11, 64,92;
-		end;
-
-	Arena12:
-		callsub CheckSpectators, "1@lab", 12, 56,117;
-		end;
-
-	Arena13:
-		callsub CheckSpectators, "kvm", 13, 53,12;
-		end;
-
-	Arena14:
-		callsub CheckSpectators, "bio04", 14, 123,247;
+		callsub CheckSpectators, "2026arena4", 11, 250,205;
 		end;
 
 
@@ -184,18 +150,17 @@ izlude,125,145,3	script	Spectator NPC	664,{
 		.@y = getarg(3);
 
 		warp .@map$, .@x, .@y;
-		setoption Option_Invisible | Option_Xmas, 1;
+		setoption option_invisible, 1;
 		sc_start SC_NOCHAT,420000,0;
-		bonus bSpeedRate,50;
-		sc_start SC_SPEEDUP1,420000,0;
+		sc_start SC_WEDDING,420000,0;
+		sc_start SC_WALKSPEED,420000,1000;
 		end;
 
 	ResetSpectator:
 		.@arena = getarg(0);
 
 		// Reset player state
-		set Manner, 0;
-		setoption 0x40 | Option_Invisible | Option_Xmas, 0;
+		setoption option_invisible, 0;
 		sc_end SC_ALL;
 
 finalization:
