@@ -4977,6 +4977,9 @@ int32 skill_area_sub(struct block_list *bl, va_list ap)
 		}
 	}
 //fim do custom
+
+//fim do custom
+
 	if (battle_check_target(src, bl, flag) > 0)
 	{
 		// several splash skills need this initial dummy packet to display correctly
@@ -7286,7 +7289,10 @@ int32 skill_castend_damage_id(struct block_list *src, struct block_list *bl, uin
 			}
 			else
 			{
-				skill_attack(skill_get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, flag);
+				// Hell's Plant still needs the recursive splash attack, but its
+				// anchor must not receive the direct damage hit.
+				if (!(skill_id == GN_HELLS_PLANT_ATK && src == bl))
+					skill_attack(skill_get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, flag);
 			}
 
 			// recursive invocation of skill_castend_damage_id() with flag|1
@@ -9784,7 +9790,7 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 #endif
 	case WS_CARTBOOST:
 	case SN_SIGHT:
-	case WS_MELTDOWN:
+	case KO_MEIKYOUSISUI:
 	case WS_OVERTHRUSTMAX:
 	case ST_REJECTSWORD:
 	case HW_MAGICPOWER:
@@ -9830,8 +9836,6 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 	// case SR_LIGHTNINGWALK:
 	case GN_CARTBOOST:
 	case GN_BLOOD_SUCKER:
-	case GN_HELLS_PLANT:
-	case KO_MEIKYOUSISUI:
 	case ALL_ODINS_POWER:
 	case ALL_FULL_THROTTLE:
 	case RA_UNLIMIT:
@@ -9884,6 +9888,11 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 	case HN_RULEBREAK:
 	case SH_TEMPORARY_COMMUNION:
 	case SKE_ENCHANTING_SKY:
+		clif_skill_nodamage(src, *bl, skill_id, skill_lv,
+							sc_start(src, bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv)));
+		break;
+	case GN_HELLS_PLANT:
+		// The caster receives this status because it anchors the plant.
 		clif_skill_nodamage(src, *bl, skill_id, skill_lv,
 							sc_start(src, bl, type, 100, skill_lv, skill_get_time(skill_id, skill_lv)));
 		break;
@@ -10837,8 +10846,25 @@ int32 skill_castend_nodamage_id(struct block_list *src, struct block_list *bl, u
 		map_foreachinrange(skill_area_sub, bl, skill_get_splash(skill_id, skill_lv), BL_CHAR | BL_SKILL, src, skill_id, skill_lv, tick, flag | BCT_ENEMY | SD_SPLASH | 1, skill_castend_damage_id);
 		break;
 
-	case SR_TIGERCANNON:
 	case GN_CART_TORNADO:
+	{
+		clif_skill_nodamage(src, *bl, skill_id, skill_lv);
+		map_foreachinrange(
+			skill_area_sub,
+			src,
+			skill_get_splash(skill_id, skill_lv),
+			BL_CHAR | BL_SKILL,
+			src,
+			skill_id,
+			skill_lv,
+			tick,
+			flag | BCT_ENEMY | SD_SPLASH | 1,
+			skill_castend_damage_id
+		);
+		break;
+	}
+
+	case SR_TIGERCANNON:
 		clif_skill_nodamage(src, *bl, skill_id, skill_lv);
 		[[fallthrough]];
 	case SR_EARTHSHAKER:

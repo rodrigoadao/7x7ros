@@ -17501,6 +17501,8 @@ TIMER_FUNC(status_change_timer)
 	case SC_HELLS_PLANT:
 		if (sce->val4 >= 0)
 		{
+			// The attack function skips only the caster's direct hit while
+			// preserving its recursive splash attack for nearby enemies.
 			skill_castend_damage_id(bl, bl, GN_HELLS_PLANT_ATK, sce->val1, tick, 0);
 		}
 		break;
