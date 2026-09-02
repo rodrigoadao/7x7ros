@@ -11428,15 +11428,8 @@ int64 battle_calc_return_damage(struct block_list *tbl, struct block_list *src, 
 			return 0;
 	}
 
-	status_change *sc = status_get_sc(src);
-
-	if (sc)
-	{
-		if (skill_id == GN_HELLS_PLANT_ATK && sc->getSCE(SC_HELLS_PLANT))
-			return 0;
-	}
-
 	map_session_data *tsd = BL_CAST(BL_PC, tbl);
+	status_change *sc = status_get_sc(src);
 	int64 rdamage = 0, damage = *dmg;
 
 	if (flag & BF_SHORT)
